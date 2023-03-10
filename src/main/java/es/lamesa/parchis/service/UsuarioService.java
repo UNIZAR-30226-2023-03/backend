@@ -19,7 +19,8 @@ public class UsuarioService {
     }
 
     public Usuario addUsuario(Usuario usuario) {
-        return repository.save(usuario);   
+        usuario.encriptarPassword();
+        return repository.save(usuario);
     }
 
     public boolean validarUsuario(String login, String password) {
@@ -28,9 +29,14 @@ public class UsuarioService {
             return false;
         }
         else {
+            System.out.println(usuario.getPassword());
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             return encoder.matches(password, usuario.getPassword());
         }
+    }
+
+    public void borrarUsuario(Long id) {
+        repository.deleteById(id);
     }
 
 }

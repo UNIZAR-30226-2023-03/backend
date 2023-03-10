@@ -1,7 +1,8 @@
 package es.lamesa.parchis.model;
 
-import jakarta.persistence.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "usuario")
@@ -52,6 +53,10 @@ public class Usuario {
     }
 
     public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void encriptarPassword() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         this.password = encoder.encode(password);
     }
@@ -63,4 +68,5 @@ public class Usuario {
     public void setNumMonedas(int numMonedas) {
         this.numMonedas = numMonedas;
     }
+
 }
