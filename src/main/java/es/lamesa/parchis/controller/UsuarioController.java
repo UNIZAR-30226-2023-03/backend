@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import es.lamesa.parchis.service.UsuarioService;
@@ -26,5 +27,11 @@ public class UsuarioController{
     @PostMapping()
     public Usuario addUsuario(@RequestBody Usuario usuario) {
         return service.addUsuario(usuario);
+    }
+
+    @PostMapping("/login")
+    public boolean validarUsuario(@RequestParam("login") String login, 
+                                  @RequestParam("password") String password) {
+        return service.validarUsuario(login, password);
     }
 }
