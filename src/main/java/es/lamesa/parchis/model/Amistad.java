@@ -32,5 +32,8 @@ public class Amistad {
     public void setUsuario2(Usuario usuario2) {
         this.usuario2 = usuario2;
     }
+
+    public Amistad() {
+    }
     
 }
