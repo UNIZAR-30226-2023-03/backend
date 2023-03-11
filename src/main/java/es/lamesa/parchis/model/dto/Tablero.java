@@ -31,7 +31,7 @@ public class Tablero {
                 c = new Casilla(i, TipoCasilla.SALIDA_VERDE);
             }
             // CASILLAS SEGURO
-            else if (i == 11 || i == 28 || i == 45 || i == 62) { //SEGUROS
+            else if (i == 11 || i == 28 || i == 45 || i == 62) { // SEGUROS
                 c = new Casilla(i, TipoCasilla.SEGURO);
             }
             // CASILLAS DE ENTRADA A PASILLO
