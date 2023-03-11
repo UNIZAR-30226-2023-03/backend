@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import es.lamesa.parchis.service.UsuarioService;
 import es.lamesa.parchis.model.Login;
@@ -30,6 +31,7 @@ public class UsuarioController {
         return service.addUsuario(usuario);
     }
 
+    @CrossOrigin(origins = "https://frontend-web-9sco.onrender.com")
     @PostMapping("/login")
     public boolean validarUsuario(@RequestBody Login request) {
         System.out.println("Hola");
