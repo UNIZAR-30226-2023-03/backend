@@ -1,7 +1,5 @@
 package es.lamesa.parchis.model.dto;
 
-import es.lamesa.parchis.model.dto.Casilla;
-
 import java.util.ArrayList;
 
 public class Tablero {
