@@ -1,7 +1,7 @@
-package es.lamesa.parchis.model;
+package es.lamesa.parchis.model.dto;
 
 public class Login {
-    
+
     private String login;
     private String password;
 

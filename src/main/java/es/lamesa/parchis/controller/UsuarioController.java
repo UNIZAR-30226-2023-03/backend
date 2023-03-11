@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import es.lamesa.parchis.service.UsuarioService;
-import es.lamesa.parchis.model.Login;
 import es.lamesa.parchis.model.Usuario;
+import es.lamesa.parchis.model.dto.Login;
 
 @RestController
 @RequestMapping("/usuarios")
