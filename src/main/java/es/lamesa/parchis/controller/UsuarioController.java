@@ -31,7 +31,6 @@ public class UsuarioController {
         return service.addUsuario(usuario);
     }
 
-    @CrossOrigin(origins = "https://frontend-web-9sco.onrender.com")
     @PostMapping("/login")
     public boolean validarUsuario(@RequestBody Login request) {
         System.out.println("Hola");
