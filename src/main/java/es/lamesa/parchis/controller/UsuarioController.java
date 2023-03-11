@@ -1,6 +1,7 @@
 package es.lamesa.parchis.controller;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,9 +32,11 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public boolean validarUsuario(@RequestBody Login l) {
+    public boolean validarUsuario(@RequestBody Map<String, String> request) {
         System.out.println("Hola");
-        return service.validarUsuario(l.getLogin(), l.getPassword());
+        String login = request.get("login");
+        String password = request.get("password");
+        return service.validarUsuario(login, password);
     }
 
     @PostMapping("/eliminar/{id}")
