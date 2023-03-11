@@ -32,7 +32,6 @@ public class UsuarioController {
 
     @PostMapping("/login")
     public boolean validarUsuario(@RequestBody Login request) {
-        System.out.println("Hola");
         return service.validarUsuario(request.getLogin(), request.getPassword());
     }
 
