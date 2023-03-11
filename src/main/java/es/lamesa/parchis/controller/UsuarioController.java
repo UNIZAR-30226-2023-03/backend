@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import es.lamesa.parchis.service.UsuarioService;
+import es.lamesa.parchis.model.Login;
 import es.lamesa.parchis.model.Usuario;
 
 @RestController
 @RequestMapping("/usuarios")
-public class UsuarioController{
+public class UsuarioController {
     @Autowired
     UsuarioService service;
     
@@ -31,10 +31,9 @@ public class UsuarioController{
     }
 
     @PostMapping("/login")
-    public boolean validarUsuario(@RequestParam("login") String login, 
-                                  @RequestParam("password") String password) {
+    public boolean validarUsuario(@RequestBody Login l) {
         System.out.println("Hola");
-        return service.validarUsuario(login, password);
+        return service.validarUsuario(l.getLogin(), l.getPassword());
     }
 
     @PostMapping("/eliminar/{id}")
