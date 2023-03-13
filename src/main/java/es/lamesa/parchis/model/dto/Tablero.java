@@ -2,15 +2,30 @@ package es.lamesa.parchis.model.dto;
 
 import java.util.ArrayList;
 
-public class Tablero {
-    private ArrayList<Casilla> perimetro;
-    private ArrayList<Casilla> pasillo;
+/**
+ * La clase Tablero representa el tablero del juego Parchís.
+ */
 
+public class Tablero {
+    /**
+     * La lista de casillas que forman el perímetro del tablero.
+     */
+    private ArrayList<Casilla> perimetro;
+    /**
+     * La lista de casillas que forman el pasillo del tablero.
+     */
+    private ArrayList<Casilla> pasillo;
+    /**
+     * Crea una nueva instancia de la clase Tablero, inicializando tanto el perímetro como el pasillo.
+     */
     public Tablero() {
         inicializarPerimetro();
         inicializarPasillo();
     }
-
+    
+    /**
+     * Inicializa la lista de casillas que forman el perímetro del tablero.
+     */
     public void inicializarPerimetro() {
         perimetro = new ArrayList<Casilla>(68);
         Casilla c;
@@ -51,7 +66,9 @@ public class Tablero {
             perimetro.add(c);
         }
     }
-    
+    /**
+     * Inicializa la lista de casillas que forman el pasillo del tablero.
+     */
     public void inicializarPasillo() {
 		pasillo = new ArrayList<Casilla>(8);
         Casilla c;
