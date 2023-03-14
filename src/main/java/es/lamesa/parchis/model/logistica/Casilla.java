@@ -29,6 +29,18 @@ public class Casilla {
         fichas = new ArrayList<Ficha>(2);
         this.tipo = tipo;
     }
+
+    public int getPosicion() {
+        return posicion;
+    }
+
+    public TipoCasilla getTipoCasilla() {
+        return tipo;
+    }
+
+    public void anyadirFicha(Ficha f) {
+        fichas.add(f);
+    }
 }
 /**
  * Enumeración que define los tipos de casillas posibles en el tablero de parchís.
