@@ -1,8 +1,9 @@
-package es.lamesa.parchis.model.dto;
+package es.lamesa.parchis.model.logistica;
 
 import java.util.ArrayList;
 
 import es.lamesa.parchis.model.Usuario;
+import es.lamesa.parchis.model.dto.Dado;
 
 public class ConfigPartida {
     Tablero tablero;

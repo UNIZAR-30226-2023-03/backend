@@ -3,7 +3,7 @@ package es.lamesa.parchis.model.dto;
 public class Dado {
     private int num;
 
-    Dado() {}
+    public Dado() {}
 
     public int getNum() {
         return this.num;
