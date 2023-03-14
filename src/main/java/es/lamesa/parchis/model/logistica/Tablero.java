@@ -1,4 +1,4 @@
-package es.lamesa.parchis.model.dto;
+package es.lamesa.parchis.model.logistica;
 
 import java.util.ArrayList;
 
