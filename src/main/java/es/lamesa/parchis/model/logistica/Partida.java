@@ -56,10 +56,25 @@ public class Partida {
     }
 
     void comprobarMovimientos(int num_dado) {
-        if(turno == Color.AMARILLO) {
+        int casilla;
+        boolean bloqueada[amarillas.size()];
+        if (turno == Color.AMARILLO) {
+            for(Ficha i : amarillas) {
+                casilla = i.getCasilla();
+                for(int j = casilla; j <= casilla+num_dado; j++) {
+                    if (j == ){
 
+                    }
+                }
+            }
         }
-        else if(turno == Color.AZUL){
+        else if (turno == Color.AZUL){
+            
+        }
+        else if (turno == Color.ROJO){
+            
+        }
+        else if (turno == Color.VERDE){
             
         }
     }
