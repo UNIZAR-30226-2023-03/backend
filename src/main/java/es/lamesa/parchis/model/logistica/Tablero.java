@@ -94,4 +94,7 @@ public class Tablero {
         return n_fichas;
     }
 
+    public Casilla obtenerCasilla(int casilla){
+        return perimetro.get(casilla);
+    }
 }

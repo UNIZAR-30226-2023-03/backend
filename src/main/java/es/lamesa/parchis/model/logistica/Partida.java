@@ -57,7 +57,7 @@ public class Partida {
 
     void comprobarMovimientos(int num_dado) {
         int id_casilla;
-        // boolean bloqueada[amarillas.size()];
+        ArrayList<Ficha> bloqueadas = new ArrayList<Ficha>();
         if (turno == Color.AMARILLO) {
             for(Ficha i : amarillas) {
                 id_casilla = i.getCasilla();
@@ -66,6 +66,10 @@ public class Partida {
                         /*CONFIG.BLOQUEANTE_SOLO_SEGURO and TIPOCASILLA.SEGURO 
                          * OR CONFIG.BLOQUEANTE_TODO -> bloquea ficha
                         */
+                        if (tablero.obtenerCasilla(id_casilla).getTipoCasilla() == TipoCasilla.SEGURO){
+                            bloqueadas.add(i);
+                            break;
+                        }
                     }
                 }
             }
@@ -81,8 +85,24 @@ public class Partida {
         }
     }
 
-    void realizarMovimiento(int id_ficha) {
-        //buscar ficha where color=turno AND id=id_ficha
+    public void realizarMovimiento(int id_ficha) {
+        Ficha f = null;
+        if (turno == Color.AMARILLO) {
+            f = amarillas.get(id_ficha);  
+        }
+        else if (turno == Color.AZUL){
+            f = amarillas.get(id_ficha);
+        }
+        else if (turno == Color.ROJO){
+            f = amarillas.get(id_ficha);
+        }
+        else if (turno == Color.VERDE){
+            f = amarillas.get(id_ficha);
+        }
+        int casilla = f.getCasilla();
+        f.setCasilla(casilla+dado.getNum()); // actualizamos el atributo posición de la clase Ficha
+        Casilla c = tablero.obtenerCasilla(casilla); 
+        c.actualizarFicha(f);
     }
 
     //¿coger el número sacado del dado?
