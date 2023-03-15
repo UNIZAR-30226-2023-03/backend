@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.ResponseEntity;
 
 import es.lamesa.parchis.service.UsuarioService;
 import es.lamesa.parchis.model.Usuario;
@@ -26,8 +27,8 @@ public class UsuarioController {
     }
 
     @PostMapping()
-    public Usuario addUsuario(@RequestBody Usuario usuario) {
-        return service.addUsuario(usuario);
+    public ResponseEntity<Usuario> addUsuario(@RequestBody Usuario usuario) {
+        return ResponseEntity.ok(service.addUsuario(usuario));
     }
 
     @PostMapping("/login")
