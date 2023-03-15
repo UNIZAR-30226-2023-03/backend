@@ -55,29 +55,27 @@ public class Partida {
         turno.siguienteTurno();
     }
 
-    void comprobarMovimientos(int num_dado) {
-        int casilla;
-        boolean bloqueada[amarillas.size()];
-        if (turno == Color.AMARILLO) {
-            for(Ficha i : amarillas) {
-                casilla = i.getCasilla();
-                for(int j = casilla; j <= casilla+num_dado; j++) {
-                    if (j == ){
-
-                    }
-                }
-            }
-        }
-        else if (turno == Color.AZUL){
+    // void comprobarMovimientos(int num_dado) {
+    //     int id_casilla;
+    //     // boolean bloqueada[amarillas.size()];
+    //     if (turno == Color.AMARILLO) {
+    //         for(Ficha i : amarillas) {
+    //             id_casilla = i.getCasilla();
+    //             for(int j = id_casilla; j <= id_casilla+num_dado; j++) {
+    //                 // obtenerFichas(id_casilla);
+    //             }
+    //         }
+    //     }
+    //     else if (turno == Color.AZUL){
             
-        }
-        else if (turno == Color.ROJO){
+    //     }
+    //     else if (turno == Color.ROJO){
             
-        }
-        else if (turno == Color.VERDE){
+    //     }
+    //     else if (turno == Color.VERDE){
             
-        }
-    }
+    //     }
+    // }
 
     void realizarMovimiento(int id_ficha) {
         //buscar ficha where color=turno AND id=id_ficha
