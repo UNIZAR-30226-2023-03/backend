@@ -1,4 +1,4 @@
-package es.lamesa.parchis;
+package es.lamesa.parchis.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
