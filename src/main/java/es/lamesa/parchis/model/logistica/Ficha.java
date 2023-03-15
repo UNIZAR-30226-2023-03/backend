@@ -4,8 +4,8 @@ public class Ficha {
     private Color color;
     private int id;
     private int casilla;
-    
-    Ficha (Color c) {
+
+    public Ficha(Color c) {
         color = c;
     }
 

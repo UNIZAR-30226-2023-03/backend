@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.dto.Dado;
-import es.lamesa.parchis.model.logistica.Ficha;
 
 public class Partida {
     Tablero tablero;
