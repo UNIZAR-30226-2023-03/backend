@@ -83,12 +83,15 @@ public class Tablero {
 		}
 	}
 
-    // public int obtenerFichas(int casilla){
-    //     for (Casilla c : perimetro){
-    //         if(c.getPosicion() == casilla) {
-                
-    //         }
-    //     }
-    // }
+    public int obtenerFichas(int casilla){
+        int n_fichas = 0;
+        for (Casilla c : perimetro){
+            if(c.getPosicion() == casilla) {
+                n_fichas = c.getFichas().size();
+                break;
+            }
+        }
+        return n_fichas;
+    }
 
 }
