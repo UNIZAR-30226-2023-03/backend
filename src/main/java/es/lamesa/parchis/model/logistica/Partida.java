@@ -68,12 +68,14 @@ public class Partida {
                     }
                 }
                 else{
-                    for(int j = id_casilla; j <= id_casilla+num_dado; j++) {
-                        if (tablero.obtenerFichas(id_casilla) == 2) {
+                    for(int j = id_casilla + 1; j <= id_casilla+num_dado; j++) {
+                        if (tablero.obtenerFichas(j) == 2) {
                             /*CONFIG.BLOQUEANTE_SOLO_SEGURO and TIPOCASILLA.SEGURO 
                             * OR CONFIG.BLOQUEANTE_TODO -> bloquea ficha
                             */
-                            if (c.getTipoCasilla() == TipoCasilla.SEGURO){
+                            if ((c.getTipoCasilla() == TipoCasilla.SEGURO &&
+                             config_barreras == ConfigBarreras.SOLO_SEGUROS) ||
+                              config_barreras == ConfigBarreras.TODAS_CASILLAS){
                                 bloqueadas.add(i);
                                 break;
                             }
