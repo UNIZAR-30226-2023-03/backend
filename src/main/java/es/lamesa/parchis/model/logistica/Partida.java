@@ -61,14 +61,22 @@ public class Partida {
         if (turno == Color.AMARILLO) {
             for(Ficha i : amarillas) {
                 id_casilla = i.getCasilla();
-                for(int j = id_casilla; j <= id_casilla+num_dado; j++) {
-                    if (tablero.obtenerFichas(id_casilla) == 2) {
-                        /*CONFIG.BLOQUEANTE_SOLO_SEGURO and TIPOCASILLA.SEGURO 
-                         * OR CONFIG.BLOQUEANTE_TODO -> bloquea ficha
-                        */
-                        if (tablero.obtenerCasilla(id_casilla).getTipoCasilla() == TipoCasilla.SEGURO){
-                            bloqueadas.add(i);
-                            break;
+                Casilla c = tablero.obtenerCasilla(id_casilla);
+                if (c.getTipoCasilla() == TipoCasilla.PASILLO){
+                    if (c.getPosicion() + num_dado > 8){
+                        bloqueadas.add(i);   
+                    }
+                }
+                else{
+                    for(int j = id_casilla; j <= id_casilla+num_dado; j++) {
+                        if (tablero.obtenerFichas(id_casilla) == 2) {
+                            /*CONFIG.BLOQUEANTE_SOLO_SEGURO and TIPOCASILLA.SEGURO 
+                            * OR CONFIG.BLOQUEANTE_TODO -> bloquea ficha
+                            */
+                            if (c.getTipoCasilla() == TipoCasilla.SEGURO){
+                                bloqueadas.add(i);
+                                break;
+                            }
                         }
                     }
                 }
@@ -88,7 +96,7 @@ public class Partida {
     public void realizarMovimiento(int id_ficha) {
         Ficha f = null;
         if (turno == Color.AMARILLO) {
-            f = amarillas.get(id_ficha);  
+            f = amarillas.get(id_ficha); 
         }
         else if (turno == Color.AZUL){
             f = amarillas.get(id_ficha);
