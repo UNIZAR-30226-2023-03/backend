@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.dto.Dado;
 
-public class ConfigPartida {
+public class Partida {
     Tablero tablero;
     Dado dado;
     ConfigBarreras config_barreras;
@@ -15,7 +15,7 @@ public class ConfigPartida {
 
     // ¿Fichas de los jugadores?
 
-    ConfigPartida(Usuario anfitrion, String configBarreras) {
+    Partida(Usuario anfitrion, String configBarreras) {
         jugadores = new ArrayList<Usuario>(4);
         jugadores.add(anfitrion);
         if(configBarreras.contentEquals("Solo en seguros")) {
