@@ -99,25 +99,33 @@ public class Partida {
 
     public void realizarMovimiento(int id_ficha) {
         Ficha f = null;
+        int id_casilla_prepasillo = 0;
         if (turno == Color.AMARILLO) {
             f = amarillas.get(id_ficha);
-            int casilla = f.getCasilla();
-            if (casilla + dado.getNum() >= 67){
-
-            } 
-            f.setCasilla(casilla+dado.getNum()); // actualizamos el atributo posición de la clase Ficha
-            Casilla c = tablero.obtenerCasilla(casilla); 
-            c.actualizarFicha(f);
+            id_casilla_prepasillo = 67;
         }
         else if (turno == Color.AZUL){
-            f = amarillas.get(id_ficha);
+            f = azules.get(id_ficha);
+            id_casilla_prepasillo = 16;
         }
         else if (turno == Color.ROJO){
-            f = amarillas.get(id_ficha);
+            f = rojas.get(id_ficha);
+            id_casilla_prepasillo = 33;
         }
         else if (turno == Color.VERDE){
-            f = amarillas.get(id_ficha);
+            f = verdes.get(id_ficha);
+            id_casilla_prepasillo = 50;
         }
+
+        int id_casilla = f.getCasilla();
+        if (id_casilla + dado.getNum() >= id_casilla_prepasillo){
+            //entrada a pasillo
+        } 
+        f.setCasilla(id_casilla+dado.getNum()); // actualizamos el atributo posición de la clase Ficha
+        Casilla c = tablero.obtenerCasilla(id_casilla); 
+        c.borrarFicha(f);
+        c = tablero.obtenerCasilla((id_casilla + dado.getNum()));
+        c.anyadirFicha(f);
     }
 
     //¿coger el número sacado del dado?

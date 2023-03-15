@@ -46,8 +46,8 @@ public class Casilla {
         return fichas;
     }
 
-    public void actualizarFicha(Ficha f){
-        fichas.add(f);
+    public void borrarFicha(Ficha f) {
+        fichas.remove(f);
     }
 }
 /**
