@@ -57,40 +57,43 @@ public class Partida {
     void comprobarMovimientos(int num_dado) {
         int id_casilla;
         ArrayList<Ficha> bloqueadas = new ArrayList<Ficha>();
+        ArrayList<Ficha> fichas_del_turno = new ArrayList<Ficha>();
         if (turno == Color.AMARILLO) {
-            for(Ficha i : amarillas) {
-                id_casilla = i.getCasilla();
-                Casilla c = tablero.obtenerCasilla(id_casilla);
-                if (c.getTipoCasilla() == TipoCasilla.PASILLO){
-                    if (c.getPosicion() + num_dado > 8){
-                        bloqueadas.add(i);   
-                    }
+            fichas_del_turno = amarillas;
+        }
+        else if (turno == Color.AZUL){
+            fichas_del_turno = azules;
+        }
+        else if (turno == Color.ROJO){
+            fichas_del_turno = rojas;
+        }
+        else if (turno == Color.VERDE){
+            fichas_del_turno = verdes;
+        }
+
+        for(Ficha i : fichas_del_turno) {
+            id_casilla = i.getCasilla();
+            Casilla c = tablero.obtenerCasilla(id_casilla);
+            if (c.getTipoCasilla() == TipoCasilla.PASILLO){
+                if (c.getPosicion() + num_dado > 8){
+                    bloqueadas.add(i);   
                 }
-                else{
-                    for(int j = id_casilla + 1; j <= id_casilla+num_dado; j++) {
-                        if (tablero.obtenerFichas(j) == 2) {
-                            /*CONFIG.BLOQUEANTE_SOLO_SEGURO and TIPOCASILLA.SEGURO 
-                            * OR CONFIG.BLOQUEANTE_TODO -> bloquea ficha
-                            */
-                            if ((c.getTipoCasilla() == TipoCasilla.SEGURO &&
-                             config_barreras == ConfigBarreras.SOLO_SEGUROS) ||
-                              config_barreras == ConfigBarreras.TODAS_CASILLAS){
-                                bloqueadas.add(i);
-                                break;
-                            }
+            }
+            else{
+                for(int j = id_casilla + 1; j <= id_casilla+num_dado; j++) {
+                    if (tablero.obtenerFichas(j) == 2) {
+                        /*CONFIG.BLOQUEANTE_SOLO_SEGURO and TIPOCASILLA.SEGURO 
+                        * OR CONFIG.BLOQUEANTE_TODO -> bloquea ficha
+                        */
+                        if ((c.getTipoCasilla() == TipoCasilla.SEGURO &&
+                         config_barreras == ConfigBarreras.SOLO_SEGUROS) ||
+                          config_barreras == ConfigBarreras.TODAS_CASILLAS){
+                            bloqueadas.add(i);
+                            break;
                         }
                     }
                 }
             }
-        }
-        else if (turno == Color.AZUL){
-            
-        }
-        else if (turno == Color.ROJO){
-            
-        }
-        else if (turno == Color.VERDE){
-            
         }
     }
 
@@ -115,8 +118,6 @@ public class Partida {
         else if (turno == Color.VERDE){
             f = amarillas.get(id_ficha);
         }
-        
-        
     }
 
     //¿coger el número sacado del dado?
