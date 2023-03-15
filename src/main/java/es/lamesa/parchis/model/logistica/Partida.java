@@ -97,7 +97,14 @@ public class Partida {
     public void realizarMovimiento(int id_ficha) {
         Ficha f = null;
         if (turno == Color.AMARILLO) {
-            f = amarillas.get(id_ficha); 
+            f = amarillas.get(id_ficha);
+            int casilla = f.getCasilla();
+            if (casilla + dado.getNum() >= 67){
+
+            } 
+            f.setCasilla(casilla+dado.getNum()); // actualizamos el atributo posición de la clase Ficha
+            Casilla c = tablero.obtenerCasilla(casilla); 
+            c.actualizarFicha(f);
         }
         else if (turno == Color.AZUL){
             f = amarillas.get(id_ficha);
@@ -108,10 +115,8 @@ public class Partida {
         else if (turno == Color.VERDE){
             f = amarillas.get(id_ficha);
         }
-        int casilla = f.getCasilla();
-        f.setCasilla(casilla+dado.getNum()); // actualizamos el atributo posición de la clase Ficha
-        Casilla c = tablero.obtenerCasilla(casilla); 
-        c.actualizarFicha(f);
+        
+        
     }
 
     //¿coger el número sacado del dado?
