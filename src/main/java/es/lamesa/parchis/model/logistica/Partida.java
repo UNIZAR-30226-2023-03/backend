@@ -80,16 +80,21 @@ public class Partida {
                 }
             }
             else{
-                for(int j = id_casilla + 1; j <= id_casilla+num_dado; j++) {
-                    if (tablero.obtenerFichas(j) == 2) {
-                        /*CONFIG.BLOQUEANTE_SOLO_SEGURO and TIPOCASILLA.SEGURO 
-                        * OR CONFIG.BLOQUEANTE_TODO -> bloquea ficha
-                        */
-                        if ((c.getTipoCasilla() == TipoCasilla.SEGURO &&
-                         config_barreras == ConfigBarreras.SOLO_SEGUROS) ||
-                          config_barreras == ConfigBarreras.TODAS_CASILLAS){
-                            bloqueadas.add(i);
-                            break;
+                if(tablero.obtenerFichas(id_casilla + num_dado) == 2) {
+                    bloqueadas.add(i);
+                }
+                else { 
+                    for(int j = id_casilla + 1; j < id_casilla+num_dado; j++) {
+                        if (tablero.obtenerFichas(j) == 2) {
+                            /*CONFIG.BLOQUEANTE_SOLO_SEGURO and TIPOCASILLA.SEGURO 
+                            * OR CONFIG.BLOQUEANTE_TODO -> bloquea ficha
+                            */
+                            if ((c.getTipoCasilla() == TipoCasilla.SEGURO &&
+                            config_barreras == ConfigBarreras.SOLO_SEGUROS) ||
+                            config_barreras == ConfigBarreras.TODAS_CASILLAS){
+                                bloqueadas.add(i);
+                                break;
+                            }
                         }
                     }
                 }
@@ -120,6 +125,7 @@ public class Partida {
         int id_casilla = f.getCasilla();
         if (id_casilla + dado.getNum() >= id_casilla_prepasillo){
             //entrada a pasillo
+            f.setCasilla(67 + ((id_casilla + dado.getNum() - id_casilla_prepasillo)));
         } 
         f.setCasilla(id_casilla+dado.getNum()); // actualizamos el atributo posición de la clase Ficha
         Casilla c = tablero.obtenerCasilla(id_casilla); 

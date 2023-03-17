@@ -18,6 +18,8 @@ public class Casilla {
      * Tipo de la casilla.
      */
     private TipoCasilla tipo;
+
+    public Casilla() {}
     /**
      * Constructor de la casilla.
      * 
