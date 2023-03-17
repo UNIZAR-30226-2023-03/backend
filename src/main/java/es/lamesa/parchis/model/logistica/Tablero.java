@@ -74,6 +74,9 @@ public class Tablero {
      */
     public void inicializarPasillo() {
 		pasillo_amarillo = new ArrayList<Casilla>(8);
+        pasillo_azul = new ArrayList<Casilla>(8);
+        pasillo_rojo = new ArrayList<Casilla>(8);
+        pasillo_verde = new ArrayList<Casilla>(8);
         Casilla c;
 		for (int i = 0; i < 8; i++) {
 			if (i == 7) {
@@ -84,9 +87,36 @@ public class Tablero {
 			}
 			pasillo_amarillo.add(c);
 		}
-        pasillo_azul = new ArrayList<Casilla>(pasillo_amarillo);
-        pasillo_rojo = new ArrayList<Casilla>(pasillo_amarillo);
-        pasillo_verde = new ArrayList<Casilla>(pasillo_amarillo);
+        for (int i = 0; i < 8; i++) {
+			if (i == 7) {
+				c = new Casilla(68+i, TipoCasilla.META);
+			} 
+            else { 
+				c = new Casilla(68+i, TipoCasilla.PASILLO);
+			}
+			pasillo_azul.add(c);
+		}
+        for (int i = 0; i < 8; i++) {
+			if (i == 7) {
+				c = new Casilla(68+i, TipoCasilla.META);
+			} 
+            else { 
+				c = new Casilla(68+i, TipoCasilla.PASILLO);
+			}
+			pasillo_rojo.add(c);
+		}
+        for (int i = 0; i < 8; i++) {
+			if (i == 7) {
+				c = new Casilla(68+i, TipoCasilla.META);
+			} 
+            else { 
+				c = new Casilla(68+i, TipoCasilla.PASILLO);
+			}
+			pasillo_verde.add(c);
+		}
+        //pasillo_azul = new ArrayList<Casilla>(pasillo_amarillo);
+        //pasillo_rojo = new ArrayList<Casilla>(pasillo_amarillo);
+        //pasillo_verde = new ArrayList<Casilla>(pasillo_amarillo);
 	}
 
     public int obtenerFichas(int casilla){

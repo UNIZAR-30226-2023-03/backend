@@ -28,7 +28,12 @@ public class Casilla {
      */
     public Casilla(int pos, TipoCasilla tipo) {
         this.posicion = pos;
-        fichas = new ArrayList<Ficha>(2);
+        if (tipo == TipoCasilla.META){
+            fichas = new ArrayList<Ficha>(4);
+        }
+        else {
+            fichas = new ArrayList<Ficha>(2);
+        }
         this.tipo = tipo;
     }
 
@@ -46,6 +51,14 @@ public class Casilla {
 
     public ArrayList<Ficha> getFichas() {
         return fichas;
+    }
+
+    public Color getColorPrimeraFicha() {
+        return fichas.get(0).getColor();
+    }
+
+    public void eliminarPrimeraFicha() {
+        fichas.remove(0);
     }
 
     public void borrarFicha(Ficha f) {

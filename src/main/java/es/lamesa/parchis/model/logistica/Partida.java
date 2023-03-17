@@ -54,6 +54,35 @@ public class Partida {
         turno.siguienteTurno();
     }
 
+    public void sacarFicha(int id_ficha){
+        Ficha f = null;
+        int id_casilla = 0;
+        if (turno == Color.AMARILLO) {
+            id_casilla = 4;
+            f = new Ficha(turno, id_ficha, id_casilla);
+            amarillas.add(f);
+        }
+        else if (turno == Color.AZUL){
+            id_casilla = 21;
+            f = new Ficha(turno, id_ficha, id_casilla);
+            azules.add(f);
+        }
+        else if (turno == Color.ROJO){
+            id_casilla = 38;
+            f = new Ficha(turno, id_ficha, id_casilla);
+            rojas.add(f);
+        }
+        else if (turno == Color.VERDE){
+            id_casilla = 55;
+            f = new Ficha(turno, id_ficha, id_casilla);
+            verdes.add(f);
+        }
+        Casilla c = tablero.obtenerCasilla(id_casilla); 
+        c.anyadirFicha(f);
+    }
+
+    
+
     void comprobarMovimientos(int num_dado) {
         int id_casilla;
         ArrayList<Ficha> bloqueadas = new ArrayList<Ficha>();
@@ -70,30 +99,37 @@ public class Partida {
         else if (turno == Color.VERDE){
             fichas_del_turno = verdes;
         }
-
-        for(Ficha i : fichas_del_turno) {
-            id_casilla = i.getCasilla();
-            Casilla c = tablero.obtenerCasilla(id_casilla);
-            if (c.getTipoCasilla() == TipoCasilla.PASILLO){
-                if (c.getPosicion() + num_dado > 8){
-                    bloqueadas.add(i);   
+        if (fichas_del_turno.size() == 4){
+            num_dado++;
+        }
+        if (num_dado == 5 && fichas_del_turno.size() < 4){
+            sacarFicha(fichas_del_turno.size() + 1);
+        }
+        else {
+            for(Ficha i : fichas_del_turno) {
+                id_casilla = i.getCasilla();
+                Casilla c = tablero.obtenerCasilla(id_casilla);
+                if (c.getTipoCasilla() == TipoCasilla.PASILLO){
+                    if (c.getPosicion() + num_dado > 75){
+                        bloqueadas.add(i);   
+                    }
                 }
-            }
-            else{
-                if(tablero.obtenerFichas(id_casilla + num_dado) == 2) {
-                    bloqueadas.add(i);
-                }
-                else { 
-                    for(int j = id_casilla + 1; j < id_casilla+num_dado; j++) {
-                        if (tablero.obtenerFichas(j) == 2) {
-                            /*CONFIG.BLOQUEANTE_SOLO_SEGURO and TIPOCASILLA.SEGURO 
-                            * OR CONFIG.BLOQUEANTE_TODO -> bloquea ficha
-                            */
-                            if ((c.getTipoCasilla() == TipoCasilla.SEGURO &&
-                            config_barreras == ConfigBarreras.SOLO_SEGUROS) ||
-                            config_barreras == ConfigBarreras.TODAS_CASILLAS){
-                                bloqueadas.add(i);
-                                break;
+                else{
+                    if(tablero.obtenerFichas(id_casilla + num_dado) == 2) {
+                        bloqueadas.add(i);
+                    }
+                    else { 
+                        for(int j = id_casilla + 1; j < id_casilla+num_dado; j++) {
+                            if (tablero.obtenerFichas(j) == 2) {
+                                /*CONFIG.BLOQUEANTE_SOLO_SEGURO and TIPOCASILLA.SEGURO 
+                                * OR CONFIG.BLOQUEANTE_TODO -> bloquea ficha
+                                */
+                                if ((c.getTipoCasilla() == TipoCasilla.SEGURO &&
+                                config_barreras == ConfigBarreras.SOLO_SEGUROS) ||
+                                config_barreras == ConfigBarreras.TODAS_CASILLAS){
+                                    bloqueadas.add(i);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -121,23 +157,44 @@ public class Partida {
             f = verdes.get(id_ficha);
             id_casilla_prepasillo = 50;
         }
-
         int id_casilla = f.getCasilla();
         if (id_casilla + dado.getNum() >= id_casilla_prepasillo){
             //entrada a pasillo
-            f.setCasilla(67 + ((id_casilla + dado.getNum() - id_casilla_prepasillo)));
+            id_casilla = 67 + ((id_casilla + dado.getNum() - id_casilla_prepasillo));
+            f.setCasilla(id_casilla);
+            Casilla c = tablero.obtenerCasillaPasillo(id_casilla, turno);
+            c.anyadirFicha(f);
         } 
-        f.setCasilla(id_casilla+dado.getNum()); // actualizamos el atributo posición de la clase Ficha
-        Casilla c = tablero.obtenerCasilla(id_casilla); 
-        c.borrarFicha(f);
-        c = tablero.obtenerCasilla((id_casilla + dado.getNum()));
-        c.anyadirFicha(f);
+        else if (id_casilla > 67){
+            Casilla c = tablero.obtenerCasillaPasillo(id_casilla, turno);
+            c.borrarFicha(f);
+            id_casilla = id_casilla + dado.getNum();
+            f.setCasilla(id_casilla);
+            c = tablero.obtenerCasillaPasillo(id_casilla, turno);
+            c.anyadirFicha(f);
+            /*comprobar si han llegado la ficha a meta. Si sí, dos cosas
+             * 1. Enviar al frontend para elegir ficha con la q mover
+             *      10 posiciones.
+             * 2. Si han llegado las 4 fichas, indicar fin de partida
+            */
+        }
+        else {
+            f.setCasilla(id_casilla+dado.getNum()); // actualizamos el atributo posición de la clase Ficha
+            Casilla c = tablero.obtenerCasilla(id_casilla); 
+            c.borrarFicha(f);
+            c = tablero.obtenerCasilla((id_casilla + dado.getNum()));
+            if(c.getFichas().size() == 1 &&
+                c.getColorPrimeraFicha() != turno && 
+                c.getTipoCasilla() == TipoCasilla.COMUN) {
+                c.eliminarPrimeraFicha();
+                /* AVANZAR 20 CASILLAS (AVISAR FRONTEND) 
+                 * Para ello, hacer otra vez el comprobarMovimientos(20)
+                */
+            }
+            c.anyadirFicha(f);
+        }
+        
     }
-
-    //¿coger el número sacado del dado?
-    //¿ficha que un jugador ha escogido mover?
-    //etc
-
 }
 
 enum ConfigBarreras {

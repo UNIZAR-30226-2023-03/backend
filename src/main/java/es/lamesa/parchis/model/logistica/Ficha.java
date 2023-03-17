@@ -5,8 +5,10 @@ public class Ficha {
     private int id;
     private int casilla;
 
-    public Ficha(Color c) {
+    public Ficha(Color c, int id, int casilla) {
         color = c;
+        this.id = id;
+        this.casilla = casilla;
     }
 
     public Color getColor() {
