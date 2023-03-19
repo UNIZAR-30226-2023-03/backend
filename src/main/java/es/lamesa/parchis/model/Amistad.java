@@ -16,7 +16,6 @@ public class Amistad {
     @JoinColumn(name = "usuario2", referencedColumnName = "id")
     private Usuario usuario2;
     
-
     public Usuario getUsuario1() {
         return this.usuario1;
     }

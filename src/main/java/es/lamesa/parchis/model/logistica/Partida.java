@@ -54,8 +54,9 @@ public class Partida {
         turno.siguienteTurno();
     }
 
-    void comprobarMovimientos(int num_dado) {
+    public void comprobarMovimientos(int num_dado) {
         int id_casilla;
+        dado.setNum(num_dado);
         ArrayList<Ficha> bloqueadas = new ArrayList<Ficha>();
         if (turno == Color.AMARILLO) {
             for(Ficha i : amarillas) {
