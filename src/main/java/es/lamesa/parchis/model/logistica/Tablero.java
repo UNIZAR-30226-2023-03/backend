@@ -14,7 +14,10 @@ public class Tablero {
     /**
      * La lista de casillas que forman el pasillo del tablero.
      */
-    private ArrayList<Casilla> pasillo;
+    private ArrayList<Casilla> pasillo_amarillo;
+    private ArrayList<Casilla> pasillo_azul;
+    private ArrayList<Casilla> pasillo_rojo;
+    private ArrayList<Casilla> pasillo_verde;
     /**
      * Crea una nueva instancia de la clase Tablero, inicializando tanto el perímetro como el pasillo.
      */
@@ -70,17 +73,50 @@ public class Tablero {
      * Inicializa la lista de casillas que forman el pasillo del tablero.
      */
     public void inicializarPasillo() {
-		pasillo = new ArrayList<Casilla>(8);
+		pasillo_amarillo = new ArrayList<Casilla>(8);
+        pasillo_azul = new ArrayList<Casilla>(8);
+        pasillo_rojo = new ArrayList<Casilla>(8);
+        pasillo_verde = new ArrayList<Casilla>(8);
         Casilla c;
 		for (int i = 0; i < 8; i++) {
 			if (i == 7) {
-				c = new Casilla(i, TipoCasilla.META);
+				c = new Casilla(68+i, TipoCasilla.META);
 			} 
             else { 
-				c = new Casilla(i, TipoCasilla.PASILLO);
+				c = new Casilla(68+i, TipoCasilla.PASILLO);
 			}
-			pasillo.add(c);
+			pasillo_amarillo.add(c);
 		}
+        for (int i = 0; i < 8; i++) {
+			if (i == 7) {
+				c = new Casilla(68+i, TipoCasilla.META);
+			} 
+            else { 
+				c = new Casilla(68+i, TipoCasilla.PASILLO);
+			}
+			pasillo_azul.add(c);
+		}
+        for (int i = 0; i < 8; i++) {
+			if (i == 7) {
+				c = new Casilla(68+i, TipoCasilla.META);
+			} 
+            else { 
+				c = new Casilla(68+i, TipoCasilla.PASILLO);
+			}
+			pasillo_rojo.add(c);
+		}
+        for (int i = 0; i < 8; i++) {
+			if (i == 7) {
+				c = new Casilla(68+i, TipoCasilla.META);
+			} 
+            else { 
+				c = new Casilla(68+i, TipoCasilla.PASILLO);
+			}
+			pasillo_verde.add(c);
+		}
+        //pasillo_azul = new ArrayList<Casilla>(pasillo_amarillo);
+        //pasillo_rojo = new ArrayList<Casilla>(pasillo_amarillo);
+        //pasillo_verde = new ArrayList<Casilla>(pasillo_amarillo);
 	}
 
     public int obtenerFichas(int casilla){
@@ -96,5 +132,22 @@ public class Tablero {
 
     public Casilla obtenerCasilla(int casilla){
         return perimetro.get(casilla);
+    }
+
+    public Casilla obtenerCasillaPasillo(int casilla, Color c) {
+        Casilla fallo = new Casilla();
+        if(c == Color.AMARILLO) {
+            return pasillo_amarillo.get(casilla);
+        }
+        else if(c == Color.AZUL) {
+            return pasillo_azul.get(casilla);
+        }
+        else if(c == Color.ROJO) {
+            return pasillo_rojo.get(casilla);
+        }
+        else if(c == Color.VERDE) {
+            return pasillo_verde.get(casilla);
+        }
+        return fallo;
     }
 }

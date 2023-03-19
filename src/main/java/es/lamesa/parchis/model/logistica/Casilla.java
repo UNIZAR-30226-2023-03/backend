@@ -18,6 +18,8 @@ public class Casilla {
      * Tipo de la casilla.
      */
     private TipoCasilla tipo;
+
+    public Casilla() {}
     /**
      * Constructor de la casilla.
      * 
@@ -26,7 +28,12 @@ public class Casilla {
      */
     public Casilla(int pos, TipoCasilla tipo) {
         this.posicion = pos;
-        fichas = new ArrayList<Ficha>(2);
+        if (tipo == TipoCasilla.META){
+            fichas = new ArrayList<Ficha>(4);
+        }
+        else {
+            fichas = new ArrayList<Ficha>(2);
+        }
         this.tipo = tipo;
     }
 
@@ -46,8 +53,16 @@ public class Casilla {
         return fichas;
     }
 
-    public void actualizarFicha(Ficha f){
-        fichas.add(f);
+    public Color getColorPrimeraFicha() {
+        return fichas.get(0).getColor();
+    }
+
+    public void eliminarPrimeraFicha() {
+        fichas.remove(0);
+    }
+
+    public void borrarFicha(Ficha f) {
+        fichas.remove(f);
     }
 }
 /**
