@@ -54,9 +54,6 @@ public class Partida {
         turno.siguienteTurno();
     }
 
-<<<<<<< HEAD
-    public void comprobarMovimientos(int num_dado) {
-=======
     public void sacarFicha(int id_ficha){
         Ficha f = null;
         int id_casilla = 0;
@@ -87,7 +84,6 @@ public class Partida {
     
 
     void comprobarMovimientos(int num_dado) {
->>>>>>> d724333c5d38e6af60f620598e0ead163429cb1f
         int id_casilla;
         dado.setNum(num_dado);
         ArrayList<Ficha> bloqueadas = new ArrayList<Ficha>();
