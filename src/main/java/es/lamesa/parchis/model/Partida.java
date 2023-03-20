@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.ArrayList;
 
 @NoArgsConstructor
 @Data
@@ -49,6 +50,9 @@ public class Partida {
     }
 
     public void agnadirJugadores(UsuarioPartida jugador){
+        if (jugadores ==null){
+            jugadores = new ArrayList<UsuarioPartida>();
+        }
         jugadores.add(jugador);
     }
 
