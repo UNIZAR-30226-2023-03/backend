@@ -26,6 +26,9 @@ public class Partida {
     @Column
     private Color turno;
 
+    @Column
+    private String nombre;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ConfigBarreras config_barreras;
@@ -34,8 +37,8 @@ public class Partida {
     @Enumerated(EnumType.STRING)
     private EstadoPartida estado;
 
-    public Partida(Long id, UsuarioPartida jugador, ConfigBarreras config_barreras, EstadoPartida estado) {
-        this.id = id;
+    public Partida(String nombre, UsuarioPartida jugador, ConfigBarreras config_barreras, EstadoPartida estado) {
+        this.nombre = nombre;
         this.jugadores.add(jugador);
         this.config_barreras = config_barreras;
         this.estado = estado;

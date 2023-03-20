@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class PartidaDto {
 
-    private Long id;
+    private String nombre;
     private UsuarioPartida jugador;
     private ConfigBarreras configuracion;
 

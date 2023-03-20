@@ -16,7 +16,7 @@ public class PartidaService {
     PartidaRepository repository;
     
     public Partida crearPartida(PartidaDto partidaDto) {
-        Partida partida = new Partida(partidaDto.getId(), 
+        Partida partida = new Partida(partidaDto.getNombre(), 
                           partidaDto.getJugador(), partidaDto.getConfiguracion(), EstadoPartida.ESPERANDO_JUGADORES);
         return repository.save(partida);
     }
