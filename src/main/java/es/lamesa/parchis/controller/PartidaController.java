@@ -14,7 +14,6 @@ import es.lamesa.parchis.service.PartidaService;
 import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.dto.PartidaDto;
 
-
 @RestController
 @RequestMapping("/partida")
 public class PartidaController {
