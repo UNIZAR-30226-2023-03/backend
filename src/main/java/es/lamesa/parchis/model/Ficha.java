@@ -23,14 +23,3 @@ public class Ficha {
     private Casilla casilla;
     
 }
-
-enum Color {
-	AMARILLO,
-    AZUL,
-    ROJO,
-	VERDE;
-
-    public Color siguienteTurno() {
-        return values()[(ordinal() + 1) % values().length];
-    }
-}
