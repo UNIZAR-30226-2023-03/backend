@@ -18,12 +18,12 @@ public class Partida {
     @OneToMany(mappedBy = "partida")
     private List<UsuarioPartida> jugadores;
 
-    @OneToOne
-    @JoinColumn(name = "tablero_id")
-    private Tablero tablero;
+    // @OneToOne
+    // @JoinColumn(name = "tablero_id")
+    // private Tablero tablero;
 
-    @Column
-    private Color turno;
+    // @Column
+    // private Color turno;
 
     @Column
     private String nombre;
