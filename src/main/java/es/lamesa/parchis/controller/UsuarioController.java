@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import es.lamesa.parchis.service.UsuarioService;
 import es.lamesa.parchis.model.Usuario;
-import es.lamesa.parchis.model.dto.Login;
+import es.lamesa.parchis.model.dto.LoginDto;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -31,7 +31,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public boolean validarUsuario(@RequestBody Login request) {
+    public boolean validarUsuario(@RequestBody LoginDto request) {
         return service.validarUsuario(request.getLogin(), request.getPassword());
     }
 

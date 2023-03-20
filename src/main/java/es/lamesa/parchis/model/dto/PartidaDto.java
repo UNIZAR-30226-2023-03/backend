@@ -9,6 +9,7 @@ import lombok.Data;
 public class PartidaDto {
 
     private String nombre;
+    private String password;
     private UsuarioPartida jugador;
     private ConfigBarreras configuracion;
 
