@@ -1,8 +1,6 @@
 package es.lamesa.parchis.service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,6 @@ public class PartidaService {
     public Partida crearPartida(PartidaDto partidaDto) {
         if (pRepository.findByNombreAndEstado(partidaDto.getNombre()) == null) {
             Partida partida = new Partida();
-            partida.setId(UUID.randomUUID().toString());
             partida.setNombre(partidaDto.getNombre());
             partida.setPassword(partidaDto.getPassword());
             partida.setConfigBarreras(partidaDto.getConfiguracion());

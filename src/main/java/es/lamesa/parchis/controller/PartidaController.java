@@ -27,7 +27,7 @@ public class PartidaController {
     }
 
     @PostMapping("/crear")
-    public String crearPartida(@RequestBody PartidaDto request) {
+    public Long crearPartida(@RequestBody PartidaDto request) {
         return service.crearPartida(request).getId();
     }
     

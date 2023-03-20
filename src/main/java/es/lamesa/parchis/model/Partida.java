@@ -13,7 +13,8 @@ import java.util.List;
 public class Partida {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @OneToMany(mappedBy = "partida")
     private List<UsuarioPartida> jugadores;
