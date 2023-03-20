@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import es.lamesa.parchis.repository.PartidaRepository;
 import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.dto.PartidaDto;
+import es.lamesa.parchis.model.EstadoPartida;
 
 @Service
 public class PartidaService {
@@ -16,7 +17,7 @@ public class PartidaService {
     
     public Partida crearPartida(PartidaDto partidaDto) {
         Partida partida = new Partida(partidaDto.getId(), 
-                          partidaDto.getJugador(), partidaDto.getConfiguracion(), Partida.EstadoPartida.ESPERANDO_JUGADORES);
+                          partidaDto.getJugador(), partidaDto.getConfiguracion(), EstadoPartida.ESPERANDO_JUGADORES);
         return repository.save(partida);
     }
 

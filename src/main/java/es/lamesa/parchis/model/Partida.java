@@ -221,13 +221,3 @@ public class Partida {
 //     }
 }
 
-enum ConfigBarreras {
-    SOLO_SEGUROS,
-    TODAS_CASILLAS
-}
-
-enum EstadoPartida {
-    ESPERANDO_JUGADORES,
-    EN_PROGRESO,
-    FINALIZADA
-}

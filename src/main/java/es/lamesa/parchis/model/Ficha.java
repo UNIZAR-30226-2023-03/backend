@@ -21,7 +21,7 @@ public class Ficha {
     @ManyToOne
     @JoinColumn(name = "casilla_id")
     private Casilla casilla;
-
+    
 }
 
 enum Color {
