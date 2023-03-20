@@ -45,39 +45,11 @@ public class Partida {
     }
 
     public void agnadirJugadores(UsuarioPartida jugador){
+        if(jugadores.size() == 4) {
+            //EXCEPCION
+        }
         jugadores.add(jugador);
-    } 
-//     HashMap<Usuario,Color> colores_jugadores;
-    
-//     ArrayList<Ficha> amarillas;
-//     ArrayList<Ficha> azules;
-//     ArrayList<Ficha> rojas;
-//     ArrayList<Ficha> verdes;
-
-//     Partida(Usuario anfitrion, String configBarreras) {
-//         jugadores = new ArrayList<Usuario>(4);
-//         jugadores.add(anfitrion);
-//         if(configBarreras.contentEquals("Solo en seguros")) {
-//             config_barreras = ConfigBarreras.SOLO_SEGUROS;
-//         }
-//         else if(configBarreras.contentEquals("En todas las casillas")) {
-//             config_barreras = ConfigBarreras.TODAS_CASILLAS;
-//         }
-//         tablero = new Tablero();
-
-//         amarillas = new ArrayList<Ficha>(4);
-//         azules = new ArrayList<Ficha>(4);
-//         rojas = new ArrayList<Ficha>(4);
-//         verdes = new ArrayList<Ficha>(4);
-//     }
-
-//     boolean conectarse(Usuario user) {
-//         if(jugadores.size() == 4) {
-//             return false;
-//         }
-//         jugadores.add(user);
-//         return true;
-//     }
+    }
 
 //     void empezar() {
 //         // int n = random(0,3);
