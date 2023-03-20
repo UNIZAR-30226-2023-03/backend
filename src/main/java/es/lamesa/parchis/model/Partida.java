@@ -29,6 +29,9 @@ public class Partida {
     @Column
     private String nombre;
 
+    @Column
+    private String password;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ConfigBarreras config_barreras;
@@ -37,8 +40,9 @@ public class Partida {
     @Enumerated(EnumType.STRING)
     private EstadoPartida estado;
 
-    public Partida(String nombre, UsuarioPartida jugador, ConfigBarreras config_barreras, EstadoPartida estado) {
+    public Partida(String nombre, String password, UsuarioPartida jugador, ConfigBarreras config_barreras, EstadoPartida estado) {
         this.nombre = nombre;
+        this.password = password;
         this.jugadores.add(jugador);
         this.config_barreras = config_barreras;
         this.estado = estado;

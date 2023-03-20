@@ -27,5 +27,4 @@ public class PartidaController {
         return service.crearPartida(request).getId();
     }
     
-
 }
