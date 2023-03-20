@@ -14,9 +14,9 @@ public class PartidaService {
     @Autowired
     PartidaRepository repository;
     
-    public Partida crearPartida(PartidaDto partidaDto) {
-        // Partida partida = new Partida();
-        return repository.save(partida);
-    }
+    // public Partida crearPartida(PartidaDto partidaDto) {
+    //     Partida partida = new Partida();
+    //     return repository.save(partida);
+    // }
 
 }
