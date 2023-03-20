@@ -15,8 +15,8 @@ public class Tablero {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "tablero")
-    private Partida partida;
+    // @OneToOne(mappedBy = "tablero")
+    // private Partida partida;
 
     @OneToMany(mappedBy = "tablero")
     private List<Casilla> casillas;
