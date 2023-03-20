@@ -2,17 +2,18 @@ package es.lamesa.parchis.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "partida")
 public class Partida {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @OneToMany(mappedBy = "partida")
     private List<UsuarioPartida> jugadores;
@@ -32,17 +33,17 @@ public class Partida {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private ConfigBarreras config_barreras;
+    private ConfigBarreras configBarreras;
     
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private EstadoPartida estado;
 
-    public Partida(String nombre, String password, UsuarioPartida jugador, ConfigBarreras config_barreras, EstadoPartida estado) {
+    public Partida(String nombre, String password, UsuarioPartida jugador, ConfigBarreras configBarreras, EstadoPartida estado) {
         this.nombre = nombre;
         this.password = password;
         this.jugadores.add(jugador);
-        this.config_barreras = config_barreras;
+        this.configBarreras = configBarreras;
         this.estado = estado;
     }
 
@@ -131,8 +132,8 @@ public class Partida {
 //                                 * OR CONFIG.BLOQUEANTE_TODO -> bloquea ficha
 //                                 */
 //                                 if ((c.getTipoCasilla() == TipoCasilla.SEGURO &&
-//                                 config_barreras == ConfigBarreras.SOLO_SEGUROS) ||
-//                                 config_barreras == ConfigBarreras.TODAS_CASILLAS){
+//                                 configBarreras == ConfigBarreras.SOLO_SEGUROS) ||
+//                                 configBarreras == ConfigBarreras.TODAS_CASILLAS){
 //                                     bloqueadas.add(i);
 //                                     break;
 //                                 }

@@ -24,4 +24,11 @@ public class UsuarioPartida {
     @Column(name = "color")
     private Color color;
 
+    public UsuarioPartida(Usuario usuario, Partida partida, Color color) {
+        this.usuario = usuario;
+        this.partida = partida;
+        this.color = color;
+    }
 }
+
+    
