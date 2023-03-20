@@ -34,6 +34,12 @@ public class Partida {
     @Enumerated(EnumType.STRING)
     private EstadoPartida estado;
 
+    public Partida(Long id, UsuarioPartida jugador, ConfigBarreras config_barreras, EstadoPartida estado) {
+        this.id = id;
+        this.jugadores.add(jugador);
+        this.config_barreras = config_barreras;
+        this.estado = estado;
+    }
 //     HashMap<Usuario,Color> colores_jugadores;
     
 //     ArrayList<Ficha> amarillas;
