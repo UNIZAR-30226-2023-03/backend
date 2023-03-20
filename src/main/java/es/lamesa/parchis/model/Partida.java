@@ -43,6 +43,10 @@ public class Partida {
         this.config_barreras = config_barreras;
         this.estado = estado;
     }
+
+    public void agnadirJugadores(UsuarioPartida jugador){
+        jugadores.add(jugador);
+    } 
 //     HashMap<Usuario,Color> colores_jugadores;
     
 //     ArrayList<Ficha> amarillas;

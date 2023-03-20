@@ -18,7 +18,7 @@ import es.lamesa.parchis.model.dto.PartidaDto;
 
 @RestController
 @RequestMapping("/partida")
-public class PartidaControler {
+public class PartidaController {
     @Autowired
     PartidaService service;
     
@@ -26,6 +26,6 @@ public class PartidaControler {
     public Long crearPartida(@RequestBody PartidaDto request) {
         return service.crearPartida(request).getId();
     }
-
     
+
 }
