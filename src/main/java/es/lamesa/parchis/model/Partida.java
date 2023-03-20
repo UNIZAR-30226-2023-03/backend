@@ -3,9 +3,7 @@ package es.lamesa.parchis.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
 
 @Data
 @Entity
@@ -93,8 +91,8 @@ public class Partida {
 
 //     public void comprobarMovimientos(int num_dado) {
 //         int id_casilla;
-//         ArrayList<Ficha> bloqueadas = new ArrayList<Ficha>();
-//         ArrayList<Ficha> fichas_del_turno = new ArrayList<Ficha>();
+//         List<Ficha> bloqueadas = new List<Ficha>();
+//         List<Ficha> fichas_del_turno = new List<Ficha>();
 //         if (turno == Color.AMARILLO) {
 //             fichas_del_turno = amarillas;
 //         }

@@ -1,6 +1,6 @@
 package es.lamesa.parchis.service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +14,8 @@ public class UsuarioService {
     @Autowired
     UsuarioRepository repository;
     
-    public ArrayList<Usuario> getUsuarios() {
-        return (ArrayList<Usuario>) repository.findAll();
+    public List<Usuario> getUsuarios() {
+        return repository.findAll();
     }
 
     public Usuario addUsuario(Usuario usuario) {

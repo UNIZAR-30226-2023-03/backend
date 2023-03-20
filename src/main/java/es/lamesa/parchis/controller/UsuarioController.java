@@ -1,6 +1,6 @@
 package es.lamesa.parchis.controller;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +21,7 @@ public class UsuarioController {
     UsuarioService service;
     
     @GetMapping()
-    public ArrayList<Usuario> getUsuarios() {
+    public List<Usuario> getUsuarios() {
         return service.getUsuarios();
     }
 

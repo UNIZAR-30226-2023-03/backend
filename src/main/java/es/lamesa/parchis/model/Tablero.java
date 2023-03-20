@@ -1,8 +1,9 @@
 package es.lamesa.parchis.model;
 
-import jakarta.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.persistence.*;
+
 /**
  * La clase Tablero representa el tablero del juego Parchís.
  */
