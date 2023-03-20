@@ -37,6 +37,7 @@ public class PartidaService {
             partida.setPassword(partidaDto.getPassword());
             partida.setConfigBarreras(partidaDto.getConfiguracion());
             partida.setEstado(EstadoPartida.EN_PROGRESO);
+            partida = pRepository.save(partida);
             UsuarioPartida up = new UsuarioPartida(uRepository.findById(partidaDto.getJugador()).get(), partida, Color.AMARILLO);
             partida.agnadirJugadores(up);
             return pRepository.save(partida);
