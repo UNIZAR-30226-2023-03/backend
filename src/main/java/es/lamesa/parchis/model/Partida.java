@@ -49,9 +49,6 @@ public class Partida {
     }
 
     public void agnadirJugadores(UsuarioPartida jugador){
-        if(jugadores.size() == 4) {
-            //EXCEPCION
-        }
         jugadores.add(jugador);
     }
 
