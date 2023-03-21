@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import es.lamesa.parchis.repository.UsuarioRepository;
 import es.lamesa.parchis.model.Usuario;
+import es.lamesa.parchis.model.dto.UsuarioDto;
 
 @Service
 public class UsuarioService {
@@ -18,9 +19,13 @@ public class UsuarioService {
         return repository.findAll();
     }
 
-    public Usuario addUsuario(Usuario usuario) {
-        usuario.encriptarPassword();
-        return repository.save(usuario);
+    public Usuario addUsuario(UsuarioDto usuario) {
+        Usuario u = new Usuario();
+        u.setEmail(usuario.getEmail());
+        u.setUsername(usuario.getUsername());
+        u.setPassword(usuario.getPassword());
+        u.encriptarPassword();
+        return repository.save(u);
     }
 
     public boolean validarUsuario(String login, String password) {
