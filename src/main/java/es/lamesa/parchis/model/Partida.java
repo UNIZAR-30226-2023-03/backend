@@ -18,7 +18,7 @@ public class Partida {
     private Long id;
 
     @OneToMany(mappedBy = "partida")
-    private List<UsuarioPartida> jugadores = new ArrayList<>();
+    private List<UsuarioPartida> jugadores = new ArrayList<>(4);
 
     // @OneToOne
     // @JoinColumn(name = "tablero_id")

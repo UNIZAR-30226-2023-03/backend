@@ -48,7 +48,7 @@ public class PartidaService {
             up.setColor(Color.AMARILLO);
             partida.getJugadores().add(up);
             usuario.getPartidas().add(up);
-            upRepository.save(up);
+            // upRepository.save(up);
             uRepository.save(usuario);
             return pRepository.save(partida);
         }
