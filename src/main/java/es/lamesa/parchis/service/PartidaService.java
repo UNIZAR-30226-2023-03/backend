@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.lamesa.parchis.repository.PartidaRepository;
-import es.lamesa.parchis.repository.UsuarioRepository;
 import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.EstadoPartida;
@@ -18,17 +17,14 @@ import es.lamesa.parchis.model.dto.PartidaDto;
 public class PartidaService {
     
     @Autowired
-    PartidaRepository pRepository;
-
-    @Autowired
-    UsuarioRepository uRepository;
+    PartidaRepository repository;
      
     public List<Partida> getPartidas() {
-        return pRepository.findAll();
+        return repository.findAll();
     }
     
     public Partida crearPartidaPrivada(PartidaDto partidaDto) {
-        if (pRepository.findByNombreAndEstado(partidaDto.getNombre()) == null) {
+        if (repository.findByNombreAndEstado(partidaDto.getNombre()) == null) {
             Partida partida = new Partida();
             partida.setNombre(partidaDto.getNombre());
             partida.setPassword(partidaDto.getPassword());
@@ -45,14 +41,14 @@ public class PartidaService {
 
             partida.getJugadores().add(up);
             
-            return pRepository.save(partida);
+            return repository.save(partida);
         }
         return null;
     }
     
     public Partida conectarPartidaPrivada(PartidaDto partidaDto) {
 		Partida partida = new Partida();
-		partida = pRepository.buscarPartida(partidaDto.getNombre(), partidaDto.getConfiguracion());
+		partida = repository.buscarPartida(partidaDto.getNombre(), partidaDto.getConfiguracion());
         if (partida != null) {
             if (partidaDto.getPassword().contentEquals(partida.getPassword())) {
                 Usuario usuario = new Usuario();
@@ -67,7 +63,7 @@ public class PartidaService {
                     partida.setEstado(EstadoPartida.EN_PROGRESO);
                 }
 
-                partida = pRepository.save(partida);
+                partida = repository.save(partida);
                 return partida;
             }
         }
