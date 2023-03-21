@@ -1,7 +1,8 @@
 package es.lamesa.parchis.model;
 
-import jakarta.persistence.*;
 import java.util.ArrayList;
+
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data

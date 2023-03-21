@@ -1,10 +1,10 @@
 package es.lamesa.parchis.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @NoArgsConstructor
 @Data

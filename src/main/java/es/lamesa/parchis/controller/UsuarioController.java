@@ -26,7 +26,7 @@ public class UsuarioController {
         return service.getUsuarios();
     }
 
-    @PostMapping()
+    @PostMapping("/crear")
     public Usuario addUsuario(@RequestBody UsuarioDto usuario) {
         return service.addUsuario(usuario);
     }

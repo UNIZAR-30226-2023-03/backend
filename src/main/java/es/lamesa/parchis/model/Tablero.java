@@ -3,10 +3,12 @@ package es.lamesa.parchis.model;
 import java.util.List;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 /**
  * La clase Tablero representa el tablero del juego Parchís.
  */
+@Data
 @Entity
 @Table(name = "tablero")
 public class Tablero {

@@ -1,12 +1,12 @@
 package es.lamesa.parchis.model;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import java.util.List;
-import java.util.ArrayList;
 
 @NoArgsConstructor
 @Data
