@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @NoArgsConstructor
 @Data
 @Entity
@@ -14,10 +16,12 @@ public class UsuarioPartida {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "partida_id")
     private Partida partida;

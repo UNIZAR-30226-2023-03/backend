@@ -1,6 +1,9 @@
 package es.lamesa.parchis.model;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class Usuario {
     @Column(nullable = false, columnDefinition = "int default 0")
     private int numMonedas;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<UsuarioPartida> partidas = new ArrayList<>();
 

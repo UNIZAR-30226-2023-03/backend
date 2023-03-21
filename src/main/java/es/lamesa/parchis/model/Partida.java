@@ -3,6 +3,7 @@ package es.lamesa.parchis.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class Partida {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "partida", cascade = CascadeType.ALL)
     private List<UsuarioPartida> jugadores = new ArrayList<>(4);
 
