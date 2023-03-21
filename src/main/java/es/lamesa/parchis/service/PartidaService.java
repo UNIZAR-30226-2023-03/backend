@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.lamesa.parchis.repository.PartidaRepository;
+import es.lamesa.parchis.repository.UsuarioPartidaRepository;
 import es.lamesa.parchis.repository.UsuarioRepository;
 import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.Usuario;
@@ -22,6 +23,9 @@ public class PartidaService {
 
     @Autowired
     UsuarioRepository uRepository;
+
+    @Autowired
+    UsuarioPartidaRepository upRepository;
      
     public List<Partida> getPartidas() {
         return pRepository.findAll();
@@ -34,11 +38,15 @@ public class PartidaService {
             partida.setPassword(partidaDto.getPassword());
             partida.setConfigBarreras(partidaDto.getConfiguracion());
             partida.setEstado(EstadoPartida.ESPERANDO_JUGADORES);
+            System.out.println("Hola");
             partida = pRepository.save(partida);
+            System.out.println("Adios");
             Usuario usuario = uRepository.findById(partidaDto.getJugador()).get();
             UsuarioPartida up = new UsuarioPartida(usuario, partida, Color.AMARILLO);
             partida.addJugador(up);
             usuario.addPartida(up);
+            upRepository.save(up);
+            uRepository.save(usuario);
             return pRepository.save(partida);
         }
         return null;
