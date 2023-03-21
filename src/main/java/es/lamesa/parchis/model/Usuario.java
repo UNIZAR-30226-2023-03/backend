@@ -1,6 +1,7 @@
 package es.lamesa.parchis.model;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -28,11 +29,15 @@ public class Usuario {
     private int numMonedas;
 
     @OneToMany(mappedBy = "usuario")
-    private List<UsuarioPartida> partidas;
+    private List<UsuarioPartida> partidas = new ArrayList<>();
 
     public void encriptarPassword() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         this.password = encoder.encode(password);
+    }
+
+    public void addPartida(UsuarioPartida p) {
+        partidas.add(p);
     }
 
 }

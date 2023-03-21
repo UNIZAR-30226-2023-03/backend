@@ -18,7 +18,7 @@ public class Partida {
     private Long id;
 
     @OneToMany(mappedBy = "partida")
-    private List<UsuarioPartida> jugadores;
+    private List<UsuarioPartida> jugadores = new ArrayList<>();
 
     // @OneToOne
     // @JoinColumn(name = "tablero_id")
@@ -49,11 +49,10 @@ public class Partida {
         this.estado = estado;
     }
 
-    public void agnadirJugadores(UsuarioPartida jugador){
-        if (jugadores ==null){
-            jugadores = new ArrayList<UsuarioPartida>();
+    public void addJugador(UsuarioPartida jugador) {
+        if (jugadores.size() < 4) {
+            jugadores.add(jugador);
         }
-        jugadores.add(jugador);
     }
 
 //     void empezar() {
