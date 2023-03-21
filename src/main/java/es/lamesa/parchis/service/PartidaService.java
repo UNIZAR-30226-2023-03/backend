@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import es.lamesa.parchis.repository.PartidaRepository;
 import es.lamesa.parchis.repository.UsuarioPartidaRepository;
@@ -32,7 +31,6 @@ public class PartidaService {
         return pRepository.findAll();
     }
     
-    @Transactional
     public Partida crearPartida(PartidaDto partidaDto) {
         if (pRepository.findByNombreAndEstado(partidaDto.getNombre()) == null) {
             Partida partida = new Partida();
