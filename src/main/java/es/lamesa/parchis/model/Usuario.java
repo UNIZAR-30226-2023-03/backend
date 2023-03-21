@@ -28,7 +28,7 @@ public class Usuario {
     @Column(nullable = false, columnDefinition = "int default 0")
     private int numMonedas;
 
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<UsuarioPartida> partidas = new ArrayList<>();
 
     public void encriptarPassword() {

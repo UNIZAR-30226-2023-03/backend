@@ -17,7 +17,7 @@ public class Partida {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "partida")
+    @OneToMany(mappedBy = "partida", cascade = CascadeType.ALL)
     private List<UsuarioPartida> jugadores = new ArrayList<>(4);
 
     // @OneToOne

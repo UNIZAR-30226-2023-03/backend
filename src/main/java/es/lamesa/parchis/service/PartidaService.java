@@ -38,18 +38,18 @@ public class PartidaService {
             partida.setPassword(partidaDto.getPassword());
             partida.setConfigBarreras(partidaDto.getConfiguracion());
             partida.setEstado(EstadoPartida.ESPERANDO_JUGADORES);
-            System.out.println("Hola");
             partida = pRepository.save(partida);
-            System.out.println("Adios");
+
             Usuario usuario = uRepository.findById(partidaDto.getJugador()).get();
+            
             UsuarioPartida up = new UsuarioPartida();
             up.setUsuario(usuario);
             up.setPartida(partida);
             up.setColor(Color.AMARILLO);
+
             partida.getJugadores().add(up);
             usuario.getPartidas().add(up);
-            // upRepository.save(up);
-            uRepository.save(usuario);
+
             return pRepository.save(partida);
         }
         return null;
