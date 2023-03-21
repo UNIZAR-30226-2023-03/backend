@@ -40,7 +40,6 @@ public class PartidaService {
             partida.setPassword(partidaDto.getPassword());
             partida.setConfigBarreras(partidaDto.getConfiguracion());
             partida.setEstado(EstadoPartida.ESPERANDO_JUGADORES);
-            partida = pRepository.save(partida);
 
             Usuario usuario = uRepository.findById(partidaDto.getJugador()).get();
             
@@ -51,11 +50,12 @@ public class PartidaService {
 
             partida.getJugadores().add(up);
             usuario.getPartidas().add(up);
-
+            
+            partida = pRepository.save(partida);
             uRepository.save(usuario);
-            return pRepository.save(partida);
+            
+            return partida;
         }
         return null;
     }
-
 }
