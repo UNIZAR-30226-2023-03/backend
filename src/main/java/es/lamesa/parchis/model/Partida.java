@@ -49,12 +49,6 @@ public class Partida {
         this.estado = estado;
     }
 
-    public void addJugador(UsuarioPartida jugador) {
-        if (jugadores.size() < 4) {
-            jugadores.add(jugador);
-        }
-    }
-
 //     void empezar() {
 //         // int n = random(0,3);
 //         turno = Color.ROJO;

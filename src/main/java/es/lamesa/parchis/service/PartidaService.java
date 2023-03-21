@@ -42,9 +42,12 @@ public class PartidaService {
             partida = pRepository.save(partida);
             System.out.println("Adios");
             Usuario usuario = uRepository.findById(partidaDto.getJugador()).get();
-            UsuarioPartida up = new UsuarioPartida(usuario, partida, Color.AMARILLO);
-            partida.addJugador(up);
-            usuario.addPartida(up);
+            UsuarioPartida up = new UsuarioPartida();
+            up.setUsuario(usuario);
+            up.setPartida(partida);
+            up.setColor(Color.AMARILLO);
+            partida.getJugadores().add(up);
+            usuario.getPartidas().add(up);
             upRepository.save(up);
             uRepository.save(usuario);
             return pRepository.save(partida);

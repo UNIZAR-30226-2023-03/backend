@@ -36,8 +36,4 @@ public class Usuario {
         this.password = encoder.encode(password);
     }
 
-    public void addPartida(UsuarioPartida p) {
-        partidas.add(p);
-    }
-
 }
