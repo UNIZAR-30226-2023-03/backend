@@ -44,12 +44,12 @@ public class UsuarioController {
     }
 
     @PostMapping("/enviar-solicitud")
-    public boolean enviarSolicitud(@RequestBody RequestAmistad request){
+    public boolean enviarSolicitud(@RequestBody RequestAmistad request) {
         return service.enviarSolicitud(request);
     }
 
-    @PostMapping("/mostra-solicitud/{id}")
-    public List<Usuario> mostrarSolicitudes(@PathVariable("id") Long id){
+    @PostMapping("/solicitudes/{id}")
+    public List<Usuario> mostrarSolicitudes(@PathVariable("id") Long id) {
         return service.mostrarSolicitudes(id);
     }
 }
