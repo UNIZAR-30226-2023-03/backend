@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import es.lamesa.parchis.repository.UsuarioRepository;
+import es.lamesa.parchis.model.Amistad;
 import es.lamesa.parchis.model.Usuario;
+import es.lamesa.parchis.model.dto.RequestAmistad;
 import es.lamesa.parchis.model.dto.UsuarioDto;
+
 
 @Service
 public class UsuarioService {
@@ -43,5 +46,18 @@ public class UsuarioService {
     public void borrarUsuario(Long id) {
         repository.deleteById(id);
     }
-
+    
+    public boolean enviarSolicitud(RequestAmistad amistad) {
+        Amistad a = new Amistad();
+        Usuario usuario = new Usuario();
+        Usuario amigo = new Usuario();
+        amigo.setId(amistad.getAmigo());
+        a.setUsuario(usuario);
+        usuario.setId(amistad.getUsuario());
+        a.setUsuario(usuario);                                   
+        a.setAceptado(false);
+        usuario.getAmigos().add(amigo); 
+        repository.save(usuario);            
+        return true;
+    }
 }

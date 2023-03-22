@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import es.lamesa.parchis.service.UsuarioService;
 import es.lamesa.parchis.model.dto.UsuarioDto;
+import es.lamesa.parchis.model.dto.RequestAmistad;
 import es.lamesa.parchis.model.dto.LoginDto;
 import es.lamesa.parchis.model.Usuario;
 
@@ -40,5 +41,10 @@ public class UsuarioController {
     public String borrarUsuario(@PathVariable("id") Long id) {
         service.borrarUsuario(id);
         return "Usuario eliminado con exito";
+    }
+
+    @PostMapping("/enviar-solicitud")
+    public boolean enviarSolicitud(@RequestBody RequestAmistad request){
+        return service.enviarSolicitud(request);
     }
 }
