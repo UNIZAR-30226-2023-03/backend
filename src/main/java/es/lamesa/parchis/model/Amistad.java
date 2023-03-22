@@ -9,13 +9,18 @@ import lombok.Data;
 public class Amistad {
     
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne
-    @JoinColumn(name = "usuario1", referencedColumnName = "id")
-    private Usuario usuario1;
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
     
-    @Id
     @ManyToOne
-    @JoinColumn(name = "usuario2", referencedColumnName = "id")
-    private Usuario usuario2;
+    @JoinColumn(name = "amigo_id")
+    private Usuario amigo;
+
+    @Column(nullable = false)
+    private boolean aceptado;
     
 }

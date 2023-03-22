@@ -35,6 +35,13 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<UsuarioPartida> partidas = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(
+        name = "amistad",
+        joinColumns = @JoinColumn(name = "usuario_id"),
+        inverseJoinColumns = @JoinColumn(name = "amigo_id"))
+    private List<Usuario> amigos = new ArrayList<>();
+
     public void encriptarPassword() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         this.password = encoder.encode(password);
