@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import es.lamesa.parchis.service.PartidaService;
 import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.dto.PartidaDto;
+import es.lamesa.parchis.model.dto.RequestPartidaPublica;
 
 @RestController
 @RequestMapping("/partida")
@@ -35,4 +36,8 @@ public class PartidaController {
         return service.conectarPartidaPrivada(request).getId();
     }
     
+    @PostMapping("/publica")
+    public Long jugarPartidaPublica(@RequestBody RequestPartidaPublica request) {
+        return service.jugarPartidaPublica(request).getId();
+    }
 }
