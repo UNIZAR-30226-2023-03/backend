@@ -47,4 +47,9 @@ public class UsuarioController {
     public boolean enviarSolicitud(@RequestBody RequestAmistad request){
         return service.enviarSolicitud(request);
     }
+
+    @PostMapping("/mostra-solicitud/{id}")
+    public List<Usuario> mostrarSolicitudes(@PathVariable("id") Long id){
+        return service.mostrarSolicitudes(id);
+    }
 }

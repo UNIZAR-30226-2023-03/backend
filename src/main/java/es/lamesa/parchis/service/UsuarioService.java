@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import es.lamesa.parchis.repository.UsuarioRepository;
+import es.lamesa.parchis.repository.AmistadRepository;
 import es.lamesa.parchis.model.Amistad;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.dto.RequestAmistad;
@@ -16,10 +17,12 @@ import es.lamesa.parchis.model.dto.UsuarioDto;
 @Service
 public class UsuarioService {
     @Autowired
-    UsuarioRepository repository;
-    
+    UsuarioRepository uRepository;
+    @Autowired
+    AmistadRepository aRepository;
+
     public List<Usuario> getUsuarios() {
-        return repository.findAll();
+        return uRepository.findAll();
     }
 
     public Usuario addUsuario(UsuarioDto usuario) {
@@ -28,11 +31,11 @@ public class UsuarioService {
         u.setUsername(usuario.getUsername());
         u.setPassword(usuario.getPassword());
         u.encriptarPassword();
-        return repository.save(u);
+        return uRepository.save(u);
     }
 
     public boolean validarUsuario(String login, String password) {
-        Usuario usuario = repository.findByUsernameOrEmail(login);
+        Usuario usuario = uRepository.findByUsernameOrEmail(login);
         if (usuario == null) {
             return false;
         }
@@ -44,7 +47,7 @@ public class UsuarioService {
     }
 
     public void borrarUsuario(Long id) {
-        repository.deleteById(id);
+        uRepository.deleteById(id);
     }
     
     public boolean enviarSolicitud(RequestAmistad amistad) {
@@ -57,7 +60,11 @@ public class UsuarioService {
         a.setUsuario(usuario);                                   
         a.setAceptado(false);
         usuario.getAmigos().add(amigo); 
-        repository.save(usuario);            
+        uRepository.save(usuario);            
         return true;
+    }
+
+    public List<Usuario> mostrarSolicitudes(Long id){
+        return aRepository.findByAmigoAndAceptado(id,false);
     }
 }
