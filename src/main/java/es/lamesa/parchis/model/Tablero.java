@@ -209,73 +209,73 @@ public class Tablero {
     //     //pasillo_verde = new ArrayList<Casilla>(pasillo_amarillo);
 	// }*/
 
-    public int contarFichas(Color color) {
-        int n = 0;
-        for(Casilla c : casillas) {
-            for (Ficha f : c.getFichas()) {
-                if(f.getColor() == color) {
-                    n++;
-                }
-            }
-        }
-        return n;
-    }
+    // public int contarFichas(Color color) {
+    //     int n = 0;
+    //     for(Casilla c : casillas) {
+    //         for (Ficha f : c.getFichas()) {
+    //             if(f.getColor() == color) {
+    //                 n++;
+    //             }
+    //         }
+    //     }
+    //     return n;
+    // }
     
-    public Ficha buscarFicha(int numero_ficha, Color color) {
-        for (Casilla c : casillas) {
-            for (Ficha f : c.getFichas()) {
-                if(f.getNumero() == numero_ficha && f.getColor() == color) {
-                    return f;
-                }
-            }
-        }
-        return null;
-    }
+    // public Ficha buscarFicha(int numero_ficha, Color color) {
+    //     for (Casilla c : casillas) {
+    //         for (Ficha f : c.getFichas()) {
+    //             if(f.getNumero() == numero_ficha && f.getColor() == color) {
+    //                 return f;
+    //             }
+    //         }
+    //     }
+    //     return null;
+    // }
 
-    public int obtenerFichas(int casilla){
-        int n_fichas = 0;
-        for (Casilla c : casillas){
-            if(c.getPosicion() == casilla) {
-                n_fichas = c.getFichas().size();
-                break;
-            }
-        }
-        return n_fichas;
-    }
+    // public int obtenerFichas(int casilla){
+    //     int n_fichas = 0;
+    //     for (Casilla c : casillas){
+    //         if(c.getPosicion() == casilla) {
+    //             n_fichas = c.getFichas().size();
+    //             break;
+    //         }
+    //     }
+    //     return n_fichas;
+    // }
 
     // public Casilla obtenerCasillaPerimetro(int casilla){
     //     return casillas.get(casilla);
     // }
 
-    public Casilla obtenerCasillaPasillo(int casilla, Color c) {
-        if(c == Color.AMARILLO) {
-            for (Casilla ca : casillas) {
-                if(ca.getPosicion() == casilla && ca.getTipo() == TipoCasilla.PASILLO_AMARILLO) {
-                    return ca;
-                }
-            }
-        }
-        else if(c == Color.AZUL) {
-            for (Casilla ca : casillas) {
-                if(ca.getPosicion() == casilla && ca.getTipo() == TipoCasilla.PASILLO_AZUL) {
-                    return ca;
-                }
-            }
-        }
-        else if(c == Color.ROJO) {
-            for (Casilla ca : casillas) {
-                if(ca.getPosicion() == casilla && ca.getTipo() == TipoCasilla.PASILLO_ROJO) {
-                    return ca;
-                }
-            }
-        }
-        else if(c == Color.VERDE) {
-            for (Casilla ca : casillas) {
-                if(ca.getPosicion() == casilla && ca.getTipo() == TipoCasilla.PASILLO_VERDE) {
-                    return ca;
-                }
-            }
-        }
-        return null;
-    }
+    // public Casilla obtenerCasillaPasillo(int casilla, Color c) {
+    //     if(c == Color.AMARILLO) {
+    //         for (Casilla ca : casillas) {
+    //             if(ca.getPosicion() == casilla && ca.getTipo() == TipoCasilla.PASILLO_AMARILLO) {
+    //                 return ca;
+    //             }
+    //         }
+    //     }
+    //     else if(c == Color.AZUL) {
+    //         for (Casilla ca : casillas) {
+    //             if(ca.getPosicion() == casilla && ca.getTipo() == TipoCasilla.PASILLO_AZUL) {
+    //                 return ca;
+    //             }
+    //         }
+    //     }
+    //     else if(c == Color.ROJO) {
+    //         for (Casilla ca : casillas) {
+    //             if(ca.getPosicion() == casilla && ca.getTipo() == TipoCasilla.PASILLO_ROJO) {
+    //                 return ca;
+    //             }
+    //         }
+    //     }
+    //     else if(c == Color.VERDE) {
+    //         for (Casilla ca : casillas) {
+    //             if(ca.getPosicion() == casilla && ca.getTipo() == TipoCasilla.PASILLO_VERDE) {
+    //                 return ca;
+    //             }
+    //         }
+    //     }
+    //     return null;
+    // }
 }
