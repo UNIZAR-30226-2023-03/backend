@@ -66,45 +66,33 @@ public class Partida {
         int id_casilla = 0;
         if (turno == Color.AMARILLO) {
             id_casilla = 4;
-            f = new Ficha(turno, id_ficha, id_casilla);
-            amarillas.add(f);
         }
         else if (turno == Color.AZUL){
             id_casilla = 21;
-            f = new Ficha(turno, id_ficha, id_casilla);
-            azules.add(f);
         }
         else if (turno == Color.ROJO){
             id_casilla = 38;
-            f = new Ficha(turno, id_ficha, id_casilla);
-            rojas.add(f);
         }
         else if (turno == Color.VERDE){
             id_casilla = 55;
-            f = new Ficha(turno, id_ficha, id_casilla);
-            verdes.add(f);
         }
-        Casilla c = tablero.obtenerCasilla(id_casilla); 
-        c.anyadirFicha(f);
+        Casilla c = tablero.getCasillas().get(id_casilla);
+        f = new Ficha(turno, id_ficha, c);
+        c.getFichas().add(f);
+        //HACER SAVES CON REPOSITORY
     }
 
     public void comprobarMovimientos(int num_dado) {
         int id_casilla;
-        List<Ficha> bloqueadas = new List<Ficha>();
-        List<Ficha> fichas_del_turno = new List<Ficha>();
-        if (turno == Color.AMARILLO) {
-            fichas_del_turno = amarillas;
+        List<Ficha> bloqueadas = new ArrayList<Ficha>();
+        List<Ficha> fichas_del_turno = new ArrayList<Ficha>();
+        Ficha f = null;
+        int n = tablero.contarFichas(turno);
+        for(int i = 1; i <= n; i++) {
+            f = tablero.buscarFicha(i, turno);
+            fichas_del_turno.add(f);
         }
-        else if (turno == Color.AZUL){
-            fichas_del_turno = azules;
-        }
-        else if (turno == Color.ROJO){
-            fichas_del_turno = rojas;
-        }
-        else if (turno == Color.VERDE){
-            fichas_del_turno = verdes;
-        }
-        if (fichas_del_turno.size() == 4){
+        if (fichas_del_turno.size() == 4){ //¿ESTO?
             num_dado++;
         }
         if (num_dado == 5 && fichas_del_turno.size() < 4){
@@ -112,11 +100,33 @@ public class Partida {
         }
         else {
             for(Ficha i : fichas_del_turno) {
-                id_casilla = i.getCasilla();
-                Casilla c = tablero.obtenerCasilla(id_casilla);
-                if (c.getTipoCasilla() == TipoCasilla.PASILLO){
-                    if (c.getPosicion() + num_dado > 75){
-                        bloqueadas.add(i);   
+                id_casilla = i.getCasilla().getPosicion();
+                if(turno == Color.AMARILLO) {
+                    if (i.getCasilla().getTipo() == TipoCasilla.PASILLO_AMARILLO){
+                        if (id_casilla + num_dado > 75){
+                            bloqueadas.add(i);   
+                        }
+                    }
+                }
+                else if(turno == Color.AZUL) {
+                    if (i.getCasilla().getTipo() == TipoCasilla.PASILLO_AZUL){
+                        if (id_casilla + num_dado > 75){
+                            bloqueadas.add(i);   
+                        }
+                    }
+                }
+                else if(turno == Color.ROJO) {
+                    if (i.getCasilla().getTipo() == TipoCasilla.PASILLO_ROJO){
+                        if (id_casilla + num_dado > 75){
+                            bloqueadas.add(i);   
+                        }
+                    }
+                }
+                else if(turno == Color.VERDE) {
+                    if (i.getCasilla().getTipo() == TipoCasilla.PASILLO_VERDE){
+                        if (id_casilla + num_dado > 75){
+                            bloqueadas.add(i);   
+                        }
                     }
                 }
                 else{
@@ -129,7 +139,7 @@ public class Partida {
                                 /*CONFIG.BLOQUEANTE_SOLO_SEGURO and TIPOCASILLA.SEGURO 
                                 * OR CONFIG.BLOQUEANTE_TODO -> bloquea ficha
                                 */
-                                if ((c.getTipoCasilla() == TipoCasilla.SEGURO &&
+                                if ((i.getCasilla().getTipo() == TipoCasilla.SEGURO &&
                                 configBarreras == ConfigBarreras.SOLO_SEGUROS) ||
                                 configBarreras == ConfigBarreras.TODAS_CASILLAS){
                                     bloqueadas.add(i);
@@ -144,31 +154,29 @@ public class Partida {
     }
 
     public void realizarMovimiento(int id_ficha, int dado) {
-        Ficha f = null;
+        Ficha f = tablero.buscarFicha(id_ficha, turno);
         int id_casilla_prepasillo = 0;
         if (turno == Color.AMARILLO) {
-            f = amarillas.get(id_ficha);
             id_casilla_prepasillo = 67;
         }
         else if (turno == Color.AZUL){
-            f = azules.get(id_ficha);
             id_casilla_prepasillo = 16;
         }
         else if (turno == Color.ROJO){
-            f = rojas.get(id_ficha);
             id_casilla_prepasillo = 33;
         }
         else if (turno == Color.VERDE){
-            f = verdes.get(id_ficha);
             id_casilla_prepasillo = 50;
         }
-        int id_casilla = f.getCasilla();
+        int id_casilla = f.getCasilla().getPosicion();
         if (id_casilla + dado >= id_casilla_prepasillo){
             //entrada a pasillo
             id_casilla = 67 + ((id_casilla + dado - id_casilla_prepasillo));
-            f.setCasilla(id_casilla);
+            f.getCasilla().getFichas().remove(f);
             Casilla c = tablero.obtenerCasillaPasillo(id_casilla, turno);
-            c.anyadirFicha(f);
+            c.getFichas().add(f);
+            f.setCasilla(c);
+            //HACER SAVE?
         } 
         else if (id_casilla > 67){
             Casilla c = tablero.obtenerCasillaPasillo(id_casilla, turno);
@@ -177,6 +185,7 @@ public class Partida {
             f.setCasilla(id_casilla);
             c = tablero.obtenerCasillaPasillo(id_casilla, turno);
             c.anyadirFicha(f);
+            //HACER SAVE?
             /*comprobar si han llegado la ficha a meta. Si sí, dos cosas
              * 1. Enviar al frontend para elegir ficha con la q mover
              *      10 posiciones.
@@ -197,6 +206,7 @@ public class Partida {
                 */
             }
             c.anyadirFicha(f);
+            //HACER SAVE?
         }  
     }
 }
