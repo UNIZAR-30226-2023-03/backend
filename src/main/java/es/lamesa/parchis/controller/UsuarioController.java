@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import es.lamesa.parchis.service.UsuarioService;
 import es.lamesa.parchis.model.dto.UsuarioDto;
 import es.lamesa.parchis.model.dto.RequestAmistad;
+import es.lamesa.parchis.model.dto.RequestRespuestaAmistad;
 import es.lamesa.parchis.model.dto.LoginDto;
 import es.lamesa.parchis.model.Usuario;
 
@@ -52,4 +53,10 @@ public class UsuarioController {
     public List<Usuario> mostrarSolicitudes(@PathVariable("id") Long id) {
         return service.mostrarSolicitudes(id);
     }
+
+    @PostMapping("/contestar-solicitud/{id}")
+    public void setSolicitudes(@RequestBody RequestRespuestaAmistad request) {
+        service.setSolicitudes(request);
+    }
 }
+

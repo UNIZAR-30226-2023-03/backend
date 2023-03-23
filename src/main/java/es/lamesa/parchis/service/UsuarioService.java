@@ -12,6 +12,7 @@ import es.lamesa.parchis.model.Amistad;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.dto.RequestAmistad;
 import es.lamesa.parchis.model.dto.UsuarioDto;
+import es.lamesa.parchis.model.dto.RequestRespuestaAmistad;
 
 
 @Service
@@ -66,5 +67,9 @@ public class UsuarioService {
 
     public List<Usuario> mostrarSolicitudes(Long id){
         return aRepository.findByAmigoAndAceptado(id,false);
+    }
+
+    public void setSolicitudes(RequestRespuestaAmistad p){
+        
     }
 }
