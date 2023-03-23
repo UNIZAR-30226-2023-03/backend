@@ -39,7 +39,7 @@ public class PartidaService {
             UsuarioPartida up = new UsuarioPartida();
             up.setUsuario(usuario);
             up.setPartida(partida);
-            up.setColor(Color.AMARILLO);
+            up.setColor(Color.values()[partida.getJugadores().size()]);
 
             partida.getJugadores().add(up);
             
@@ -68,6 +68,10 @@ public class PartidaService {
                 partida = repository.save(partida);
                 return partida;
             }
+            //EXCEPCIÓN CONTRASEÑA INCORRECTA
+        }
+        else {
+            //EXCEPCIÓN NOMBRE DE PARTIDA NO ENCONTRADO
         }
         return null;
     }
