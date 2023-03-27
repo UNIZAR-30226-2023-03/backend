@@ -54,9 +54,14 @@ public class UsuarioController {
         return service.mostrarSolicitudes(id);
     }
 
-    @PostMapping("/contestar-solicitud/{id}")
-    public void setSolicitudes(@RequestBody RequestRespuestaAmistad request) {
-        service.setSolicitudes(request);
+    @PostMapping("/aceptar-solicitud/{id}")
+    public void aceptarSolicitud(@RequestBody RequestRespuestaAmistad request) {
+        service.aceptarSolicitud(request);
+    }
+
+    @PostMapping("/denegar-solicitud/{id}")
+    public void denegarSolicitud(@RequestBody RequestRespuestaAmistad request) {
+        service.denegarSolicitud(request);
     }
 }
 

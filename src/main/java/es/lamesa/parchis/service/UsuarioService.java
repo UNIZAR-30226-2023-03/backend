@@ -69,7 +69,15 @@ public class UsuarioService {
         return aRepository.findByAmigoAndAceptado(id,false);
     }
 
-    public void setSolicitudes(RequestRespuestaAmistad p){
-        
+    public void aceptarSolicitud(RequestRespuestaAmistad p){
+        // aceptar solicitudes -> pasar en bd de la lista de solicitudes a la de amigos
+        Amistad a = aRepository.getReferenceById(p.getAmigo());
+        a.setAceptado(true);
+        aRepository.save(a);
+    }
+
+    public void denegarSolicitud(RequestRespuestaAmistad p) {
+        // denegar solicitud -> eliminar en bd de la lista de solicitudes
+        aRepository.deleteById(p.getAmigo());
     }
 }
