@@ -39,7 +39,7 @@ public class UsuarioService {
     public boolean validarUsuario(String login, String password) {
         Usuario usuario = uRepository.findByUsernameOrEmail(login);
         if (usuario == null) {
-            throw new NoExisteUsuarioException("No existe el usuario indicado");
+            throw new NoExisteUsuarioException();
             // return false;
         }
         else {

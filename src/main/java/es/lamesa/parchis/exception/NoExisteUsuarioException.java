@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class NoExisteUsuarioException extends RuntimeException {
     
-    private String mensaje_error;
+    private String mensaje = "No existe un usuario con ese login.";
 
-    public NoExisteUsuarioException(String mensaje) {
+    public NoExisteUsuarioException() {
         super();
-        this.mensaje_error = mensaje;
+        this.mensaje = mensaje;
     }
 }

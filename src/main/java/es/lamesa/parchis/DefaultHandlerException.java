@@ -1,4 +1,4 @@
-package es.lamesa;
+package es.lamesa.parchis;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +13,6 @@ public class DefaultHandlerException extends ResponseEntityExceptionHandler{
     
     @ExceptionHandler
     public ResponseEntity<String> noExisteUsuarioException(NoExisteUsuarioException ex) {
-        return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<String>(ex.getMensaje(), HttpStatus.BAD_REQUEST);
     }
 }
