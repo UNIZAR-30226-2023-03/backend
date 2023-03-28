@@ -55,16 +55,30 @@ public class UsuarioService {
     
     public boolean enviarSolicitud(RequestAmistad amistad) {
         Amistad a = new Amistad();
+        Usuario usuario = uRepository.getReferenceById(amistad.getUsuario());
+        Usuario amigo = uRepository.getReferenceById(amistad.getAmigo());
+        if(usuario == null || amigo == null) {
+            // habrá excepción de que no existe algún usuario
+            return false;
+        }
+        a.setAmigo(amigo);
+        a.setUsuario(usuario);                                   
+        a.setAceptado(false);
+        usuario.getAmigos().add(amigo); 
+        uRepository.save(usuario);
+        aRepository.save(a);            
+        return true;
+        /*Amistad a = new Amistad();
         Usuario usuario = new Usuario();
         Usuario amigo = new Usuario();
         amigo.setId(amistad.getAmigo());
-        a.setUsuario(usuario);
+        a.setAmigo(amigo);
         usuario.setId(amistad.getUsuario());
         a.setUsuario(usuario);                                   
         a.setAceptado(false);
         usuario.getAmigos().add(amigo); 
         uRepository.save(usuario);            
-        return true;
+        return true;*/
     }
 
     public List<Usuario> mostrarSolicitudes(Long id){
