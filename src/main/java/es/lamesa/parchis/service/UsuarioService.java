@@ -55,8 +55,8 @@ public class UsuarioService {
     
     public boolean enviarSolicitud(RequestAmistad amistad) {
         Amistad a = new Amistad();
-        Usuario usuario = uRepository.getReferenceById(amistad.getUsuario());
-        Usuario amigo = uRepository.getReferenceById(amistad.getAmigo());
+        Usuario usuario = uRepository.findById(amistad.getUsuario()).get();
+        Usuario amigo = uRepository.findById(amistad.getAmigo()).get();
         if(usuario == null || amigo == null) {
             // habrá excepción de que no existe algún usuario
             return false;
@@ -87,7 +87,7 @@ public class UsuarioService {
 
     public void aceptarSolicitud(RequestRespuestaAmistad p){
         // aceptar solicitudes -> pasar en bd de la lista de solicitudes a la de amigos
-        Amistad a = aRepository.getReferenceById(p.getAmigo());
+        Amistad a = aRepository.findById(p.getAmigo()).get();
         a.setAceptado(true);
         aRepository.save(a);
     }

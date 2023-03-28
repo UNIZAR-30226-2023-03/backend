@@ -9,6 +9,6 @@ public class NoExisteUsuarioException extends RuntimeException {
 
     public NoExisteUsuarioException() {
         super();
-        this.mensaje = mensaje;
+        // this.mensaje = mensaje;
     }
 }
