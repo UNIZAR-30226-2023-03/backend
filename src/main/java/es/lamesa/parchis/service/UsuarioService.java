@@ -89,4 +89,9 @@ public class UsuarioService {
         Amistad a = aRepository.findByUsuarioAndAmigo(usuario, amigo);
         aRepository.delete(a);
     }
+
+    public Long obtenerId(String name) {
+        Usuario u = uRepository.findByUsername(name);
+        return u.getId();
+    }
 }

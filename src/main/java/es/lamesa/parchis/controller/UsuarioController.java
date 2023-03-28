@@ -62,5 +62,10 @@ public class UsuarioController {
     public void denegarSolicitud(@RequestBody RequestAmistad request) {
         service.denegarSolicitud(request);
     }
+
+    @GetMapping("/obtener-id")
+    public Long obtenerId(String username){
+        return service.obtenerId(username);
+    }
 }
 
