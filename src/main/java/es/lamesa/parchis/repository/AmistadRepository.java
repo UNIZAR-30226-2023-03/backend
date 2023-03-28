@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface AmistadRepository extends JpaRepository<Amistad, Long> {
     public List<Usuario> findByAmigoAndAceptado(Long amigo, boolean aceptado);
+
+    public Amistad findByUsuarioAndAmigo(Usuario usuario, Usuario amigo);
 }

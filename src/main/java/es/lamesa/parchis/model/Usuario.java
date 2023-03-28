@@ -35,12 +35,13 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<UsuarioPartida> partidas = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-        name = "amistad",
-        joinColumns = @JoinColumn(name = "usuario_id"),
-        inverseJoinColumns = @JoinColumn(name = "amigo_id"))
-    private List<Usuario> amigos = new ArrayList<>();
+    @JsonManagedReference
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Amistad> solicitudesEnviadas = new ArrayList<>();
+    
+    @JsonManagedReference
+    @OneToMany(mappedBy = "amigo", cascade = CascadeType.ALL)
+    private List<Amistad> solicitudesRecibidas = new ArrayList<>();
 
     public void encriptarPassword() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

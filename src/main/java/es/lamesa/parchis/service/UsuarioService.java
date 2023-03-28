@@ -13,7 +13,6 @@ import es.lamesa.parchis.model.Amistad;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.dto.RequestAmistad;
 import es.lamesa.parchis.model.dto.UsuarioDto;
-import es.lamesa.parchis.model.dto.RequestRespuestaAmistad;
 
 
 @Service
@@ -55,20 +54,6 @@ public class UsuarioService {
     
     public boolean enviarSolicitud(RequestAmistad amistad) {
         Amistad a = new Amistad();
-        Usuario usuario = uRepository.findById(amistad.getUsuario()).get();
-        Usuario amigo = uRepository.findById(amistad.getAmigo()).get();
-        if(usuario == null || amigo == null) {
-            // habrá excepción de que no existe algún usuario
-            return false;
-        }
-        a.setAmigo(amigo);
-        a.setUsuario(usuario);                                   
-        a.setAceptado(false);
-        usuario.getAmigos().add(amigo); 
-        uRepository.save(usuario);
-        aRepository.save(a);            
-        return true;
-        /*Amistad a = new Amistad();
         Usuario usuario = new Usuario();
         Usuario amigo = new Usuario();
         amigo.setId(amistad.getAmigo());
@@ -76,24 +61,32 @@ public class UsuarioService {
         usuario.setId(amistad.getUsuario());
         a.setUsuario(usuario);                                   
         a.setAceptado(false);
-        usuario.getAmigos().add(amigo); 
-        uRepository.save(usuario);            
-        return true;*/
+        aRepository.save(a);            
+        return true;
     }
 
     public List<Usuario> mostrarSolicitudes(Long id){
         return aRepository.findByAmigoAndAceptado(id,false);
     }
 
-    public void aceptarSolicitud(RequestRespuestaAmistad p){
+    public void aceptarSolicitud(RequestAmistad amistad){
         // aceptar solicitudes -> pasar en bd de la lista de solicitudes a la de amigos
-        Amistad a = aRepository.findById(p.getAmigo()).get();
+        Usuario usuario = new Usuario();
+        Usuario amigo = new Usuario();
+        usuario.setId(amistad.getAmigo());
+        amigo.setId(amistad.getUsuario());
+        Amistad a = aRepository.findByUsuarioAndAmigo(usuario, amigo);
         a.setAceptado(true);
         aRepository.save(a);
     }
 
-    public void denegarSolicitud(RequestRespuestaAmistad p) {
+    public void denegarSolicitud(RequestAmistad amistad) {
         // denegar solicitud -> eliminar en bd de la lista de solicitudes
-        aRepository.deleteById(p.getAmigo());
+        Usuario usuario = new Usuario();
+        Usuario amigo = new Usuario();
+        usuario.setId(amistad.getAmigo());
+        amigo.setId(amistad.getUsuario());
+        Amistad a = aRepository.findByUsuarioAndAmigo(usuario, amigo);
+        aRepository.delete(a);
     }
 }
