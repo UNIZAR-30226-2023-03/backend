@@ -20,7 +20,7 @@ public class Amistad {
     @JoinColumn(name = "amigo_id")
     private Usuario amigo;
 
-    @Column(nullable = false)
+    @Column
     private boolean aceptado;
     
 }
