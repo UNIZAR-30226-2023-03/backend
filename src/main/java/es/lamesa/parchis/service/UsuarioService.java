@@ -1,6 +1,7 @@
 package es.lamesa.parchis.service;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import es.lamesa.parchis.repository.AmistadRepository;
 import es.lamesa.parchis.exception.NoExisteUsuarioException;
 import es.lamesa.parchis.model.Amistad;
 import es.lamesa.parchis.model.Usuario;
+import es.lamesa.parchis.model.dto.AmigosDto;
 import es.lamesa.parchis.model.dto.RequestAmistad;
 import es.lamesa.parchis.model.dto.UsuarioDto;
 
@@ -65,8 +67,29 @@ public class UsuarioService {
         return true;
     }
 
-    public List<Usuario> mostrarSolicitudes(Long id){
-        return aRepository.findByAmigoAndAceptado(id,false);
+    public List<AmigosDto> mostrarSolicitudes(Long id) {
+        Usuario u = new Usuario();
+        u.setId(id);
+        List<Usuario> us = aRepository.findSolicitudes(u);
+        List<AmigosDto> am = new ArrayList<AmigosDto>();
+        for (Usuario uu : us){
+            AmigosDto a = new AmigosDto(uu.getId(), uu.getUsername());
+            am.add(a);
+        }
+        return am;
+    }
+
+    public List<String> getAmigos(Long id) {
+        Usuario u = new Usuario();
+        u.setId(id);
+        List<Amistad> la = aRepository.findAmigos(u);
+        List<String> amigos = new ArrayList<>();
+        String amigo = "";
+        for (Amistad a : la) {
+            amigo = a.getAmigo_Username(id);
+            amigos.add(amigo);
+        }
+        return amigos;
     }
 
     public void aceptarSolicitud(RequestAmistad amistad){

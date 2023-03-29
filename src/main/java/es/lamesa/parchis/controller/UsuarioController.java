@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import es.lamesa.parchis.service.UsuarioService;
 import es.lamesa.parchis.model.dto.UsuarioDto;
 import es.lamesa.parchis.model.dto.RequestAmistad;
+import es.lamesa.parchis.model.dto.AmigosDto;
 import es.lamesa.parchis.model.dto.LoginDto;
 import es.lamesa.parchis.model.Usuario;
 
@@ -48,9 +49,14 @@ public class UsuarioController {
         return service.enviarSolicitud(request);
     }
 
-    @PostMapping("/solicitudes/{id}")
-    public List<Usuario> mostrarSolicitudes(@PathVariable("id") Long id) {
+    @GetMapping("/solicitudes/{id}")
+    public List<AmigosDto> mostrarSolicitudes(@PathVariable("id") Long id) {
         return service.mostrarSolicitudes(id);
+    }
+
+    @GetMapping("/amigos/{id}")
+    public List<String> getAmigos(@PathVariable("id") Long id) {
+        return service.getAmigos(id);
     }
 
     @PostMapping("/aceptar-solicitud")

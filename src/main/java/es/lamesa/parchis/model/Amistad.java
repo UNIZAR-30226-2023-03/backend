@@ -25,5 +25,14 @@ public class Amistad {
 
     @Column (nullable = false)
     private boolean aceptado;
+
+    public String getAmigo_Username(Long id) {
+        if (usuario.getId() == id) {
+            return amigo.getUsername();
+        }
+        else {
+            return usuario.getUsername();
+        }
+    }
     
 }
