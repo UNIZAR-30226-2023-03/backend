@@ -79,14 +79,13 @@ public class UsuarioService {
         return am;
     }
 
-    public List<String> getAmigos(Long id) {
+    public List<AmigosDto> getAmigos(Long id) {
         Usuario u = new Usuario();
         u.setId(id);
         List<Amistad> la = aRepository.findAmigos(u);
-        List<String> amigos = new ArrayList<>();
-        String amigo = "";
+        List<AmigosDto> amigos = new ArrayList<>();
         for (Amistad a : la) {
-            amigo = a.getAmigo_Username(id);
+            AmigosDto amigo = new AmigosDto(a.getIdAmigo(id), a.getUsernameAmigo(id));
             amigos.add(amigo);
         }
         return amigos;
@@ -116,5 +115,14 @@ public class UsuarioService {
     public Long obtenerId(String name) {
         Usuario u = uRepository.findByUsername(name);
         return u.getId();
+    }
+
+    public void eliminarAmigo(RequestAmistad request){
+        Usuario usuario = new Usuario();
+        Usuario amigo = new Usuario();
+        amigo.setId(request.getAmigo());
+        usuario.setId(request.getUsuario());
+        Amistad a = aRepository.findAmistad(usuario, amigo);
+        aRepository.delete(a);
     }
 }

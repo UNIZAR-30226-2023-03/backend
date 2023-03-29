@@ -55,7 +55,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/amigos/{id}")
-    public List<String> getAmigos(@PathVariable("id") Long id) {
+    public List<AmigosDto> getAmigos(@PathVariable("id") Long id) {
         return service.getAmigos(id);
     }
 
@@ -72,6 +72,11 @@ public class UsuarioController {
     @GetMapping("/obtener-id")
     public Long obtenerId(String username){
         return service.obtenerId(username);
+    }
+
+    @PostMapping("/eliminar-amigo")
+    public void eliminarAmigo(@RequestBody RequestAmistad request) {
+        service.eliminarAmigo(request);
     }
 }
 

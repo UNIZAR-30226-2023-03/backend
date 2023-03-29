@@ -26,12 +26,21 @@ public class Amistad {
     @Column (nullable = false)
     private boolean aceptado;
 
-    public String getAmigo_Username(Long id) {
+    public String getUsernameAmigo(Long id) {
         if (usuario.getId() == id) {
             return amigo.getUsername();
         }
         else {
             return usuario.getUsername();
+        }
+    }
+
+    public Long getIdAmigo(Long id) {
+        if (usuario.getId() == id) {
+            return amigo.getId();
+        }
+        else {
+            return usuario.getId();
         }
     }
     
