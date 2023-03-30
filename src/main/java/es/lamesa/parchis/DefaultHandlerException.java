@@ -15,4 +15,5 @@ public class DefaultHandlerException extends ResponseEntityExceptionHandler {
     public ResponseEntity<String> GenericException(GenericException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+    
 }

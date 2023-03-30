@@ -29,6 +29,13 @@ public class UsuarioService {
     }
 
     public Usuario addUsuario(UsuarioDto usuario) {
+        if (uRepository.findByEmail(usuario.getEmail()) != null) {
+            throw new GenericException("Ya existe un usuario con ese email");
+        }
+        if (uRepository.findByUsername(usuario.getUsername()) != null) {
+            throw new GenericException("Ya existe un usuario con ese username");
+        }
+
         Usuario u = new Usuario();
         u.setEmail(usuario.getEmail());
         u.setUsername(usuario.getUsername());
@@ -41,13 +48,10 @@ public class UsuarioService {
         Usuario usuario = uRepository.findByUsernameOrEmail(login);
         if (usuario == null) {
             throw new GenericException("El usuario no existe");
-            // return false;
         }
-        else {
-            System.out.println(usuario.getPassword());
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            return encoder.matches(password, usuario.getPassword());
-        }
+        System.out.println(usuario.getPassword());
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder.matches(password, usuario.getPassword());
     }
 
     public void borrarUsuario(Long id) {
