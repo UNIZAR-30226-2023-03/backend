@@ -9,7 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import es.lamesa.parchis.repository.UsuarioRepository;
 import es.lamesa.parchis.repository.AmistadRepository;
-import es.lamesa.parchis.exception.NoExisteUsuarioException;
+import es.lamesa.parchis.exception.GenericException;
 import es.lamesa.parchis.model.Amistad;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.dto.AmigosDto;
@@ -40,7 +40,7 @@ public class UsuarioService {
     public boolean validarUsuario(String login, String password) {
         Usuario usuario = uRepository.findByUsernameOrEmail(login);
         if (usuario == null) {
-            throw new NoExisteUsuarioException();
+            throw new GenericException("El usuario no existe");
             // return false;
         }
         else {

@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import es.lamesa.parchis.exception.NoExisteUsuarioException;
+import es.lamesa.parchis.exception.GenericException;
 
 @RestControllerAdvice
-public class DefaultHandlerException extends ResponseEntityExceptionHandler{
+public class DefaultHandlerException extends ResponseEntityExceptionHandler {
     
-    @ExceptionHandler
-    public ResponseEntity<String> noExisteUsuarioException(NoExisteUsuarioException ex) {
-        return new ResponseEntity<String>(ex.getMensaje(), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(GenericException.class)
+    public ResponseEntity<String> GenericException(GenericException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }
