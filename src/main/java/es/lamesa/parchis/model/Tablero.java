@@ -78,6 +78,7 @@ public class Tablero {
     //     }
 
     //     //inicialización pasillos
+    //      //A TENER EN CUENTA: AHORA MISMO HAY 4 CASILLAS METAS IDENTICAS EN LA LISTA DE CASILLAS. SOLUCIÓN -> USAR ATRIBUTO COLOR, O 4 TIPOS DE METAS (META_AMARILLO, META_AZUL,...).
     //     for (int i = 0; i < 8; i++) {
 	// 		if (i == 7) {
 	// 			c = new Casilla(this, 68+i, TipoCasilla.META);

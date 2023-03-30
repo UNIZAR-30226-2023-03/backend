@@ -170,7 +170,27 @@ public class Partida {
     //         id_casilla_prepasillo = 50;
     //     }
     //     int id_casilla = f.getCasilla().getPosicion();
-    //     if (id_casilla + dado >= id_casilla_prepasillo){
+    //     if (id_casilla > 67){
+    //         id_casilla = id_casilla + dado;
+    //         c = tablero.obtenerCasillaPasillo(id_casilla, turno);
+    //         f.getCasilla().getFichas().remove(f);
+    //         c.getFichas().add(f);
+    //         //HACER SAVE?
+    //         /*comprobar si han llegado la ficha a meta. Si sí, dos cosas
+    //          * 1. Si han llegado las 4 fichas, indicar fin de partida
+    //          * 2. Sino, enviar al frontend para elegir ficha con la q mover
+    //          *      10 posiciones.
+    //         */
+    //         if(id_casilla == 75) {
+    //             if(c.getFichas().size() == 4) {
+    //                 this.estado = EstadoPartida.FINALIZADA;
+    //             }
+    //             else {
+    //                 comprobarMovimientos(10);
+    //             }   
+    //         }
+    //     }
+    //     else if (id_casilla + dado >= id_casilla_prepasillo){
     //         //entrada a pasillo
     //         id_casilla = 67 + ((id_casilla + dado - id_casilla_prepasillo));
     //         f.getCasilla().getFichas().remove(f);
@@ -178,18 +198,6 @@ public class Partida {
     //         c.getFichas().add(f);
     //         f.setCasilla(c);
     //         //HACER SAVE?
-    //     } 
-    //     else if (id_casilla > 67){
-    //         id_casilla = id_casilla + dado;
-    //         c = tablero.obtenerCasillaPasillo(id_casilla, turno);
-    //         f.getCasilla().getFichas().remove(f);
-    //         c.getFichas().add(f);
-    //         //HACER SAVE?
-    //         /*comprobar si han llegado la ficha a meta. Si sí, dos cosas
-    //          * 1. Enviar al frontend para elegir ficha con la q mover
-    //          *      10 posiciones.
-    //          * 2. Si han llegado las 4 fichas, indicar fin de partida
-    //         */
     //     }
     //     else {
     //         c = tablero.obtenerCasillaPerimetro(id_casilla + dado);
@@ -203,6 +211,7 @@ public class Partida {
     //             /* AVANZAR 20 CASILLAS (AVISAR FRONTEND) 
     //              * Para ello, hacer otra vez el comprobarMovimientos(20)
     //             */
+    //             comprobarMovimientos(20);
     //         }
     //         //HACER SAVE?
     //     }  
