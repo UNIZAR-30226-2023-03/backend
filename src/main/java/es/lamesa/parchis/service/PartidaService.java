@@ -11,6 +11,7 @@ import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.EstadoPartida;
 import es.lamesa.parchis.model.UsuarioPartida;
+import es.lamesa.parchis.exception.GenericException;
 import es.lamesa.parchis.model.Color;
 import es.lamesa.parchis.model.dto.PartidaDto;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
@@ -45,7 +46,8 @@ public class PartidaService {
             
             return repository.save(partida);
         }
-        return null;
+        //EXCEPCIÓN NOMBRE DE SALA USADO EN PARTIDA QUE SE ESTÁ JUGANDO
+        throw new GenericException("Nombre de sala no disponible: ya se está jugando una partida con ese nombre de sala");
     }
     
     public Partida conectarPartidaPrivada(PartidaDto partidaDto) {
@@ -69,11 +71,10 @@ public class PartidaService {
                 return partida;
             }
             //EXCEPCIÓN CONTRASEÑA INCORRECTA
+            throw new GenericException("Contraseña incorrecta para la sala indicada");
         }
-        else {
-            //EXCEPCIÓN NOMBRE DE PARTIDA NO ENCONTRADO
-        }
-        return null;
+        //EXCEPCIÓN NOMBRE DE PARTIDA NO ENCONTRADO
+        throw new GenericException("El nombre de sala indicado no existe");
     }
 
     public Partida jugarPartidaPublica(RequestPartidaPublica p) {
