@@ -22,9 +22,9 @@ public class Ficha {
     @JoinColumn(name = "casilla_id")
     private Casilla casilla;
     
-    // public Ficha(Color color, int numero, Casilla casilla) {
-    //     this.numero = numero;
-    //     this.color = color;
-    //     this.casilla = casilla;
-    // }
+    public Ficha(Color color, int numero, Casilla casilla) {
+        this.numero = numero;
+        this.color = color;
+        this.casilla = casilla;
+    }
 }

@@ -23,7 +23,7 @@ public class Amistad {
     @JoinColumn(name = "amigo_id")
     private Usuario amigo;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private boolean aceptado;
 
     public String getUsernameAmigo(Long id) {

@@ -3,18 +3,9 @@ package es.lamesa.parchis.model;
 public enum TipoCasilla {
     CASA,
     COMUN,
-    SALIDA_AZUL,
-    SALIDA_AMARILLO,
-    SALIDA_ROJO,
-    SALIDA_VERDE,
+    SALIDA,
 	SEGURO,
-    ENTRADA_AZUL,
-    ENTRADA_AMARILLO,
-    ENTRADA_ROJO,
-    ENTRADA_VERDE,
-    PASILLO_AZUL,
-    PASILLO_AMARILLO,
-    PASILLO_ROJO,
-    PASILLO_VERDE,
+    ENTRADA,
+    PASILLO,
 	META
 }
