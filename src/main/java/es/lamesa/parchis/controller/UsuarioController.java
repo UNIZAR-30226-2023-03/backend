@@ -23,6 +23,8 @@ public class UsuarioController {
     @Autowired
     UsuarioService service;
     
+    // Gestión de usuarios
+
     @GetMapping()
     public List<Usuario> getUsuarios() {
         return service.getUsuarios();
@@ -43,6 +45,8 @@ public class UsuarioController {
         service.borrarUsuario(id);
         return "Usuario eliminado con exito";
     }
+
+    // Gestión de amigos
 
     @PostMapping("/enviar-solicitud")
     public boolean enviarSolicitud(@RequestBody RequestAmistad request) {
@@ -78,5 +82,13 @@ public class UsuarioController {
     public void eliminarAmigo(@RequestBody RequestAmistad request) {
         service.eliminarAmigo(request);
     }
+
+    // Modificación de campos de los usuarios
+
+    // public void modificarUsername(/*@RequestQUE? */ String nuevo_username)
+
+    // public void modificarEmail(/*@RequestQUE? */ String nuevo_email)
+
+    // public void changePassword(/* varios campos??? */)
 }
 
