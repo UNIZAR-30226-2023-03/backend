@@ -79,7 +79,6 @@ public class Partida {
         Casilla c = tablero.getCasillas().get(id_casilla);
         f = new Ficha(turno, id_ficha, c);
         c.getFichas().add(f);
-        //HACER SAVES CON REPOSITORY
     }
 
     public void comprobarMovimientos(int num_dado) {
@@ -92,7 +91,7 @@ public class Partida {
             f = tablero.buscarFicha(i, turno);
             fichas_del_turno.add(f);
         }
-        if (fichas_del_turno.size() == 4 && num_dado == 6){ //¿ESTO?
+        if (fichas_del_turno.size() == 4 && num_dado == 6){ 
             num_dado++;
         }
         if (num_dado == 5 && fichas_del_turno.size() < 4){
@@ -202,7 +201,6 @@ public class Partida {
             c = tablero.obtenerCasillaPasillo(id_casilla, turno);
             c.getFichas().add(f);
             f.setCasilla(c);
-            //HACER SAVE?
         }
         else {
             c = tablero.obtenerCasillaPerimetro(id_casilla + dado);
@@ -218,7 +216,6 @@ public class Partida {
                 */
                 comprobarMovimientos(20);
             }
-            //HACER SAVE?
         }  
     }
 }

@@ -36,11 +36,15 @@ public class Tablero {
         //4 pasillos de dimensión 8 -> 4*8 + las [0,67] casillas perimetro
         casillas = new ArrayList<Casilla>(4+68+4*8);
         Casilla c = new Casilla();
-
+        Ficha f;
         //inicialización de casas
         for(int i = 0; i < 4; i++) {
             c = new Casilla(this, -1, TipoCasilla.CASA, Color.values()[i]);
-            // construir fichas
+            // poner las fichas en las casillas CASA:
+            for(int j = 1; j <= 4; j++) {
+                f = new Ficha(Color.values()[i], j, c);
+                c.getFichas().add(f);
+            }
         }
 
         //inicialización perimetro
