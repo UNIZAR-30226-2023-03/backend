@@ -129,4 +129,17 @@ public class UsuarioService {
         Amistad a = aRepository.findAmistad(usuario, amigo);
         aRepository.delete(a);
     }
+
+    public void actualizarMonedas(Long id, int premio){
+        Usuario u = uRepository.findById(id).get();
+        u.setNumMonedas(premio);
+        uRepository.save(u);
+    }
+
+    public void realizarCompra(Long id, int coste){
+        Usuario u = new Usuario();
+        u.setId(id);
+        u.setNumMonedas(u.getNumMonedas() - coste);
+        uRepository.save(u);
+    }
 }

@@ -40,4 +40,9 @@ public class PartidaController {
     public Long jugarPartidaPublica(@RequestBody RequestPartidaPublica request) {
         return service.jugarPartidaPublica(request).getId();
     }
+
+    @PostMapping("/dado")
+    public void registrarDado(){
+        
+    }
 }

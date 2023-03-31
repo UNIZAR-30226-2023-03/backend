@@ -78,5 +78,16 @@ public class UsuarioController {
     public void eliminarAmigo(@RequestBody RequestAmistad request) {
         service.eliminarAmigo(request);
     }
+
+    @PostMapping("/premio/{id}")
+	public void actualizarMonedas(@PathVariable("id") Long id, int premio){
+		service.actualizarMonedas(id, premio);
+	}
+
+    @PostMapping("/comprar/{id}")
+    public void realizarCompra(@PathVariable("id") Long id, int coste){
+        service.realizarCompra(id, coste);
+    }
+
 }
 
