@@ -12,8 +12,7 @@ public class WebSocket implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/dado").withSockJS();
-        registry.addEndpoint("/mover").withSockJS();
+        registry.addEndpoint("/ws").withSockJS();
     }
 
     @Override
