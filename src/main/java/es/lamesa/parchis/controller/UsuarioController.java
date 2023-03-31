@@ -23,6 +23,8 @@ public class UsuarioController {
     @Autowired
     UsuarioService service;
     
+    // Gestión de usuarios
+
     @GetMapping()
     public List<Usuario> getUsuarios() {
         return service.getUsuarios();
@@ -43,6 +45,8 @@ public class UsuarioController {
         service.borrarUsuario(id);
         return "Usuario eliminado con exito";
     }
+
+    // Gestión de amigos
 
     @PostMapping("/enviar-solicitud")
     public boolean enviarSolicitud(@RequestBody RequestAmistad request) {
