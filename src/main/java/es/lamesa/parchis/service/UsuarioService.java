@@ -137,9 +137,20 @@ public class UsuarioService {
     }
 
     public void realizarCompra(Long id, int coste){
-        Usuario u = new Usuario();
-        u.setId(id);
+        Usuario u = uRepository.findById(id).get();
         u.setNumMonedas(u.getNumMonedas() - coste);
+        uRepository.save(u);
+    }
+
+    public void actualizarUsername(Long id, String username){
+        Usuario u = uRepository.findById(id).get();
+        u.setUsername(username);
+        uRepository.save(u);
+    }
+
+    public void actualizarEmail(Long id, String email){
+        Usuario u = uRepository.findById(id).get();
+        u.setEmail(email);
         uRepository.save(u);
     }
 }
