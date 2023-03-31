@@ -1,4 +1,4 @@
-package es.lamesa.parchis;
+package es.lamesa.parchis.config;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
