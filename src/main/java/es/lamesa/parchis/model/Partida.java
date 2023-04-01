@@ -70,7 +70,11 @@ public class Partida {
 
     public ResponseDado comprobarMovimientos(int num_dado) {
         int id_casilla;
-        List<Ficha> bloqueadas = tablero.obtenerFichasCasa(turno); // TODO: añadir fichas meta
+        List<Ficha> bloqueadas = tablero.obtenerFichasCasa(turno); 
+        List<Ficha> meta = tablero.obtenerFichasMeta(turno);
+        for (Ficha f : meta){
+            bloqueadas.add(f);
+        }
         List<Ficha> fichas_del_turno = tablero.obtenerFichasTablero(turno);
         Ficha comida = null;
         if (num_dado == 5 && fichas_del_turno.size() < 4 && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) != 2) {
@@ -200,12 +204,12 @@ public class Partida {
         } 
         else if (f.getNumPasos() + dado > 63) {
             //entrada a pasillo
-            id_casilla = 67 + ((id_casilla + dado - id_casilla_prepasillo));
+            id_casilla = 67 + ((id_casilla + dado - id_casilla_prepasillo)%68);
             c = tablero.obtenerCasillaPasillo(id_casilla, turno);
             turno = turno.siguienteTurno(jugadores.size());
         }
         else {
-            c = tablero.obtenerCasillaPerimetro(id_casilla + dado);
+            c = tablero.obtenerCasillaPerimetro((id_casilla + dado)%68);
             //COMIDAS
             if (c.getFichas().size() == 1 &&
                 c.obtenerColorPrimeraFicha() != turno && 

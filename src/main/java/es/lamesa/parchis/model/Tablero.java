@@ -214,7 +214,7 @@ public class Tablero {
     public Casilla obtenerCasillaPasillo(int casilla, Color c) {
         if(c == Color.AMARILLO) {
             for (Casilla ca : casillas) {
-                if(ca.getPosicion() == casilla && ca.getTipo() == TipoCasilla.PASILLO && ca.getColor() == c) {
+                if(ca.getPosicion() == casilla && (ca.getTipo() == TipoCasilla.PASILLO || ca.getTipo() == TipoCasilla.META) && ca.getColor() == c ) {
                     return ca;
                 }
             }
@@ -247,6 +247,18 @@ public class Tablero {
         List<Ficha> fichas = new ArrayList<>();
         for (Casilla ca : casillas){
             if (ca.getTipo() == TipoCasilla.CASA && ca.getColor() == c){
+                for (Ficha f : ca.getFichas()) {
+                    fichas.add(f);
+                }
+            }
+        }
+        return fichas;
+    }
+
+    public List<Ficha> obtenerFichasMeta(Color c){
+        List<Ficha> fichas = new ArrayList<>();
+        for (Casilla ca : casillas){
+            if (ca.getTipo() == TipoCasilla.META && ca.getColor() == c){
                 for (Ficha f : ca.getFichas()) {
                     fichas.add(f);
                 }
