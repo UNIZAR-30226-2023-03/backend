@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import es.lamesa.parchis.model.dto.ResponseDado;
 import es.lamesa.parchis.model.dto.ResponseMovimiento;
@@ -60,7 +62,7 @@ public class Partida {
         int id_casilla = tablero.obtenerSalida(turno);
         Casilla casa = tablero.obtenerCasillaCasa(turno);
         Ficha f = casa.getFichas().get(0);
-        casa.getFichas().remove(0);
+        casa.getFichas().remove(f);
         Casilla c = tablero.getCasillas().get(id_casilla);
         c.getFichas().add(f);
         f.setCasilla(c);
@@ -70,15 +72,9 @@ public class Partida {
 
     public ResponseDado comprobarMovimientos(int num_dado) {
         int id_casilla;
-        List<Ficha> bloqueadas = new ArrayList<Ficha>();
-        List<Ficha> fichas_del_turno = new ArrayList<Ficha>();
-        Ficha f = null;
+        List<Ficha> bloqueadas = tablero.obtenerFichasCasa(turno);
+        List<Ficha> fichas_del_turno = tablero.obtenerFichasTablero(turno);
         Ficha comida = null;
-        int n = tablero.contarFichas(turno);
-        for(int i = 1; i <= n; i++) {
-            f = tablero.buscarFicha(i, turno);
-            fichas_del_turno.add(f);
-        }
         if (num_dado == 5 && fichas_del_turno.size() < 4 && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) != 2) {
             int salida = tablero.obtenerSalida(turno);
             Casilla c = tablero.getCasillas().get(salida);
@@ -94,6 +90,7 @@ public class Partida {
                     }
                 }
             }
+            //Para mandar al frontend:
             Ficha ficha_sacada = sacarFicha();
             List<Ficha> fichas = new ArrayList<>();
             fichas.add(ficha_sacada);
@@ -165,8 +162,8 @@ public class Partida {
         }
     }
 
-    public ResponseMovimiento realizarMovimiento(int id_ficha, int dado) {
-        Ficha f = tablero.buscarFicha(id_ficha, turno);
+    public ResponseMovimiento realizarMovimiento(int num_ficha, int dado) {
+        Ficha f = tablero.buscarFicha(num_ficha, turno);
         Ficha comida = null;
         Casilla c;
         int id_casilla_prepasillo = 0;
@@ -204,7 +201,7 @@ public class Partida {
         else {
             c = tablero.obtenerCasillaPerimetro(id_casilla + dado);
             //COMIDAS
-            if (c.getFichas().size() == 2 &&
+            if (c.getFichas().size() == 1 &&
                 c.getColorPrimeraFicha() != turno && 
                 c.getTipo() == TipoCasilla.COMUN) {
                     comida = c.getFichas().get(0);

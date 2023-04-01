@@ -3,6 +3,8 @@ package es.lamesa.parchis.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,6 +20,7 @@ public class Tablero {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "tablero")
     private Partida partida;
 
@@ -234,5 +237,31 @@ public class Tablero {
             }
         }
         return null;
+    }
+
+    public List<Ficha> obtenerFichasCasa(Color c){
+        List<Ficha> fichas = new ArrayList<>();
+        for (Casilla ca : casillas){
+            if (ca.getTipo() == TipoCasilla.CASA && ca.getColor() == c){
+                for (Ficha f : ca.getFichas()) {
+                    fichas.add(f);
+                }
+            }
+        }
+        return fichas;
+    }
+
+    public List<Ficha> obtenerFichasTablero(Color c){
+        List<Ficha> fichas = new ArrayList<>();
+        for (Casilla ca : casillas) {
+            if ((ca.getTipo() != TipoCasilla.META && ca.getTipo() != TipoCasilla.CASA) || (ca.getTipo() == TipoCasilla.PASILLO && ca.getColor() == c)) {
+                for (Ficha f : ca.getFichas()) {
+                    if (f.getColor() == c) {
+                        fichas.add(f);
+                    }
+                }
+            }
+        }
+        return fichas;
     }
 }

@@ -1,6 +1,9 @@
 package es.lamesa.parchis.model;
 
 import lombok.Data;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Data
@@ -18,6 +21,7 @@ public class Ficha {
     @Column(nullable = false)
     private Color color;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "casilla_id")
     private Casilla casilla;

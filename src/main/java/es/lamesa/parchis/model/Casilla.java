@@ -2,6 +2,8 @@ package es.lamesa.parchis.model;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -26,6 +28,7 @@ public class Casilla {
     @OneToMany(mappedBy = "casilla")
     private ArrayList<Ficha> fichas;
  
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "tablero_id")
     private Tablero tablero;
