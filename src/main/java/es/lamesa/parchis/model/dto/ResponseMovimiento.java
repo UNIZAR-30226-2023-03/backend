@@ -1,24 +1,21 @@
 package es.lamesa.parchis.model.dto;
 
 import lombok.Data;
-import java.util.List;
-
 import es.lamesa.parchis.model.Ficha;
 import es.lamesa.parchis.model.Casilla;
+import es.lamesa.parchis.model.Color;
 
 @Data
 public class ResponseMovimiento {
-    
-    private List<Ficha> fichas;
-    private boolean sacar;
-    private Ficha comida;
-    private Casilla casilla;
 
-    public ResponseMovimiento(List<Ficha> fichas, boolean sacar, Ficha comida, Casilla casilla) {
-        this.fichas = fichas;
-        this.sacar = sacar;
+    private Casilla destino;
+    private Ficha comida;
+    private Color turno;
+
+    public ResponseMovimiento(Casilla destino, Ficha comida, Color turno) {
+        this.destino = destino;
         this.comida = comida;
-        this.casilla = casilla;
+        this.turno = turno;
     }
 
 }

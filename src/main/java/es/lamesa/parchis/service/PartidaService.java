@@ -16,7 +16,9 @@ import es.lamesa.parchis.exception.GenericException;
 import es.lamesa.parchis.model.Color;
 import es.lamesa.parchis.model.dto.PartidaDto;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
+import es.lamesa.parchis.model.dto.RequestMovimiento;
 import es.lamesa.parchis.model.dto.ResponsePartida;
+import es.lamesa.parchis.model.dto.ResponseDado;
 import es.lamesa.parchis.model.dto.ResponseMovimiento;
 
 @Service
@@ -122,13 +124,14 @@ public class PartidaService {
         return r;
     }
 
-    public ResponseMovimiento comprobarMovimientos(Long id, int dado) {
+    public ResponseDado comprobarMovimientos(Long id, int dado) {
         Partida p = repository.findById(id).get();
         return p.comprobarMovimientos(dado);
     }
     
-    public void realizarMovimiento(Long id, int id_ficha) {
-        Partida p = repository.findById(id).get();
+    public ResponseMovimiento realizarMovimiento(RequestMovimiento request) {
+        Partida p = repository.findById(request.getPartida()).get();
+        return p.realizarMovimiento(request.getFicha(), request.getDado());
     }
     
 }

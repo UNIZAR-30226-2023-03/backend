@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import es.lamesa.parchis.model.dto.ResponseDado;
 import es.lamesa.parchis.model.dto.ResponseMovimiento;
 
 @NoArgsConstructor
@@ -61,34 +62,48 @@ public class Partida {
         Ficha f = casa.getFichas().get(0);
         casa.getFichas().remove(0);
         Casilla c = tablero.getCasillas().get(id_casilla);
-        // ¿La casilla a donde va a salir la ficha está llena?
-        // ¿Y si se puede sacar?
         c.getFichas().add(f);
         f.setCasilla(c);
+        turno = turno.siguienteTurno();
         return f;
     }
 
-    public ResponseMovimiento comprobarMovimientos(int num_dado) {
+    public ResponseDado comprobarMovimientos(int num_dado) {
         int id_casilla;
         List<Ficha> bloqueadas = new ArrayList<Ficha>();
         List<Ficha> fichas_del_turno = new ArrayList<Ficha>();
         Ficha f = null;
+        Ficha comida = null;
         int n = tablero.contarFichas(turno);
         for(int i = 1; i <= n; i++) {
             f = tablero.buscarFicha(i, turno);
             fichas_del_turno.add(f);
         }
-        if (fichas_del_turno.size() == 4 && num_dado == 6){ 
-            num_dado++;
-        }
         if (num_dado == 5 && fichas_del_turno.size() < 4 && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) != 2) {
+            int salida = tablero.obtenerSalida(turno);
+            Casilla c = tablero.getCasillas().get(salida);
+            if (c.getFichas().size() == 2) {
+                for (Ficha ficha : c.getFichas()) {
+                    if (ficha.getColor() != turno) {
+                        comida = ficha;
+                        c.getFichas().remove(comida);
+                        Casilla casa = tablero.obtenerCasillaCasa(comida.getColor());
+                        casa.getFichas().add(comida);
+                        comida.setCasilla(casa);
+                        break;
+                    }
+                }
+            }
             Ficha ficha_sacada = sacarFicha();
             List<Ficha> fichas = new ArrayList<>();
             fichas.add(ficha_sacada);
-            //ResponseMovimiento rm = new ResponseMovimiento(fichas, true);
-            //return rm;
+            ResponseDado rd = new ResponseDado(fichas, true, comida, c, turno);
+            return rd;
         }
         else {
+            if (fichas_del_turno.size() == 4 && num_dado == 6){ 
+                num_dado++;
+            }
             for(Ficha i : fichas_del_turno) {
                 id_casilla = i.getCasilla().getPosicion();
                 // if(turno == Color.AMARILLO) {
@@ -136,7 +151,7 @@ public class Partida {
                                 */
                                 if ((i.getCasilla().getTipo() == TipoCasilla.SEGURO &&
                                 configBarreras == ConfigBarreras.SOLO_SEGUROS) ||
-                                configBarreras == ConfigBarreras.TODAS_CASILLAS){
+                                configBarreras == ConfigBarreras.TODAS_CASILLAS) {
                                     bloqueadas.add(i);
                                     break;
                                 }
@@ -145,14 +160,14 @@ public class Partida {
                     }
                 }
             }
+            ResponseDado rd = new ResponseDado(bloqueadas, false, null, null, turno);
+            return rd;
         }
-        // ResponseMovimiento rm = new ResponseMovimiento(bloqueadas, false, null);
-        // return rm;
-        return null;
     }
 
-    public void realizarMovimiento(int id_ficha, int dado) {
+    public ResponseMovimiento realizarMovimiento(int id_ficha, int dado) {
         Ficha f = tablero.buscarFicha(id_ficha, turno);
+        Ficha comida = null;
         Casilla c;
         int id_casilla_prepasillo = 0;
         if (turno == Color.AMARILLO) {
@@ -171,45 +186,42 @@ public class Partida {
         if (id_casilla > 67){
             id_casilla = id_casilla + dado;
             c = tablero.obtenerCasillaPasillo(id_casilla, turno);
-            f.getCasilla().getFichas().remove(f);
-            c.getFichas().add(f);
-            /*comprobar si han llegado la ficha a meta. Si sí, dos cosas
-             * 1. Si han llegado las 4 fichas, indicar fin de partida
-             * 2. Sino, enviar al frontend para elegir ficha con la q mover
-             *      10 posiciones.
-            */
             if(id_casilla == 75) {
                 if(c.getFichas().size() == 4) {
                     this.estado = EstadoPartida.FINALIZADA;
-                }
-                else {
-                    comprobarMovimientos(10);
-                }   
+                }  
+            }
+            else {
+                turno = turno.siguienteTurno();
             }
         }
         else if (id_casilla + dado >= id_casilla_prepasillo){
             //entrada a pasillo
             id_casilla = 67 + ((id_casilla + dado - id_casilla_prepasillo));
-            f.getCasilla().getFichas().remove(f);
             c = tablero.obtenerCasillaPasillo(id_casilla, turno);
-            c.getFichas().add(f);
-            f.setCasilla(c);
+            turno = turno.siguienteTurno();
         }
         else {
             c = tablero.obtenerCasillaPerimetro(id_casilla + dado);
-            f.getCasilla().getFichas().remove(f);
-            c.getFichas().add(f);
             //COMIDAS
-            if(c.getFichas().size() == 1 &&
+            if (c.getFichas().size() == 2 &&
                 c.getColorPrimeraFicha() != turno && 
                 c.getTipo() == TipoCasilla.COMUN) {
-                c.eliminarPrimeraFicha();
-                /* AVANZAR 20 CASILLAS (AVISAR FRONTEND) 
-                 * Para ello, hacer otra vez el comprobarMovimientos(20)
-                */
-                comprobarMovimientos(20);
+                    comida = c.getFichas().get(0);
+                    c.eliminarPrimeraFicha();   // ¡ESTO IGUAL HAY QUE CAMBIARLO!
+                    Casilla casa = tablero.obtenerCasillaCasa(comida.getColor());
+                    casa.getFichas().add(comida);
+                    comida.setCasilla(casa);
             }
-        }  
+            else {
+                turno = turno.siguienteTurno();
+            }
+        } 
+        f.getCasilla().getFichas().remove(f);
+        c.getFichas().add(f);
+        f.setCasilla(c);
+        ResponseMovimiento rm = new ResponseMovimiento(c, comida, turno);
+        return rm;
     }
 }
 

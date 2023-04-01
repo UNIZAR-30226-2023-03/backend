@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import es.lamesa.parchis.service.PartidaService;
 import es.lamesa.parchis.model.Partida;
-import es.lamesa.parchis.model.Ficha;
 import es.lamesa.parchis.model.dto.PartidaDto;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
 import es.lamesa.parchis.model.dto.ResponsePartida;
+import es.lamesa.parchis.model.dto.ResponseDado;
 import es.lamesa.parchis.model.dto.ResponseMovimiento;
+import es.lamesa.parchis.model.dto.RequestMovimiento;
 
 @RestController
 @RequestMapping("/partida")
@@ -51,12 +52,13 @@ public class PartidaController {
     }
 
     @PostMapping("/dado/{id}")
-    public ResponseMovimiento comprobarMovimientos(@PathVariable("id") Long id, int dado) {
+    public ResponseDado comprobarMovimientos(@PathVariable("id") Long id, int dado) {
         return service.comprobarMovimientos(id, dado);
     }
 
-    @PostMapping("/movimiento/{id}")
-    public void realizarMovimiento(@PathVariable("id") Long id, int id_ficha){
-        service.realizarMovimiento(id, id_ficha);
+    @PostMapping("/movimiento")
+    public ResponseMovimiento realizarMovimiento(RequestMovimiento request) {
+        return service.realizarMovimiento(request);
     }
+    
 }
