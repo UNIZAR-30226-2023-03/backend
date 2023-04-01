@@ -127,9 +127,11 @@ public class Tablero {
     public int contarFichas(Color color) {
         int n = 0;
         for(Casilla c : casillas) {
-            for (Ficha f : c.getFichas()) {
-                if(f.getColor() == color) {
-                    n++;
+            if(c.getTipo() != TipoCasilla.CASA) {
+                for (Ficha f : c.getFichas()) {
+                    if(f.getColor() == color) {
+                        n++;
+                    }
                 }
             }
         }
@@ -156,6 +158,46 @@ public class Tablero {
             }
         }
         return n_fichas;
+    }
+
+    public int obtenerFichasColor(int casilla, Color color) {
+        int n_fichas = 0;
+        for (Casilla c : casillas) {
+            if(c.getPosicion() == casilla) {
+                for (Ficha f : c.getFichas()) {
+                    if (f.getColor() == color) {
+                        n_fichas++;
+                    }
+                }
+            }
+        }
+        return n_fichas;
+    }
+
+    public int obtenerSalida(Color c) {
+        int id_casilla = -2;
+        if (c == Color.AMARILLO) {
+            id_casilla = 4;
+        }
+        else if (c == Color.AZUL){
+            id_casilla = 21;
+        }
+        else if (c == Color.ROJO){
+            id_casilla = 38;
+        }
+        else if (c == Color.VERDE){
+            id_casilla = 55;
+        }
+        return id_casilla;
+    }
+
+    public Casilla obtenerCasillaCasa(Color c){
+        for (Casilla ca : casillas) {
+            if(ca.getColor() == c && ca.getPosicion() == -1) {
+                return ca;
+            }
+        }
+        return null;
     }
 
     public Casilla obtenerCasillaPerimetro(int casilla){

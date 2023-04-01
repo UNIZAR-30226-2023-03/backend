@@ -16,7 +16,7 @@ public class Producto {
     private String nombre;
 
     @Column(nullable = false)
-    private double precio;
+    private int precio;
 
     @Column(nullable = false)
     private String descripcion;
@@ -24,5 +24,4 @@ public class Producto {
     @Column(nullable = false)
     private String imagenUrl;
 
-    // Otros atributos y métodos según tus necesidades
 }

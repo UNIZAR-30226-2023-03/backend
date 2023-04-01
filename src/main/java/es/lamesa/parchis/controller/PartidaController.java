@@ -16,6 +16,7 @@ import es.lamesa.parchis.model.Ficha;
 import es.lamesa.parchis.model.dto.PartidaDto;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
 import es.lamesa.parchis.model.dto.ResponsePartida;
+import es.lamesa.parchis.model.dto.ResponseMovimiento;
 
 @RestController
 @RequestMapping("/partida")
@@ -50,7 +51,12 @@ public class PartidaController {
     }
 
     @PostMapping("/dado/{id}")
-    public List<Ficha> comprobarMovimientos(@PathVariable("id") Long id, int dado) {
+    public ResponseMovimiento comprobarMovimientos(@PathVariable("id") Long id, int dado) {
         return service.comprobarMovimientos(id, dado);
+    }
+
+    @PostMapping("/movimiento/{id}")
+    public void realizarMovimiento(@PathVariable("id") Long id, int id_ficha){
+        service.realizarMovimiento(id, id_ficha);
     }
 }

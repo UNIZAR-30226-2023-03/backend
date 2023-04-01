@@ -7,8 +7,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import es.lamesa.parchis.exception.GenericException;
+import es.lamesa.parchis.model.dto.ResponseMovimiento;
 
 @NoArgsConstructor
 @Data
@@ -56,27 +55,20 @@ public class Partida {
         turno.siguienteTurno();
     }
 
-    public void sacarFicha(int id_ficha){
-        Ficha f = null;
-        int id_casilla = -2;
-        if (turno == Color.AMARILLO) {
-            id_casilla = 4;
-        }
-        else if (turno == Color.AZUL){
-            id_casilla = 21;
-        }
-        else if (turno == Color.ROJO){
-            id_casilla = 38;
-        }
-        else if (turno == Color.VERDE){
-            id_casilla = 55;
-        }
+    public Ficha sacarFicha() {
+        int id_casilla = tablero.obtenerSalida(turno);
+        Casilla casa = tablero.obtenerCasillaCasa(turno);
+        Ficha f = casa.getFichas().get(0);
+        casa.getFichas().remove(0);
         Casilla c = tablero.getCasillas().get(id_casilla);
-        f = new Ficha(turno, id_ficha, c);
+        // ¿La casilla a donde va a salir la ficha está llena?
+        // ¿Y si se puede sacar?
         c.getFichas().add(f);
+        f.setCasilla(c);
+        return f;
     }
 
-    public List<Ficha> comprobarMovimientos(int num_dado) {
+    public ResponseMovimiento comprobarMovimientos(int num_dado) {
         int id_casilla;
         List<Ficha> bloqueadas = new ArrayList<Ficha>();
         List<Ficha> fichas_del_turno = new ArrayList<Ficha>();
@@ -89,8 +81,12 @@ public class Partida {
         if (fichas_del_turno.size() == 4 && num_dado == 6){ 
             num_dado++;
         }
-        if (num_dado == 5 && fichas_del_turno.size() < 4){
-            sacarFicha(fichas_del_turno.size() + 1);
+        if (num_dado == 5 && fichas_del_turno.size() < 4 && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) != 2) {
+            Ficha ficha_sacada = sacarFicha();
+            List<Ficha> fichas = new ArrayList<>();
+            fichas.add(ficha_sacada);
+            //ResponseMovimiento rm = new ResponseMovimiento(fichas, true);
+            //return rm;
         }
         else {
             for(Ficha i : fichas_del_turno) {
@@ -150,7 +146,9 @@ public class Partida {
                 }
             }
         }
-        return bloqueadas;
+        // ResponseMovimiento rm = new ResponseMovimiento(bloqueadas, false, null);
+        // return rm;
+        return null;
     }
 
     public void realizarMovimiento(int id_ficha, int dado) {
