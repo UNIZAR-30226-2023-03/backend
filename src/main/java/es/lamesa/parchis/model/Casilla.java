@@ -1,12 +1,15 @@
 package es.lamesa.parchis.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "casilla")
@@ -25,15 +28,13 @@ public class Casilla {
     @Column
     private Color color;
 
-    @OneToMany(mappedBy = "casilla")
-    private ArrayList<Ficha> fichas;
+    @OneToMany(mappedBy = "casilla", cascade = CascadeType.ALL)
+    private List<Ficha> fichas;
  
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "tablero_id")
     private Tablero tablero;
-
-    public Casilla() {}
 
     public Casilla(Tablero tablero, int pos, TipoCasilla tipo) {
         this.posicion = pos;
@@ -66,7 +67,7 @@ public class Casilla {
         this.color = c;
     }
 
-    public Color getColorPrimeraFicha() {
+    public Color obtenerColorPrimeraFicha() {
         return fichas.get(0).getColor();
     }
 

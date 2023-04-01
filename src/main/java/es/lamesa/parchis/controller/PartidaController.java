@@ -57,7 +57,7 @@ public class PartidaController {
     }
 
     @PostMapping("/movimiento")
-    public ResponseMovimiento realizarMovimiento(RequestMovimiento request) {
+    public ResponseMovimiento realizarMovimiento(@RequestBody RequestMovimiento request) {
         return service.realizarMovimiento(request);
     }
     

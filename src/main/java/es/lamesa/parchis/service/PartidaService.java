@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.lamesa.parchis.repository.PartidaRepository;
+import es.lamesa.parchis.repository.TableroRepository;
 import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.Usuario;
-import es.lamesa.parchis.model.Ficha;
 import es.lamesa.parchis.model.EstadoPartida;
 import es.lamesa.parchis.model.UsuarioPartida;
 import es.lamesa.parchis.exception.GenericException;
@@ -25,14 +25,17 @@ import es.lamesa.parchis.model.dto.ResponseMovimiento;
 public class PartidaService {
     
     @Autowired
-    PartidaRepository repository;
+    PartidaRepository pRepository;
+
+    @Autowired
+    TableroRepository tRepository;
      
     public List<Partida> getPartidas() {
-        return repository.findAll();
+        return pRepository.findAll();
     }
     
     public ResponsePartida crearPartidaPrivada(PartidaDto partidaDto) {
-        if (repository.findByNombreAndEstado(partidaDto.getNombre()) == null) {
+        if (pRepository.findByNombreAndEstado(partidaDto.getNombre()) == null) {
             Partida partida = new Partida();
             partida.setNombre(partidaDto.getNombre());
             partida.setPassword(partidaDto.getPassword());
@@ -48,7 +51,7 @@ public class PartidaService {
             up.setColor(Color.values()[partida.getJugadores().size()]);
 
             partida.getJugadores().add(up);
-            partida = repository.save(partida);
+            partida = pRepository.save(partida);
             ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
             return r;
         }
@@ -58,7 +61,7 @@ public class PartidaService {
     
     public ResponsePartida conectarPartidaPrivada(PartidaDto partidaDto) {
 		Partida partida = new Partida();
-		partida = repository.buscarPartida(partidaDto.getNombre());
+		partida = pRepository.buscarPartida(partidaDto.getNombre());
         if (partida != null) {
             if (partidaDto.getPassword().contentEquals(partida.getPassword())) {
                 Usuario usuario = new Usuario();
@@ -73,7 +76,7 @@ public class PartidaService {
                     partida.empezar();
                 }
 
-                partida = repository.save(partida);
+                partida = pRepository.save(partida);
                 ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
                 return r;
             }
@@ -81,23 +84,23 @@ public class PartidaService {
             throw new GenericException("Contraseña incorrecta para la sala indicada");
         }
         //EXCEPCIÓN NOMBRE DE PARTIDA NO ENCONTRADO
-        throw new GenericException("El nombre de sala indicado no existe");
+        throw new GenericException("La partida no existe o está ya en curso");
     }
 
     public void empezarPartida(Long id) {
-        Partida p = repository.findById(id).get();
+        Partida p = pRepository.findById(id).get();
         if (p.getJugadores().size() == 1) {
             throw new GenericException("Debe haber al menos 2 jugadores para empezar");
         }
         p.empezar();
-        repository.save(p);
+        pRepository.save(p);
     }
 
     public ResponsePartida jugarPartidaPublica(RequestPartidaPublica p) {
         List<Partida> partidas = new ArrayList<>();
         Partida partida = new Partida();
 
-        partidas = repository.buscarPublica();
+        partidas = pRepository.buscarPublica();
         if (partidas.isEmpty()){
             // Creo la partida
             partida.setConfigBarreras(p.getConfiguracion());
@@ -119,19 +122,24 @@ public class PartidaService {
             partida.empezar();
         }
         
-        partida = repository.save(partida);
+        partida = pRepository.save(partida);
         ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
         return r;
     }
 
     public ResponseDado comprobarMovimientos(Long id, int dado) {
-        Partida p = repository.findById(id).get();
-        return p.comprobarMovimientos(dado);
+        Partida p = pRepository.findById(id).get();
+        ResponseDado rd = p.comprobarMovimientos(dado);
+        pRepository.save(p);
+        return rd;
     }
     
     public ResponseMovimiento realizarMovimiento(RequestMovimiento request) {
-        Partida p = repository.findById(request.getPartida()).get();
-        return p.realizarMovimiento(request.getFicha(), request.getDado());
+        System.out.println(request.getPartida());
+        Partida p = pRepository.findById(request.getPartida()).get();
+        ResponseMovimiento rm = p.realizarMovimiento(request.getFicha(), request.getDado());
+        pRepository.save(p);
+        return rm;
     }
     
 }

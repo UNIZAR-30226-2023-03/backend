@@ -7,10 +7,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * La clase Tablero representa el tablero del juego Parchís.
  */
+@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "tablero")
@@ -21,10 +23,11 @@ public class Tablero {
     private Long id;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "tablero")
+    @OneToOne
+    @JoinColumn(name = "partida_id")
     private Partida partida;
 
-    @OneToMany(mappedBy = "tablero")
+    @OneToMany(mappedBy = "tablero", cascade = CascadeType.ALL)
     private List<Casilla> casillas;
 
     /**
@@ -37,18 +40,9 @@ public class Tablero {
 
     public void inicializarTablero(int num_jugadores) {
         //4 pasillos de dimensión 8 -> 4*8 + las [0,67] casillas perimetro
-        casillas = new ArrayList<Casilla>(4+68+4*8);
+        casillas = new ArrayList<Casilla>(num_jugadores+68+num_jugadores*8);
         Casilla c = new Casilla();
-        Ficha f;
-        //inicialización de casas
-        for(int i = 0; i < num_jugadores; i++) {
-            c = new Casilla(this, -1, TipoCasilla.CASA, Color.values()[i]);
-            // poner las fichas en las casillas CASA:
-            for(int j = 1; j <= 4; j++) {
-                f = new Ficha(Color.values()[i], j, c);
-                c.getFichas().add(f);
-            }
-        }
+        Ficha f;        
 
         //inicialización perimetro
         for(int i = 0; i < 68; i++) {
@@ -125,6 +119,16 @@ public class Tablero {
 			}
 			casillas.add(c);
 		}
+        //inicialización de casas
+        for(int i = 0; i < num_jugadores; i++) {
+            c = new Casilla(this, -1, TipoCasilla.CASA, Color.values()[i]);
+            casillas.add(c);
+            // poner las fichas en las casillas CASA:
+            for(int j = 1; j <= 4; j++) {
+                f = new Ficha(Color.values()[i], j, c);
+                c.getFichas().add(f);
+            }
+        }
     }
 
     public int contarFichas(Color color) {
@@ -178,20 +182,20 @@ public class Tablero {
     }
 
     public int obtenerSalida(Color c) {
-        int id_casilla = -2;
+        int num_casilla = -2;
         if (c == Color.AMARILLO) {
-            id_casilla = 4;
+            num_casilla = 4;
         }
         else if (c == Color.AZUL){
-            id_casilla = 21;
+            num_casilla = 21;
         }
         else if (c == Color.ROJO){
-            id_casilla = 38;
+            num_casilla = 38;
         }
         else if (c == Color.VERDE){
-            id_casilla = 55;
+            num_casilla = 55;
         }
-        return id_casilla;
+        return num_casilla;
     }
 
     public Casilla obtenerCasillaCasa(Color c){

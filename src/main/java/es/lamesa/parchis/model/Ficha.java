@@ -1,11 +1,13 @@
 package es.lamesa.parchis.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 
+@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "ficha")
@@ -25,6 +27,9 @@ public class Ficha {
     @ManyToOne
     @JoinColumn(name = "casilla_id")
     private Casilla casilla;
+
+    @Column(columnDefinition = "int default 0")
+    int numPasos;
     
     public Ficha(Color color, int numero, Casilla casilla) {
         this.numero = numero;

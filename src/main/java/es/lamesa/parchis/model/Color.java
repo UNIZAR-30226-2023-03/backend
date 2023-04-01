@@ -6,7 +6,7 @@ public enum Color {
     ROJO,
 	VERDE;
 
-    public Color siguienteTurno() {
-        return values()[(ordinal() + 1) % values().length];
+    public Color siguienteTurno(int num_jugadores) {
+        return values()[(ordinal() + 1) % num_jugadores];
     }
 }
