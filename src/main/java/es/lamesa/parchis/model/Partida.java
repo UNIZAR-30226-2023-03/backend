@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import es.lamesa.parchis.exception.GenericException;
+
 @NoArgsConstructor
 @Data
 @Entity
@@ -43,27 +45,20 @@ public class Partida {
     @Enumerated(EnumType.STRING)
     private EstadoPartida estado;
 
-    public Partida(String nombre, String password, UsuarioPartida jugador, ConfigBarreras configBarreras, EstadoPartida estado) {
-        this.nombre = nombre;
-        this.password = password;
-        this.jugadores.add(jugador);
-        this.configBarreras = configBarreras;
-        this.estado = estado;
-        this.tablero = new Tablero(this);
-    }
-
-    void empezar() {
+    public void empezar() {
+        this.tablero = new Tablero(jugadores.size(), this);
+        this.estado = EstadoPartida.EN_PROGRESO;
         int n = (int) (Math.random() * 4); //se elije de manera aleatoria el jugador que empieza en el intervalo [0,3]
         turno = Color.values()[n];
     }
 
-    void cambiarTurno() {
+    public void cambiarTurno() {
         turno.siguienteTurno();
     }
 
     public void sacarFicha(int id_ficha){
         Ficha f = null;
-        int id_casilla = 0;
+        int id_casilla = -2;
         if (turno == Color.AMARILLO) {
             id_casilla = 4;
         }
@@ -81,7 +76,7 @@ public class Partida {
         c.getFichas().add(f);
     }
 
-    public void comprobarMovimientos(int num_dado) {
+    public List<Ficha> comprobarMovimientos(int num_dado) {
         int id_casilla;
         List<Ficha> bloqueadas = new ArrayList<Ficha>();
         List<Ficha> fichas_del_turno = new ArrayList<Ficha>();
@@ -155,6 +150,7 @@ public class Partida {
                 }
             }
         }
+        return bloqueadas;
     }
 
     public void realizarMovimiento(int id_ficha, int dado) {
@@ -179,7 +175,6 @@ public class Partida {
             c = tablero.obtenerCasillaPasillo(id_casilla, turno);
             f.getCasilla().getFichas().remove(f);
             c.getFichas().add(f);
-            //HACER SAVE?
             /*comprobar si han llegado la ficha a meta. Si sí, dos cosas
              * 1. Si han llegado las 4 fichas, indicar fin de partida
              * 2. Sino, enviar al frontend para elegir ficha con la q mover

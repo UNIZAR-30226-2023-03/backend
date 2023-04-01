@@ -27,18 +27,18 @@ public class Tablero {
     /**
      * Crea una nueva instancia de la clase Tablero, inicializando tanto el perímetro como el pasillo.
      */
-    public Tablero(Partida p) {
+    public Tablero(int num_jugadores, Partida p) {
         this.partida = p;
-        inicializarTablero();
+        inicializarTablero(num_jugadores);
     }
 
-    public void inicializarTablero() {
+    public void inicializarTablero(int num_jugadores) {
         //4 pasillos de dimensión 8 -> 4*8 + las [0,67] casillas perimetro
         casillas = new ArrayList<Casilla>(4+68+4*8);
         Casilla c = new Casilla();
         Ficha f;
         //inicialización de casas
-        for(int i = 0; i < 4; i++) {
+        for(int i = 0; i < num_jugadores; i++) {
             c = new Casilla(this, -1, TipoCasilla.CASA, Color.values()[i]);
             // poner las fichas en las casillas CASA:
             for(int j = 1; j <= 4; j++) {

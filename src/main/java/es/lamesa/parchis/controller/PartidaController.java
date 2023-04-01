@@ -7,12 +7,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import es.lamesa.parchis.service.PartidaService;
 import es.lamesa.parchis.model.Partida;
+import es.lamesa.parchis.model.Ficha;
 import es.lamesa.parchis.model.dto.PartidaDto;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
+import es.lamesa.parchis.model.dto.ResponsePartida;
 
 @RestController
 @RequestMapping("/partida")
@@ -27,22 +30,27 @@ public class PartidaController {
     }
 
     @PostMapping("/crear")
-    public Long crearPartidaPrivada(@RequestBody PartidaDto request) {
-        return service.crearPartidaPrivada(request).getId();
+    public ResponsePartida crearPartidaPrivada(@RequestBody PartidaDto request) {
+        return service.crearPartidaPrivada(request);
     }
     
     @PostMapping("/conectar")
-    public Long conectarPartidaPrivada(@RequestBody PartidaDto request) {
-        return service.conectarPartidaPrivada(request).getId();
+    public ResponsePartida conectarPartidaPrivada(@RequestBody PartidaDto request) {
+        return service.conectarPartidaPrivada(request);
+    }
+
+    @PostMapping("/empezar/{id}")
+    public void empezarPartida(@PathVariable("id") Long id) {
+        service.empezarPartida(id);
     }
     
     @PostMapping("/publica")
-    public Long jugarPartidaPublica(@RequestBody RequestPartidaPublica request) {
-        return service.jugarPartidaPublica(request).getId();
+    public ResponsePartida jugarPartidaPublica(@RequestBody RequestPartidaPublica request) {
+        return service.jugarPartidaPublica(request);
     }
 
-    @PostMapping("/dado")
-    public void registrarDado(){
-        
+    @PostMapping("/dado/{id}")
+    public List<Ficha> comprobarMovimientos(@PathVariable("id") Long id, int dado) {
+        return service.comprobarMovimientos(id, dado);
     }
 }

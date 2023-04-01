@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import es.lamesa.parchis.repository.PartidaRepository;
 import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.Usuario;
+import es.lamesa.parchis.model.Ficha;
 import es.lamesa.parchis.model.EstadoPartida;
 import es.lamesa.parchis.model.UsuarioPartida;
 import es.lamesa.parchis.exception.GenericException;
 import es.lamesa.parchis.model.Color;
 import es.lamesa.parchis.model.dto.PartidaDto;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
+import es.lamesa.parchis.model.dto.ResponsePartida;
 
 @Service
 public class PartidaService {
@@ -26,7 +28,7 @@ public class PartidaService {
         return repository.findAll();
     }
     
-    public Partida crearPartidaPrivada(PartidaDto partidaDto) {
+    public ResponsePartida crearPartidaPrivada(PartidaDto partidaDto) {
         if (repository.findByNombreAndEstado(partidaDto.getNombre()) == null) {
             Partida partida = new Partida();
             partida.setNombre(partidaDto.getNombre());
@@ -43,14 +45,15 @@ public class PartidaService {
             up.setColor(Color.values()[partida.getJugadores().size()]);
 
             partida.getJugadores().add(up);
-            
-            return repository.save(partida);
+            partida = repository.save(partida);
+            ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
+            return r;
         }
         //EXCEPCIÓN NOMBRE DE SALA USADO EN PARTIDA QUE SE ESTÁ JUGANDO
         throw new GenericException("Nombre de sala no disponible: ya se está jugando una partida con ese nombre de sala");
     }
     
-    public Partida conectarPartidaPrivada(PartidaDto partidaDto) {
+    public ResponsePartida conectarPartidaPrivada(PartidaDto partidaDto) {
 		Partida partida = new Partida();
 		partida = repository.buscarPartida(partidaDto.getNombre());
         if (partida != null) {
@@ -64,11 +67,12 @@ public class PartidaService {
                 up.setColor(Color.values()[partida.getJugadores().size()]);
                 partida.getJugadores().add(up);
                 if (partida.getJugadores().size() == 4) {
-                    partida.setEstado(EstadoPartida.EN_PROGRESO);
+                    partida.empezar();
                 }
 
                 partida = repository.save(partida);
-                return partida;
+                ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
+                return r;
             }
             //EXCEPCIÓN CONTRASEÑA INCORRECTA
             throw new GenericException("Contraseña incorrecta para la sala indicada");
@@ -77,7 +81,16 @@ public class PartidaService {
         throw new GenericException("El nombre de sala indicado no existe");
     }
 
-    public Partida jugarPartidaPublica(RequestPartidaPublica p) {
+    public void empezarPartida(Long id) {
+        Partida p = repository.findById(id).get();
+        if (p.getJugadores().size() == 1) {
+            throw new GenericException("Debe haber al menos 2 jugadores para empezar");
+        }
+        p.empezar();
+        repository.save(p);
+    }
+
+    public ResponsePartida jugarPartidaPublica(RequestPartidaPublica p) {
         List<Partida> partidas = new ArrayList<>();
         Partida partida = new Partida();
 
@@ -100,12 +113,19 @@ public class PartidaService {
         partida.getJugadores().add(up);
 
         if (partida.getJugadores().size() == 4) {
-            partida.setEstado(EstadoPartida.EN_PROGRESO);
+            partida.empezar();
         }
         
         partida = repository.save(partida);
-        return partida;
+        ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
+        return r;
     }
 
+    public List<Ficha> comprobarMovimientos(Long id, int dado) {
+        Partida p = repository.findById(id).get();
+        return p.comprobarMovimientos(dado);
+    }
+    
+    
     
 }
