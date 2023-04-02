@@ -53,7 +53,7 @@ public class Tablero {
             else if (i == 21) {
                 c = new Casilla(this, i, TipoCasilla.SALIDA, Color.AZUL);
             }
-            else if (i == 37) {
+            else if (i == 38) {
                 c = new Casilla(this, i, TipoCasilla.SALIDA, Color.ROJO);
             }
             else if (i == 55) {

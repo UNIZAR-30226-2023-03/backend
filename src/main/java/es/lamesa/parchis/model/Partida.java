@@ -79,7 +79,6 @@ public class Partida {
         Ficha comida = null;
         if (num_dado == 5 && fichas_del_turno.size() < 4 && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) != 2) {
             int salida = tablero.obtenerSalida(turno);
-            System.out.println(salida);
             Casilla c = tablero.getCasillas().get(salida);
             if (c.getFichas().size() == 2) {
                 for (Ficha ficha : c.getFichas()) {
@@ -101,6 +100,7 @@ public class Partida {
             ResponseDado rd = new ResponseDado(fichas, true, comida, c, turno);
             return rd;
         }
+        
         else {
             if (fichas_del_turno.size() == 4 && num_dado == 6){ 
                 num_dado++;
@@ -141,7 +141,10 @@ public class Partida {
                 //     }
                 // }
                 if (i.getNumPasos() + num_dado > 71){ //¿se podría quitar condicion de turno? (si ya está en pasillo, ya se sabe que es del color del turno)
-                    bloqueadas.add(i);   
+                    bloqueadas.add(i);
+                }
+                else if (num_dado == 5 && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) == 2) {
+                   bloqueadas.add(i);
                 }
                 else{
                     if(tablero.obtenerFichas(id_casilla + num_dado) == 2) {
@@ -153,12 +156,24 @@ public class Partida {
                                 /*CONFIG.BLOQUEANTE_SOLO_SEGURO and TIPOCASILLA.SEGURO 
                                 * OR CONFIG.BLOQUEANTE_TODO -> bloquea ficha
                                 */
-                                if ((i.getCasilla().getTipo() == TipoCasilla.SEGURO &&
-                                configBarreras == ConfigBarreras.SOLO_SEGUROS) ||
-                                configBarreras == ConfigBarreras.TODAS_CASILLAS) {
+                                if (configBarreras == ConfigBarreras.SOLO_SEGUROS){
+                                    if (tablero.obtenerCasillaPerimetro(j).getTipo() == TipoCasilla.SEGURO || 
+                                        tablero.obtenerCasillaPerimetro(j).getTipo() == TipoCasilla.ENTRADA || 
+                                        tablero.obtenerCasillaPerimetro(j).getTipo() == TipoCasilla.SALIDA) {
+                                        bloqueadas.add(i);
+                                        break;
+                                    }
+                                }
+                                else {
                                     bloqueadas.add(i);
                                     break;
                                 }
+                                // if ((i.getCasilla().getTipo() == TipoCasilla.SEGURO &&
+                                // configBarreras == ConfigBarreras.SOLO_SEGUROS) ||
+                                // configBarreras == ConfigBarreras.TODAS_CASILLAS) {
+                                //     bloqueadas.add(i);
+                                //     break;
+                                // }
                             }
                         }
                     }
