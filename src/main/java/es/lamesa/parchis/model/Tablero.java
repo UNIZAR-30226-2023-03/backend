@@ -28,7 +28,7 @@ public class Tablero {
     private Partida partida;
 
     @OneToMany(mappedBy = "tablero", cascade = CascadeType.ALL)
-    private List<Casilla> casillas;
+    private List<Casilla> casillas = new ArrayList<>();
 
     /**
      * Crea una nueva instancia de la clase Tablero, inicializando tanto el perímetro como el pasillo.
@@ -212,32 +212,9 @@ public class Tablero {
     }
 
     public Casilla obtenerCasillaPasillo(int casilla, Color c) {
-        if(c == Color.AMARILLO) {
-            for (Casilla ca : casillas) {
-                if(ca.getPosicion() == casilla && (ca.getTipo() == TipoCasilla.PASILLO || ca.getTipo() == TipoCasilla.META) && ca.getColor() == c ) {
-                    return ca;
-                }
-            }
-        }
-        else if(c == Color.AZUL) {
-            for (Casilla ca : casillas) {
-                if(ca.getPosicion() == casilla && ca.getTipo() == TipoCasilla.PASILLO && ca.getColor() == c) {
-                    return ca;
-                }
-            }
-        }
-        else if(c == Color.ROJO) {
-            for (Casilla ca : casillas) {
-                if(ca.getPosicion() == casilla && ca.getTipo() == TipoCasilla.PASILLO && ca.getColor() == c) {
-                    return ca;
-                }
-            }
-        }
-        else if(c == Color.VERDE) {
-            for (Casilla ca : casillas) {
-                if(ca.getPosicion() == casilla && ca.getTipo() == TipoCasilla.PASILLO && ca.getColor() == c) {
-                    return ca;
-                }
+        for (Casilla ca : casillas) {
+            if(ca.getPosicion() == casilla && (ca.getTipo() == TipoCasilla.PASILLO || ca.getTipo() == TipoCasilla.META) && ca.getColor() == c) {
+                return ca;
             }
         }
         return null;

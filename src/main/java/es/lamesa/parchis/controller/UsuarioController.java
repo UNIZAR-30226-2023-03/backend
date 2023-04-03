@@ -15,11 +15,13 @@ import es.lamesa.parchis.model.dto.UsuarioDto;
 import es.lamesa.parchis.model.dto.RequestAmistad;
 import es.lamesa.parchis.model.dto.AmigosDto;
 import es.lamesa.parchis.model.dto.LoginDto;
+import es.lamesa.parchis.model.dto.ResponseUsuario;
 import es.lamesa.parchis.model.Usuario;
 
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
+
     @Autowired
     UsuarioService service;
     
@@ -31,12 +33,12 @@ public class UsuarioController {
     }
 
     @PostMapping("/crear")
-    public Usuario addUsuario(@RequestBody UsuarioDto usuario) {
+    public ResponseUsuario addUsuario(@RequestBody UsuarioDto usuario) {
         return service.addUsuario(usuario);
     }
 
     @PostMapping("/login")
-    public boolean validarUsuario(@RequestBody LoginDto request) {
+    public ResponseUsuario validarUsuario(@RequestBody LoginDto request) {
         return service.validarUsuario(request.getLogin(), request.getPassword());
     }
 
@@ -73,25 +75,34 @@ public class UsuarioController {
         service.denegarSolicitud(request);
     }
 
-    @GetMapping("/obtener-id")
-    public Long obtenerId(String username){
-        return service.obtenerId(username);
-    }
-
     @PostMapping("/eliminar-amigo")
     public void eliminarAmigo(@RequestBody RequestAmistad request) {
         service.eliminarAmigo(request);
     }
 
     @PostMapping("/premio/{id}")
-	public void actualizarMonedas(@PathVariable("id") Long id, int premio){
+	public void actualizarMonedas(@PathVariable("id") Long id, int premio) {
 		service.actualizarMonedas(id, premio);
 	}
 
     @PostMapping("/comprar/{id}")
-    public void realizarCompra(@PathVariable("id") Long id, int coste){
+    public void realizarCompra(@PathVariable("id") Long id, int coste) {
         service.realizarCompra(id, coste);
     }
 
-}
+    @GetMapping("/monedas/{id}")
+    public int obtenerNumMonedas(@PathVariable("id") Long id) {
+        return service.obtenerNumMonedas(id);
+    }
 
+    @GetMapping("/username/{id}")
+    public String obtenerUsername(@PathVariable("id") Long id) {
+        return service.obtenerUsername(id);
+    }
+
+    @GetMapping("/obtener-id")
+    public Long obtenerId(String name) {
+        return service.obtenerId(name);
+    }
+
+}

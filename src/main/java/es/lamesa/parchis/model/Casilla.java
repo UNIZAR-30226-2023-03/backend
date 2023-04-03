@@ -29,7 +29,7 @@ public class Casilla {
     private Color color;
 
     @OneToMany(mappedBy = "casilla", cascade = CascadeType.ALL)
-    private List<Ficha> fichas;
+    private List<Ficha> fichas = new ArrayList<>();
  
     @JsonIgnore
     @ManyToOne
@@ -39,10 +39,10 @@ public class Casilla {
     public Casilla(Tablero tablero, int pos, TipoCasilla tipo) {
         this.posicion = pos;
         if (tipo == TipoCasilla.META){
-            fichas = new ArrayList<Ficha>(4);
+            fichas = new ArrayList<>(4);
         }
         else {
-            fichas = new ArrayList<Ficha>(2);
+            fichas = new ArrayList<>(2);
         }
         this.tipo = tipo;
         this.tablero = tablero;

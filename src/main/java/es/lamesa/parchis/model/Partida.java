@@ -209,7 +209,7 @@ public class Partida {
             id_casilla = id_casilla + dado;
             c = tablero.obtenerCasillaPasillo(id_casilla, turno);
             if(id_casilla == 75) {
-                if(c.getFichas().size() == 4) {
+                if(c.getFichas().size() == 3) {
                     this.estado = EstadoPartida.FINALIZADA;
                 }  
             }

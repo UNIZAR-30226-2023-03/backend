@@ -6,8 +6,10 @@ import lombok.Data;
 
 @Data
 public class PartidaDto {
+
     private String nombre;
     private String password;
     private Long jugador;
     private ConfigBarreras configuracion;
+    
 }

@@ -3,6 +3,7 @@ package es.lamesa.parchis.model;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class Usuario {
     @Column(unique = true, nullable = false)
     private String username;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 

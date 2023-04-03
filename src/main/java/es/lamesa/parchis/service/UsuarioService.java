@@ -15,10 +15,11 @@ import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.dto.AmigosDto;
 import es.lamesa.parchis.model.dto.RequestAmistad;
 import es.lamesa.parchis.model.dto.UsuarioDto;
-
+import es.lamesa.parchis.model.dto.ResponseUsuario;
 
 @Service
 public class UsuarioService {
+
     @Autowired
     UsuarioRepository uRepository;
     @Autowired
@@ -28,7 +29,7 @@ public class UsuarioService {
         return uRepository.findAll();
     }
 
-    public Usuario addUsuario(UsuarioDto usuario) {
+    public ResponseUsuario addUsuario(UsuarioDto usuario) {
         if (uRepository.findByEmail(usuario.getEmail()) != null) {
             throw new GenericException("Ya existe un usuario con ese email");
         }
@@ -41,17 +42,24 @@ public class UsuarioService {
         u.setUsername(usuario.getUsername());
         u.setPassword(usuario.getPassword());
         u.encriptarPassword();
-        return uRepository.save(u);
+        u = uRepository.save(u);
+        ResponseUsuario ru = new ResponseUsuario(u.getId(), u.getEmail(), u.getUsername(), u.getNumMonedas());
+        return ru;
     }
 
-    public boolean validarUsuario(String login, String password) {
-        Usuario usuario = uRepository.findByUsernameOrEmail(login);
-        if (usuario == null) {
+    public ResponseUsuario validarUsuario(String login, String password) {
+        Usuario u = uRepository.findByUsernameOrEmail(login);
+        if (u == null) {
             throw new GenericException("El usuario no existe");
         }
-        System.out.println(usuario.getPassword());
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder.matches(password, usuario.getPassword());
+        if (encoder.matches(password, u.getPassword())) {
+            ResponseUsuario ru = new ResponseUsuario(u.getId(), u.getEmail(), u.getUsername(), u.getNumMonedas());
+            return ru;
+        }
+        else {
+            throw new GenericException("La contraseña no es correcta");
+        }
     }
 
     public void borrarUsuario(Long id) {
@@ -116,11 +124,6 @@ public class UsuarioService {
         aRepository.delete(a);
     }
 
-    public Long obtenerId(String name) {
-        Usuario u = uRepository.findByUsername(name);
-        return u.getId();
-    }
-
     public void eliminarAmigo(RequestAmistad request){
         Usuario usuario = new Usuario();
         Usuario amigo = new Usuario();
@@ -152,5 +155,20 @@ public class UsuarioService {
         Usuario u = uRepository.findById(id).get();
         u.setEmail(email);
         uRepository.save(u);
+    }
+
+    public int obtenerNumMonedas(Long id) {
+        Usuario u = uRepository.findById(id).get();
+        return u.getNumMonedas();
+    }
+
+    public String obtenerUsername(Long id) {
+        Usuario u = uRepository.findById(id).get();
+        return u.getUsername();
+    }
+
+    public Long obtenerId(String name) {
+        Usuario u = uRepository.findByUsername(name);
+        return u.getId();
     }
 }
