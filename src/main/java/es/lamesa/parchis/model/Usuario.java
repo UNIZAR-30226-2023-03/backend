@@ -45,6 +45,10 @@ public class Usuario {
     @OneToMany(mappedBy = "amigo", cascade = CascadeType.ALL)
     private List<Amistad> solicitudesRecibidas = new ArrayList<>();
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<UsuarioProducto> productos = new ArrayList<>();
+
     public void encriptarPassword() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         this.password = encoder.encode(password);

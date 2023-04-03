@@ -17,9 +17,11 @@ import es.lamesa.parchis.model.dto.AmigosDto;
 import es.lamesa.parchis.model.dto.LoginDto;
 import es.lamesa.parchis.model.dto.ResponseUsuario;
 import es.lamesa.parchis.model.Usuario;
+import es.lamesa.parchis.model.UsuarioProducto;
+import es.lamesa.parchis.model.dto.RequestProducto;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/usuario")
 public class UsuarioController {
 
     @Autowired
@@ -85,11 +87,6 @@ public class UsuarioController {
 		service.actualizarMonedas(id, premio);
 	}
 
-    @PostMapping("/comprar/{id}")
-    public void realizarCompra(@PathVariable("id") Long id, int coste) {
-        service.realizarCompra(id, coste);
-    }
-
     @GetMapping("/monedas/{id}")
     public int obtenerNumMonedas(@PathVariable("id") Long id) {
         return service.obtenerNumMonedas(id);
@@ -103,6 +100,16 @@ public class UsuarioController {
     @GetMapping("/obtener-id")
     public Long obtenerId(String name) {
         return service.obtenerId(name);
+    }
+
+    @PostMapping("/activar")
+    public void activarProducto(@RequestBody RequestProducto request) {
+        service.activarProducto(request);
+    }
+
+    @GetMapping("/productos/{id}")
+    public List<UsuarioProducto> getProductos(@PathVariable("id") Long id) {
+        return service.getProductos(id);
     }
 
 }

@@ -8,20 +8,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import es.lamesa.parchis.repository.UsuarioRepository;
+import es.lamesa.parchis.repository.ProductoRepository;
 import es.lamesa.parchis.repository.AmistadRepository;
+import es.lamesa.parchis.repository.UsuarioProductoRepository;
 import es.lamesa.parchis.exception.GenericException;
 import es.lamesa.parchis.model.Amistad;
+import es.lamesa.parchis.model.Producto;
 import es.lamesa.parchis.model.Usuario;
+import es.lamesa.parchis.model.UsuarioProducto;
 import es.lamesa.parchis.model.dto.AmigosDto;
 import es.lamesa.parchis.model.dto.RequestAmistad;
 import es.lamesa.parchis.model.dto.UsuarioDto;
 import es.lamesa.parchis.model.dto.ResponseUsuario;
+import es.lamesa.parchis.model.dto.RequestProducto;
 
 @Service
 public class UsuarioService {
 
     @Autowired
+    ProductoRepository pRepository;
+
+    @Autowired
     UsuarioRepository uRepository;
+
+    @Autowired
+    UsuarioProductoRepository upRepository;
+    
     @Autowired
     AmistadRepository aRepository;
 
@@ -42,7 +54,12 @@ public class UsuarioService {
         u.setUsername(usuario.getUsername());
         u.setPassword(usuario.getPassword());
         u.encriptarPassword();
-        u = uRepository.saveAndFlush(u);
+        // ASIGNAR TABLERO Y FICHAS PREDETERMINADAS AL USUARIO CREADO:
+        // 1) obtener tablero predeterminado (en productoRepository según el tipo (Tipo.TABLERO) y el nombre (Tablero Predeterminado)
+        // u.getProductos().add(t);
+        // 2) obtener ficha predeterminada (en productoRepository según el tipo (Tipo.FICHA) y el nombre (Ficha Predeterminada)
+        // u.getProductos().add(f);
+        u = uRepository.save(u);
         ResponseUsuario ru = new ResponseUsuario(u.getId(), u.getEmail(), u.getUsername(), u.getNumMonedas());
         return ru;
     }
@@ -75,7 +92,7 @@ public class UsuarioService {
         usuario.setId(amistad.getUsuario());
         a.setUsuario(usuario);                                   
         a.setAceptado(false);
-        aRepository.saveAndFlush(a);            
+        aRepository.save(a);            
         return true;
     }
 
@@ -111,7 +128,7 @@ public class UsuarioService {
         amigo.setId(amistad.getUsuario());
         Amistad a = aRepository.findByUsuarioAndAmigo(usuario, amigo);
         a.setAceptado(true);
-        aRepository.saveAndFlush(a);
+        aRepository.save(a);
     }
 
     public void denegarSolicitud(RequestAmistad amistad) {
@@ -135,26 +152,20 @@ public class UsuarioService {
 
     public void actualizarMonedas(Long id, int premio){
         Usuario u = uRepository.findById(id).get();
-        u.setNumMonedas(premio);
-        uRepository.saveAndFlush(u);
-    }
-
-    public void realizarCompra(Long id, int coste){
-        Usuario u = uRepository.findById(id).get();
-        u.setNumMonedas(u.getNumMonedas() - coste);
-        uRepository.saveAndFlush(u);
+        u.setNumMonedas(u.getNumMonedas() + premio);
+        uRepository.save(u);
     }
 
     public void actualizarUsername(Long id, String username){
         Usuario u = uRepository.findById(id).get();
         u.setUsername(username);
-        uRepository.saveAndFlush(u);
+        uRepository.save(u);
     }
 
     public void actualizarEmail(Long id, String email){
         Usuario u = uRepository.findById(id).get();
         u.setEmail(email);
-        uRepository.saveAndFlush(u);
+        uRepository.save(u);
     }
 
     public int obtenerNumMonedas(Long id) {
@@ -171,4 +182,24 @@ public class UsuarioService {
         Usuario u = uRepository.findByUsername(name);
         return u.getId();
     }
+    
+    public List<UsuarioProducto> getProductos(Long id) {
+        Usuario u = uRepository.findById(id).get();
+        return upRepository.findByUsuario(u);
+    }
+
+    public void activarProducto(RequestProducto request) {
+        Usuario u = uRepository.findById(request.getUsuario()).get();
+        Producto p = pRepository.findById(request.getProducto()).get();
+        UsuarioProducto up = upRepository.findByUsuarioAndProducto(u, p);
+        Producto activo = upRepository.getProductoActivado(u);
+        if (activo.getId() == p.getId()) {
+            throw new GenericException("Ya tienes el producto activado");
+        }
+        up.setActivo(true);
+        up = upRepository.findByUsuarioAndProducto(u, activo);
+        up.setActivo(false);
+        upRepository.save(up);
+    }
+
 }

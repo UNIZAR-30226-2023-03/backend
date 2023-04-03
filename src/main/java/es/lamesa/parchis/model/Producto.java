@@ -3,6 +3,10 @@ package es.lamesa.parchis.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Data
 @Entity
 @Table(name = "producto")
@@ -23,5 +27,13 @@ public class Producto {
 
     @Column(nullable = false)
     private String imagenUrl;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TipoProducto tipoProducto;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
+    private List<UsuarioProducto> adquisidores = new ArrayList<>();
 
 }

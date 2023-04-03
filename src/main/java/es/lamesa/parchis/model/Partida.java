@@ -64,7 +64,6 @@ public class Partida {
         Casilla c = tablero.getCasillas().get(id_casilla);
         c.getFichas().add(f);
         f.setCasilla(c);
-        turno = turno.siguienteTurno(jugadores.size());
         return f;
     }
 
@@ -80,6 +79,7 @@ public class Partida {
         if (num_dado == 5 && fichas_del_turno.size() < 4 && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) != 2) {
             int salida = tablero.obtenerSalida(turno);
             Casilla c = tablero.getCasillas().get(salida);
+            boolean ficha_comida = false;
             if (c.getFichas().size() == 2) {
                 for (Ficha ficha : c.getFichas()) {
                     if (ficha.getColor() != turno) {
@@ -89,6 +89,7 @@ public class Partida {
                         casa.getFichas().add(comida);
                         comida.setCasilla(casa);
                         comida.setNumPasos(0);
+                        ficha_comida = true;
                         break;
                     }
                 }
@@ -97,54 +98,23 @@ public class Partida {
             Ficha ficha_sacada = sacarFicha();
             List<Ficha> fichas = new ArrayList<>();
             fichas.add(ficha_sacada);
+            if (!ficha_comida) {
+                turno = turno.siguienteTurno(jugadores.size());
+            }
             ResponseDado rd = new ResponseDado(fichas, true, comida, c, turno);
             return rd;
         }
-        
         else {
             if (fichas_del_turno.size() == 4 && num_dado == 6){ 
                 num_dado++;
             }
             for(Ficha i : fichas_del_turno) {
                 id_casilla = i.getCasilla().getPosicion();
-                // if(turno == Color.AMARILLO) {
-                //     if (i.getCasilla().getTipo() == TipoCasilla.PASILLO){
-                //         if (id_casilla + num_dado > 75){
-                //             bloqueadas.add(i);   
-                //         }
-                //     }
-                // }
-                // else if(turno == Color.AZUL) {
-                //     if (i.getCasilla().getTipo() == TipoCasilla.PASILLO){
-                //         if (id_casilla + num_dado > 75){
-                //             bloqueadas.add(i);   
-                //         }
-                //     }
-                // }
-                // else if(turno == Color.ROJO) {
-                //     if (i.getCasilla().getTipo() == TipoCasilla.PASILLO){
-                //         if (id_casilla + num_dado > 75){
-                //             bloqueadas.add(i);   
-                //         }
-                //     }
-                // }
-                // else if(turno == Color.VERDE) {
-                //     if (i.getCasilla().getTipo() == TipoCasilla.PASILLO){
-                //         if (id_casilla + num_dado > 75){
-                //             bloqueadas.add(i);   
-                //         }
-                //     }
-                // }
-                // if (i.getCasilla().getTipo() == TipoCasilla.PASILLO && i.getCasilla().getColor() == turno){ //¿se podría quitar condicion de turno? (si ya está en pasillo, ya se sabe que es del color del turno)
-                //     if (id_casilla + num_dado > 75){
-                //         bloqueadas.add(i);   
-                //     }
-                // }
                 if (i.getNumPasos() + num_dado > 71){ //¿se podría quitar condicion de turno? (si ya está en pasillo, ya se sabe que es del color del turno)
                     bloqueadas.add(i);
                 }
                 else if (num_dado == 5 && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) == 2) {
-                   bloqueadas.add(i);
+                    bloqueadas.add(i);
                 }
                 else{
                     if(tablero.obtenerFichas(id_casilla + num_dado) == 2) {
@@ -168,12 +138,6 @@ public class Partida {
                                     bloqueadas.add(i);
                                     break;
                                 }
-                                // if ((i.getCasilla().getTipo() == TipoCasilla.SEGURO &&
-                                // configBarreras == ConfigBarreras.SOLO_SEGUROS) ||
-                                // configBarreras == ConfigBarreras.TODAS_CASILLAS) {
-                                //     bloqueadas.add(i);
-                                //     break;
-                                // }
                             }
                         }
                     }
@@ -209,11 +173,12 @@ public class Partida {
         if (id_casilla > 67) {
             id_casilla = id_casilla + dado;
             c = tablero.obtenerCasillaPasillo(id_casilla, turno);
-            if(id_casilla == 75) {
-                if(c.getFichas().size() == 3) {
+            if (id_casilla == 75) {
+                if (c.getFichas().size() == 3) {
                     this.estado = EstadoPartida.FINALIZADA;
                     acabada = true;
-                }  
+                    jugadores.get(turno.ordinal()).setGanador(true);
+                }
             }
             else {
                 turno = turno.siguienteTurno(jugadores.size());
@@ -232,7 +197,7 @@ public class Partida {
                 c.obtenerColorPrimeraFicha() != turno && 
                 c.getTipo() == TipoCasilla.COMUN) {
                     comida = c.getFichas().get(0);
-                    c.eliminarPrimeraFicha();   // ¡ESTO IGUAL HAY QUE CAMBIARLO!
+                    c.eliminarPrimeraFicha();  
                     Casilla casa = tablero.obtenerCasillaCasa(comida.getColor());
                     casa.getFichas().add(comida);
                     comida.setCasilla(casa);
@@ -250,4 +215,3 @@ public class Partida {
         return rm;
     }
 }
-

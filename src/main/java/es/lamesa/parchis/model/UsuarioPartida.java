@@ -27,14 +27,15 @@ public class UsuarioPartida {
     private Partida partida;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "color")
     private Color color;
+
+    @Column(columnDefinition = "boolean default false")
+    private boolean ganador;
 
     public UsuarioPartida(Usuario usuario, Partida partida, Color color) {
         this.usuario = usuario;
         this.partida = partida;
         this.color = color;
     }
-}
 
-    
+}
