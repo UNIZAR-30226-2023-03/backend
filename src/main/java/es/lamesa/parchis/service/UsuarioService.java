@@ -42,7 +42,7 @@ public class UsuarioService {
         u.setUsername(usuario.getUsername());
         u.setPassword(usuario.getPassword());
         u.encriptarPassword();
-        u = uRepository.save(u);
+        u = uRepository.saveAndFlush(u);
         ResponseUsuario ru = new ResponseUsuario(u.getId(), u.getEmail(), u.getUsername(), u.getNumMonedas());
         return ru;
     }
@@ -75,7 +75,7 @@ public class UsuarioService {
         usuario.setId(amistad.getUsuario());
         a.setUsuario(usuario);                                   
         a.setAceptado(false);
-        aRepository.save(a);            
+        aRepository.saveAndFlush(a);            
         return true;
     }
 
@@ -111,7 +111,7 @@ public class UsuarioService {
         amigo.setId(amistad.getUsuario());
         Amistad a = aRepository.findByUsuarioAndAmigo(usuario, amigo);
         a.setAceptado(true);
-        aRepository.save(a);
+        aRepository.saveAndFlush(a);
     }
 
     public void denegarSolicitud(RequestAmistad amistad) {
@@ -136,25 +136,25 @@ public class UsuarioService {
     public void actualizarMonedas(Long id, int premio){
         Usuario u = uRepository.findById(id).get();
         u.setNumMonedas(premio);
-        uRepository.save(u);
+        uRepository.saveAndFlush(u);
     }
 
     public void realizarCompra(Long id, int coste){
         Usuario u = uRepository.findById(id).get();
         u.setNumMonedas(u.getNumMonedas() - coste);
-        uRepository.save(u);
+        uRepository.saveAndFlush(u);
     }
 
     public void actualizarUsername(Long id, String username){
         Usuario u = uRepository.findById(id).get();
         u.setUsername(username);
-        uRepository.save(u);
+        uRepository.saveAndFlush(u);
     }
 
     public void actualizarEmail(Long id, String email){
         Usuario u = uRepository.findById(id).get();
         u.setEmail(email);
-        uRepository.save(u);
+        uRepository.saveAndFlush(u);
     }
 
     public int obtenerNumMonedas(Long id) {

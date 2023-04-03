@@ -47,7 +47,7 @@ public class PartidaService {
             up.setColor(Color.values()[partida.getJugadores().size()]);
 
             partida.getJugadores().add(up);
-            partida = repository.save(partida);
+            partida = repository.saveAndFlush(partida);
             ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
             return r;
         }
@@ -72,7 +72,7 @@ public class PartidaService {
                     partida.empezar();
                 }
 
-                partida = repository.save(partida);
+                partida = repository.saveAndFlush(partida);
                 ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
                 return r;
             }
@@ -92,7 +92,7 @@ public class PartidaService {
             throw new GenericException("No se puede crear una partida que ya está en progreso");
         }
         p.empezar();
-        repository.save(p);
+        repository.saveAndFlush(p);
     }
 
     public ResponsePartida jugarPartidaPublica(RequestPartidaPublica p) {
@@ -121,7 +121,7 @@ public class PartidaService {
             partida.empezar();
         }
         
-        partida = repository.save(partida);
+        partida = repository.saveAndFlush(partida);
         ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
         return r;
     }
@@ -129,7 +129,7 @@ public class PartidaService {
     public ResponseDado comprobarMovimientos(Long id, int dado) {
         Partida p = repository.findById(id).get();
         ResponseDado rd = p.comprobarMovimientos(dado);
-        repository.save(p);
+        repository.saveAndFlush(p);
         return rd;
     }
     
@@ -137,7 +137,7 @@ public class PartidaService {
         System.out.println(request.getPartida());
         Partida p = repository.findById(request.getPartida()).get();
         ResponseMovimiento rm = p.realizarMovimiento(request.getFicha(), request.getDado());
-        repository.save(p);
+        repository.saveAndFlush(p);
         return rm;
     }
     
