@@ -11,11 +11,13 @@ public class ResponseMovimiento {
     private Casilla destino;
     private Ficha comida;
     private Color turno;
+    private boolean acabada;
 
-    public ResponseMovimiento(Casilla destino, Ficha comida, Color turno) {
+    public ResponseMovimiento(Casilla destino, Ficha comida, Color turno, boolean acabada) {
         this.destino = destino;
         this.comida = comida;
         this.turno = turno;
+        this.acabada = acabada;
     }
 
 }

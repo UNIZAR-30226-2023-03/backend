@@ -191,6 +191,7 @@ public class Partida {
         Ficha f = tablero.buscarFicha(num_ficha, turno);
         Ficha comida = null;
         Casilla c;
+        boolean acabada = false;
         int id_casilla_prepasillo = 0;
         if (turno == Color.AMARILLO) {
             id_casilla_prepasillo = 67;
@@ -211,6 +212,7 @@ public class Partida {
             if(id_casilla == 75) {
                 if(c.getFichas().size() == 3) {
                     this.estado = EstadoPartida.FINALIZADA;
+                    acabada = true;
                 }  
             }
             else {
@@ -244,7 +246,7 @@ public class Partida {
         c.getFichas().add(f);
         f.setCasilla(c);
         f.setNumPasos(f.getNumPasos() + dado);
-        ResponseMovimiento rm = new ResponseMovimiento(c, comida, turno);
+        ResponseMovimiento rm = new ResponseMovimiento(c, comida, turno, acabada);
         return rm;
     }
 }
