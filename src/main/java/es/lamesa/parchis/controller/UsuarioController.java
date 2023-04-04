@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import es.lamesa.parchis.service.UsuarioService;
-import es.lamesa.parchis.model.dto.UsuarioDto;
+import es.lamesa.parchis.model.dto.RequestUsuario;
 import es.lamesa.parchis.model.dto.RequestAmistad;
-import es.lamesa.parchis.model.dto.AmigosDto;
-import es.lamesa.parchis.model.dto.LoginDto;
+import es.lamesa.parchis.model.dto.ResponseAmistad;
+import es.lamesa.parchis.model.dto.RequestLogin;
 import es.lamesa.parchis.model.dto.ResponseUsuario;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.UsuarioProducto;
@@ -35,12 +35,12 @@ public class UsuarioController {
     }
 
     @PostMapping("/crear")
-    public ResponseUsuario addUsuario(@RequestBody UsuarioDto usuario) {
+    public ResponseUsuario addUsuario(@RequestBody RequestUsuario usuario) {
         return service.addUsuario(usuario);
     }
 
     @PostMapping("/login")
-    public ResponseUsuario validarUsuario(@RequestBody LoginDto request) {
+    public ResponseUsuario validarUsuario(@RequestBody RequestLogin request) {
         return service.validarUsuario(request.getLogin(), request.getPassword());
     }
 
@@ -58,12 +58,12 @@ public class UsuarioController {
     }
 
     @GetMapping("/solicitudes/{id}")
-    public List<AmigosDto> mostrarSolicitudes(@PathVariable("id") Long id) {
+    public List<ResponseAmistad> mostrarSolicitudes(@PathVariable("id") Long id) {
         return service.mostrarSolicitudes(id);
     }
 
     @GetMapping("/amigos/{id}")
-    public List<AmigosDto> getAmigos(@PathVariable("id") Long id) {
+    public List<ResponseAmistad> getAmigos(@PathVariable("id") Long id) {
         return service.getAmigos(id);
     }
 

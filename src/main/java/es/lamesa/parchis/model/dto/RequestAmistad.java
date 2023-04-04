@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class RequestAmistad {
+
     private Long usuario;
     private Long amigo;
+    
 }

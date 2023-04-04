@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import es.lamesa.parchis.service.PartidaService;
 import es.lamesa.parchis.model.Partida;
-import es.lamesa.parchis.model.dto.PartidaDto;
+import es.lamesa.parchis.model.dto.RequestPartida;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
 import es.lamesa.parchis.model.dto.ResponsePartida;
 import es.lamesa.parchis.model.dto.ResponseDado;
@@ -32,12 +32,12 @@ public class PartidaController {
     }
 
     @PostMapping("/crear")
-    public ResponsePartida crearPartidaPrivada(@RequestBody PartidaDto request) {
+    public ResponsePartida crearPartidaPrivada(@RequestBody RequestPartida request) {
         return service.crearPartidaPrivada(request);
     }
     
     @PostMapping("/conectar")
-    public ResponsePartida conectarPartidaPrivada(@RequestBody PartidaDto request) {
+    public ResponsePartida conectarPartidaPrivada(@RequestBody RequestPartida request) {
         return service.conectarPartidaPrivada(request);
     }
 

@@ -1,11 +1,11 @@
 package es.lamesa.parchis.model.dto;
 
-import es.lamesa.parchis.model.ConfigBarreras;
-
 import lombok.Data;
 
+import es.lamesa.parchis.model.ConfigBarreras;
+
 @Data
-public class PartidaDto {
+public class RequestPartida {
 
     private String nombre;
     private String password;

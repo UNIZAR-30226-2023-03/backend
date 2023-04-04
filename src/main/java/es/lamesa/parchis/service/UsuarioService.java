@@ -11,16 +11,16 @@ import es.lamesa.parchis.repository.UsuarioRepository;
 import es.lamesa.parchis.repository.ProductoRepository;
 import es.lamesa.parchis.repository.AmistadRepository;
 import es.lamesa.parchis.repository.UsuarioProductoRepository;
-import es.lamesa.parchis.exception.GenericException;
 import es.lamesa.parchis.model.Amistad;
 import es.lamesa.parchis.model.Producto;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.UsuarioProducto;
-import es.lamesa.parchis.model.dto.AmigosDto;
+import es.lamesa.parchis.model.dto.ResponseAmistad;
 import es.lamesa.parchis.model.dto.RequestAmistad;
-import es.lamesa.parchis.model.dto.UsuarioDto;
+import es.lamesa.parchis.model.dto.RequestUsuario;
 import es.lamesa.parchis.model.dto.ResponseUsuario;
 import es.lamesa.parchis.model.dto.RequestProducto;
+import es.lamesa.parchis.exception.GenericException;
 
 @Service
 public class UsuarioService {
@@ -33,7 +33,7 @@ public class UsuarioService {
 
     @Autowired
     UsuarioProductoRepository upRepository;
-    
+
     @Autowired
     AmistadRepository aRepository;
 
@@ -41,7 +41,7 @@ public class UsuarioService {
         return uRepository.findAll();
     }
 
-    public ResponseUsuario addUsuario(UsuarioDto usuario) {
+    public ResponseUsuario addUsuario(RequestUsuario usuario) {
         if (uRepository.findByEmail(usuario.getEmail()) != null) {
             throw new GenericException("Ya existe un usuario con ese email");
         }
@@ -55,9 +55,11 @@ public class UsuarioService {
         u.setPassword(usuario.getPassword());
         u.encriptarPassword();
         // ASIGNAR TABLERO Y FICHAS PREDETERMINADAS AL USUARIO CREADO:
-        // 1) obtener tablero predeterminado (en productoRepository según el tipo (Tipo.TABLERO) y el nombre (Tablero Predeterminado)
+        // 1) obtener tablero predeterminado (en productoRepository según el tipo
+        // (Tipo.TABLERO) y el nombre (Tablero Predeterminado)
         // u.getProductos().add(t);
-        // 2) obtener ficha predeterminada (en productoRepository según el tipo (Tipo.FICHA) y el nombre (Ficha Predeterminada)
+        // 2) obtener ficha predeterminada (en productoRepository según el tipo
+        // (Tipo.FICHA) y el nombre (Ficha Predeterminada)
         // u.getProductos().add(f);
         u = uRepository.save(u);
         ResponseUsuario ru = new ResponseUsuario(u.getId(), u.getEmail(), u.getUsername(), u.getNumMonedas());
@@ -73,8 +75,7 @@ public class UsuarioService {
         if (encoder.matches(password, u.getPassword())) {
             ResponseUsuario ru = new ResponseUsuario(u.getId(), u.getEmail(), u.getUsername(), u.getNumMonedas());
             return ru;
-        }
-        else {
+        } else {
             throw new GenericException("La contraseña no es correcta");
         }
     }
@@ -82,7 +83,7 @@ public class UsuarioService {
     public void borrarUsuario(Long id) {
         uRepository.deleteById(id);
     }
-    
+
     public boolean enviarSolicitud(RequestAmistad amistad) {
         Amistad a = new Amistad();
         Usuario usuario = new Usuario();
@@ -90,37 +91,37 @@ public class UsuarioService {
         amigo.setId(amistad.getAmigo());
         a.setAmigo(amigo);
         usuario.setId(amistad.getUsuario());
-        a.setUsuario(usuario);                                   
+        a.setUsuario(usuario);
         a.setAceptado(false);
-        aRepository.save(a);            
+        aRepository.save(a);
         return true;
     }
 
-    public List<AmigosDto> mostrarSolicitudes(Long id) {
+    public List<ResponseAmistad> mostrarSolicitudes(Long id) {
         Usuario u = new Usuario();
         u.setId(id);
         List<Usuario> us = aRepository.findSolicitudes(u);
-        List<AmigosDto> am = new ArrayList<AmigosDto>();
-        for (Usuario uu : us){
-            AmigosDto a = new AmigosDto(uu.getId(), uu.getUsername());
+        List<ResponseAmistad> am = new ArrayList<>();
+        for (Usuario uu : us) {
+            ResponseAmistad a = new ResponseAmistad(uu.getId(), uu.getUsername());
             am.add(a);
         }
         return am;
     }
 
-    public List<AmigosDto> getAmigos(Long id) {
+    public List<ResponseAmistad> getAmigos(Long id) {
         Usuario u = new Usuario();
         u.setId(id);
         List<Amistad> la = aRepository.findAmigos(u);
-        List<AmigosDto> amigos = new ArrayList<>();
+        List<ResponseAmistad> amigos = new ArrayList<>();
         for (Amistad a : la) {
-            AmigosDto amigo = new AmigosDto(a.getIdAmigo(id), a.getUsernameAmigo(id));
+            ResponseAmistad amigo = new ResponseAmistad(a.getIdAmigo(id), a.getUsernameAmigo(id));
             amigos.add(amigo);
         }
         return amigos;
     }
 
-    public void aceptarSolicitud(RequestAmistad amistad){
+    public void aceptarSolicitud(RequestAmistad amistad) {
         // aceptar solicitudes -> pasar en bd de la lista de solicitudes a la de amigos
         Usuario usuario = new Usuario();
         Usuario amigo = new Usuario();
@@ -141,7 +142,7 @@ public class UsuarioService {
         aRepository.delete(a);
     }
 
-    public void eliminarAmigo(RequestAmistad request){
+    public void eliminarAmigo(RequestAmistad request) {
         Usuario usuario = new Usuario();
         Usuario amigo = new Usuario();
         amigo.setId(request.getAmigo());
@@ -150,19 +151,19 @@ public class UsuarioService {
         aRepository.delete(a);
     }
 
-    public void actualizarMonedas(Long id, int premio){
+    public void actualizarMonedas(Long id, int premio) {
         Usuario u = uRepository.findById(id).get();
         u.setNumMonedas(u.getNumMonedas() + premio);
         uRepository.save(u);
     }
 
-    public void actualizarUsername(Long id, String username){
+    public void actualizarUsername(Long id, String username) {
         Usuario u = uRepository.findById(id).get();
         u.setUsername(username);
         uRepository.save(u);
     }
 
-    public void actualizarEmail(Long id, String email){
+    public void actualizarEmail(Long id, String email) {
         Usuario u = uRepository.findById(id).get();
         u.setEmail(email);
         uRepository.save(u);
@@ -182,7 +183,7 @@ public class UsuarioService {
         Usuario u = uRepository.findByUsername(name);
         return u.getId();
     }
-    
+
     public List<UsuarioProducto> getProductos(Long id) {
         Usuario u = uRepository.findById(id).get();
         return upRepository.findByUsuario(u);

@@ -10,7 +10,6 @@ import es.lamesa.parchis.model.UsuarioProducto;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.Producto;
 
-
 public interface UsuarioProductoRepository extends JpaRepository<UsuarioProducto, Long> {
 
     UsuarioProducto findByUsuarioAndProducto(Usuario usuario, Producto producto);

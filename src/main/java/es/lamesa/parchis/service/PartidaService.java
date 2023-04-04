@@ -13,14 +13,14 @@ import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.EstadoPartida;
 import es.lamesa.parchis.model.UsuarioPartida;
-import es.lamesa.parchis.exception.GenericException;
 import es.lamesa.parchis.model.Color;
-import es.lamesa.parchis.model.dto.PartidaDto;
+import es.lamesa.parchis.model.dto.RequestPartida;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
 import es.lamesa.parchis.model.dto.RequestMovimiento;
 import es.lamesa.parchis.model.dto.ResponsePartida;
 import es.lamesa.parchis.model.dto.ResponseDado;
 import es.lamesa.parchis.model.dto.ResponseMovimiento;
+import es.lamesa.parchis.exception.GenericException;
 
 @Service
 public class PartidaService {
@@ -38,7 +38,7 @@ public class PartidaService {
         return pRepository.findAll();
     }
     
-    public ResponsePartida crearPartidaPrivada(PartidaDto partidaDto) {
+    public ResponsePartida crearPartidaPrivada(RequestPartida partidaDto) {
         if (pRepository.findByNombreAndEstado(partidaDto.getNombre()) == null) {
             Partida partida = new Partida();
             partida.setNombre(partidaDto.getNombre());
@@ -62,7 +62,7 @@ public class PartidaService {
         throw new GenericException("Nombre de sala no disponible: ya se está jugando una partida con ese nombre de sala");
     }
     
-    public ResponsePartida conectarPartidaPrivada(PartidaDto partidaDto) {
+    public ResponsePartida conectarPartidaPrivada(RequestPartida partidaDto) {
 		Partida partida = new Partida();
 		partida = pRepository.buscarPartida(partidaDto.getNombre());
         if (partida != null) {
