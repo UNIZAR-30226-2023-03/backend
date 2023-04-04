@@ -27,7 +27,7 @@ public class Tablero {
     @JoinColumn(name = "partida_id")
     private Partida partida;
 
-    @OneToMany(mappedBy = "tablero", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "tablero", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Casilla> casillas = new ArrayList<>();
 
     /**
@@ -40,12 +40,12 @@ public class Tablero {
 
     public void inicializarTablero(int num_jugadores) {
         //4 pasillos de dimensión 8 -> 4*8 + las [0,67] casillas perimetro
-        casillas = new ArrayList<Casilla>(num_jugadores+68+num_jugadores*8);
+        casillas = new ArrayList<Casilla>(num_jugadores + 68 + num_jugadores * 8);
         Casilla c = new Casilla();
         Ficha f;        
 
         //inicialización perimetro
-        for(int i = 0; i < 68; i++) {
+        for (int i = 0; i < 68; i++) {
             // CASILLAS SALIDA
             if (i == 4) {
                 c = new Casilla(this, i, TipoCasilla.SALIDA, Color.AMARILLO);
@@ -82,45 +82,20 @@ public class Tablero {
             casillas.add(c);
         }
 
-        //inicialización pasillos
-        for (int i = 0; i < 8; i++) {
-			if (i == 7) {
-				c = new Casilla(this, 68+i, TipoCasilla.META, Color.AMARILLO);
-			} 
-            else { 
-				c = new Casilla(this, 68+i, TipoCasilla.PASILLO, Color.AMARILLO);
-			}
-			casillas.add(c);
-		}
-        for (int i = 0; i < 8; i++) {
-			if (i == 7) {
-				c = new Casilla(this, 68+i, TipoCasilla.META, Color.AZUL);
-			} 
-            else { 
-				c = new Casilla(this, 68+i, TipoCasilla.PASILLO, Color.AZUL);
-			}
-			casillas.add(c);
-		}
-        for (int i = 0; i < 8; i++) {
-			if (i == 7) {
-				c = new Casilla(this, 68+i, TipoCasilla.META, Color.ROJO);
-			} 
-            else { 
-				c = new Casilla(this, 68+i, TipoCasilla.PASILLO, Color.ROJO);
-			}
-			casillas.add(c);
-		}
-        for (int i = 0; i < 8; i++) {
-			if (i == 7) {
-				c = new Casilla(this, 68+i, TipoCasilla.META, Color.VERDE);
-			} 
-            else { 
-				c = new Casilla(this, 68+i, TipoCasilla.PASILLO, Color.VERDE);
-			}
-			casillas.add(c);
-		}
+        for (int i = 0; i < num_jugadores; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (j == 7) {
+                    c = new Casilla(this, 68 + j, TipoCasilla.META, Color.values()[i]);
+                }
+                else {
+                    c = new Casilla(this, 68 + j, TipoCasilla.PASILLO, Color.values()[i]);
+                }
+                casillas.add(c);
+            }
+        }
+        
         //inicialización de casas
-        for(int i = 0; i < num_jugadores; i++) {
+        for (int i = 0; i < num_jugadores; i++) {
             c = new Casilla(this, -1, TipoCasilla.CASA, Color.values()[i]);
             casillas.add(c);
             // poner las fichas en las casillas CASA:
