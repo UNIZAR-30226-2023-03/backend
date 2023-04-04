@@ -169,6 +169,13 @@ public class UsuarioService {
         uRepository.save(u);
     }
 
+    public void actualizarPassword(Long id, String password) {
+        Usuario u = uRepository.findById(id).get();
+        u.setPassword(password);
+        u.encriptarPassword();
+        u = uRepository.save(u);
+    }
+
     public int obtenerNumMonedas(Long id) {
         Usuario u = uRepository.findById(id).get();
         return u.getNumMonedas();

@@ -112,4 +112,8 @@ public class UsuarioController {
         return service.getProductos(id);
     }
 
+    @GetMapping("/actualizar/username/{id}")
+    public String actualizarUsername(@PathVariable("id") Long id, ) {
+        return service.actualizarUsername(id);
+    }
 }
