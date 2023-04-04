@@ -27,7 +27,7 @@ public class Tablero {
     @JoinColumn(name = "partida_id")
     private Partida partida;
 
-    @OneToMany(mappedBy = "tablero", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "tablero", cascade = CascadeType.ALL)
     private List<Casilla> casillas = new ArrayList<>();
 
     /**
@@ -103,7 +103,7 @@ public class Tablero {
             if (partida.getConfigFichas() == ConfigFichas.RAPIDO){
                 num_fichas = 2;
             }
-            for(int j = 1; j <= num_fichas; j++) {
+            for (int j = 1; j <= num_fichas; j++) {
                 f = new Ficha(Color.values()[i], j, c);
                 c.getFichas().add(f);
             }
@@ -113,9 +113,9 @@ public class Tablero {
     public int contarFichas(Color color) {
         int n = 0;
         for(Casilla c : casillas) {
-            if(c.getTipo() != TipoCasilla.CASA) {
+            if (c.getTipo() != TipoCasilla.CASA) {
                 for (Ficha f : c.getFichas()) {
-                    if(f.getColor() == color) {
+                    if (f.getColor() == color) {
                         n++;
                     }
                 }
@@ -127,7 +127,7 @@ public class Tablero {
     public Ficha buscarFicha(int numero_ficha, Color color) {
         for (Casilla c : casillas) {
             for (Ficha f : c.getFichas()) {
-                if(f.getNumero() == numero_ficha && f.getColor() == color) {
+                if (f.getNumero() == numero_ficha && f.getColor() == color) {
                     return f;
                 }
             }
@@ -138,7 +138,7 @@ public class Tablero {
     public int obtenerFichas(int casilla){
         int n_fichas = 0;
         for (Casilla c : casillas){
-            if(c.getPosicion() == casilla) {
+            if (c.getPosicion() == casilla) {
                 n_fichas = c.getFichas().size();
                 break;
             }
@@ -149,7 +149,7 @@ public class Tablero {
     public int obtenerFichasColor(int casilla, Color color) {
         int n_fichas = 0;
         for (Casilla c : casillas) {
-            if(c.getPosicion() == casilla) {
+            if (c.getPosicion() == casilla) {
                 for (Ficha f : c.getFichas()) {
                     if (f.getColor() == color) {
                         n_fichas++;
@@ -192,7 +192,7 @@ public class Tablero {
 
     public Casilla obtenerCasillaPasillo(int casilla, Color c) {
         for (Casilla ca : casillas) {
-            if(ca.getPosicion() == casilla && (ca.getTipo() == TipoCasilla.PASILLO || ca.getTipo() == TipoCasilla.META) && ca.getColor() == c) {
+            if (ca.getPosicion() == casilla && (ca.getTipo() == TipoCasilla.PASILLO || ca.getTipo() == TipoCasilla.META) && ca.getColor() == c) {
                 return ca;
             }
         }

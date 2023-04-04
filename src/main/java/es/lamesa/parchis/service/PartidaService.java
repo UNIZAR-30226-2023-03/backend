@@ -9,9 +9,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import es.lamesa.parchis.repository.PartidaRepository;
 import es.lamesa.parchis.repository.TableroRepository;
-import jakarta.transaction.Transactional;
 import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.Usuario;
+import es.lamesa.parchis.model.Tablero;
 import es.lamesa.parchis.model.EstadoPartida;
 import es.lamesa.parchis.model.UsuarioPartida;
 import es.lamesa.parchis.model.Color;
@@ -146,15 +146,19 @@ public class PartidaService {
         return rd;
     }
     
-    @Transactional
     public ResponseMovimiento realizarMovimiento(RequestMovimiento request) {
         System.out.println(request.getPartida());
         Partida p = pRepository.findById(request.getPartida()).get();
         ResponseMovimiento rm = p.realizarMovimiento(request.getFicha(), request.getDado());
         if (rm.isAcabada()) {
-            tRepository.deleteByPartida(p);
+            Tablero t = p.getTablero();
+            p.setTablero(null);
+            pRepository.save(p);
+            tRepository.delete(t);
         }
-        pRepository.saveAndFlush(p);
+        else {
+            pRepository.save(p);
+        }
         messagingTemplate.convertAndSend("/topic/movimiento/" + p.getId(), rm);
         return rm;
     }
