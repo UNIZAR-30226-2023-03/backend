@@ -43,6 +43,10 @@ public class Partida {
     
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    private ConfigFichas configFichas;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private EstadoPartida estado;
 
     public void empezar() {
@@ -69,6 +73,10 @@ public class Partida {
 
     public ResponseDado comprobarMovimientos(int num_dado) {
         int id_casilla;
+        int num_fichas = 4;
+        if (configFichas == ConfigFichas.RAPIDO) {
+            num_fichas = 2;
+        }
         List<Ficha> bloqueadas = tablero.obtenerFichasCasa(turno); 
         List<Ficha> meta = tablero.obtenerFichasMeta(turno);
         for (Ficha f : meta){
@@ -76,7 +84,7 @@ public class Partida {
         }
         List<Ficha> fichas_del_turno = tablero.obtenerFichasTablero(turno);
         Ficha comida = null;
-        if (num_dado == 5 && fichas_del_turno.size() < 4 && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) != 2) {
+        if (num_dado == 5 && fichas_del_turno.size() < num_fichas && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) != 2) {
             int salida = tablero.obtenerSalida(turno);
             Casilla c = tablero.getCasillas().get(salida);
             boolean ficha_comida = false;
@@ -105,7 +113,7 @@ public class Partida {
             return rd;
         }
         else {
-            if (fichas_del_turno.size() == 4 && num_dado == 6){ 
+            if (fichas_del_turno.size() == num_fichas && num_dado == 6){ 
                 num_dado++;
             }
             for(Ficha i : fichas_del_turno) {
@@ -143,7 +151,7 @@ public class Partida {
                     }
                 }
             }
-            if (bloqueadas.size() == 4 && num_dado < 6){
+            if (bloqueadas.size() == num_fichas && num_dado < 6){
                 turno = turno.siguienteTurno(jugadores.size());
             }
             ResponseDado rd = new ResponseDado(bloqueadas, false, null, null, turno);
@@ -174,7 +182,8 @@ public class Partida {
             id_casilla = id_casilla + dado;
             c = tablero.obtenerCasillaPasillo(id_casilla, turno);
             if (id_casilla == 75) {
-                if (c.getFichas().size() == 3) {
+                if (c.getFichas().size() == 3 && configFichas == ConfigFichas.NORMAL || 
+                    c.getFichas().size() == 1 && configFichas == ConfigFichas.RAPIDO) {
                     this.estado = EstadoPartida.FINALIZADA;
                     acabada = true;
                     jugadores.get(turno.ordinal()).setGanador(true);

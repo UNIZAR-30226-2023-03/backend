@@ -19,6 +19,7 @@ import es.lamesa.parchis.model.dto.ResponseUsuario;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.UsuarioProducto;
 import es.lamesa.parchis.model.dto.RequestProducto;
+import es.lamesa.parchis.model.dto.RequestCambio;
 
 @RestController
 @RequestMapping("/usuario")
@@ -112,8 +113,19 @@ public class UsuarioController {
         return service.getProductos(id);
     }
 
-    @GetMapping("/actualizar/username/{id}")
-    public String actualizarUsername(@PathVariable("id") Long id, ) {
-        return service.actualizarUsername(id);
+    @PostMapping("/actualizar/username")
+    public void actualizarUsername(RequestCambio request) {
+        service.actualizarUsername(request);
     }
+    
+    @PostMapping("/actualizar/email")
+    public void actualizarEmail(RequestCambio request) {
+        service.actualizarEmail(request);
+    }
+
+    @PostMapping("/actualizar/password")
+    public void actualizarPassword(RequestCambio request) {
+        service.actualizarPassword(request);
+    }
+    
 }

@@ -124,7 +124,11 @@ public class Tablero {
             c = new Casilla(this, -1, TipoCasilla.CASA, Color.values()[i]);
             casillas.add(c);
             // poner las fichas en las casillas CASA:
-            for(int j = 1; j <= 4; j++) {
+            int num_fichas = 4;
+            if (partida.getConfigFichas() == ConfigFichas.RAPIDO){
+                num_fichas = 2;
+            }
+            for(int j = 1; j <= num_fichas; j++) {
                 f = new Ficha(Color.values()[i], j, c);
                 c.getFichas().add(f);
             }

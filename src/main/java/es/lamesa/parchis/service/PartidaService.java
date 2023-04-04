@@ -9,6 +9,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import es.lamesa.parchis.repository.PartidaRepository;
 import es.lamesa.parchis.repository.TableroRepository;
+import jakarta.transaction.Transactional;
 import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.EstadoPartida;
@@ -43,7 +44,8 @@ public class PartidaService {
             Partida partida = new Partida();
             partida.setNombre(partidaDto.getNombre());
             partida.setPassword(partidaDto.getPassword());
-            partida.setConfigBarreras(partidaDto.getConfiguracion());
+            partida.setConfigBarreras(partidaDto.getConfiguracionB());
+            partida.setConfigFichas(partidaDto.getConfiguracionF());
             partida.setEstado(EstadoPartida.ESPERANDO_JUGADORES);
 
             Usuario usuario = new Usuario();
@@ -109,7 +111,8 @@ public class PartidaService {
         partidas = pRepository.buscarPublica();
         if (partidas.isEmpty()){
             // Creo la partida
-            partida.setConfigBarreras(p.getConfiguracion());
+            partida.setConfigBarreras(p.getConfiguracionB());
+            partida.setConfigFichas(p.getConfiguracionF());
             partida.setEstado(EstadoPartida.ESPERANDO_JUGADORES);
         }
         else{
@@ -143,6 +146,7 @@ public class PartidaService {
         return rd;
     }
     
+    @Transactional
     public ResponseMovimiento realizarMovimiento(RequestMovimiento request) {
         System.out.println(request.getPartida());
         Partida p = pRepository.findById(request.getPartida()).get();
@@ -150,7 +154,7 @@ public class PartidaService {
         if (rm.isAcabada()) {
             tRepository.deleteByPartida(p);
         }
-        pRepository.save(p);
+        pRepository.saveAndFlush(p);
         messagingTemplate.convertAndSend("/topic/movimiento/" + p.getId(), rm);
         return rm;
     }

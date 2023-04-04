@@ -20,6 +20,7 @@ import es.lamesa.parchis.model.dto.RequestAmistad;
 import es.lamesa.parchis.model.dto.RequestUsuario;
 import es.lamesa.parchis.model.dto.ResponseUsuario;
 import es.lamesa.parchis.model.dto.RequestProducto;
+import es.lamesa.parchis.model.dto.RequestCambio;
 import es.lamesa.parchis.exception.GenericException;
 
 @Service
@@ -157,21 +158,21 @@ public class UsuarioService {
         uRepository.save(u);
     }
 
-    public void actualizarUsername(Long id, String username) {
-        Usuario u = uRepository.findById(id).get();
-        u.setUsername(username);
+    public void actualizarUsername(RequestCambio request) {
+        Usuario u = uRepository.findById(request.getId()).get();
+        u.setUsername(request.getCambio());
         uRepository.save(u);
     }
 
-    public void actualizarEmail(Long id, String email) {
-        Usuario u = uRepository.findById(id).get();
-        u.setEmail(email);
+    public void actualizarEmail(RequestCambio request) {
+        Usuario u = uRepository.findById(request.getId()).get();
+        u.setEmail(request.getCambio());
         uRepository.save(u);
     }
 
-    public void actualizarPassword(Long id, String password) {
-        Usuario u = uRepository.findById(id).get();
-        u.setPassword(password);
+    public void actualizarPassword(RequestCambio request) {
+        Usuario u = uRepository.findById(request.getId()).get();
+        u.setPassword(request.getCambio());
         u.encriptarPassword();
         u = uRepository.save(u);
     }
