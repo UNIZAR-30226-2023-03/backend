@@ -63,7 +63,7 @@ public class UsuarioService {
         u.setUsername(usuario.getUsername());
         u.setPassword(usuario.getPassword());
         u.encriptarPassword();
-        email.enviarCorreoElectronico(usuario.getEmail());
+        // email.enviarCorreoElectronico(usuario.getEmail());
         UsuarioEstadisticas ue = new UsuarioEstadisticas();
         ue.setUsuario(u);
         u.setEstadisticas(ue);
