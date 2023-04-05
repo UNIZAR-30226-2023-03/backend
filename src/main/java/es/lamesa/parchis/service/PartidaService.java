@@ -40,6 +40,7 @@ public class PartidaService {
     }
     
     public ResponsePartida crearPartidaPrivada(RequestPartida partidaDto) {
+        System.out.println(partidaDto);
         if (pRepository.findByNombreAndEstado(partidaDto.getNombre()) == null) {
             Partida partida = new Partida();
             partida.setNombre(partidaDto.getNombre());
