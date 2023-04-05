@@ -148,13 +148,13 @@ public class UsuarioController {
         service.actualizarPassword(request);
     }
 
-    @PostMapping("/ranking")
+    @GetMapping("/ranking")
     @Operation(summary = "Obtiene el ranking con las estadísticas de todos los usuarios")
     public List<ResponseEstadisticas> getRanking() {
         return service.getRanking();
     }
 
-    @PostMapping("/estadisticas/{id}")
+    @GetMapping("/estadisticas/{id}")
     @Operation(summary = "Obtiene las estadísticas personales del usuarios id")
     public ResponseEstadisticas getEstadisticas(@PathVariable("id") Long id) {
         return service.getEstadisticas(id);

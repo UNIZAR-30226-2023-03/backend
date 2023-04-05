@@ -61,6 +61,7 @@ public class UsuarioService {
         u.setPassword(usuario.getPassword());
         u.encriptarPassword();
         UsuarioEstadisticas ue = new UsuarioEstadisticas();
+        ue.setUsuario(u);
         u.setEstadisticas(ue);
         // ASIGNAR TABLERO Y FICHAS PREDETERMINADAS AL USUARIO CREADO:
         // 1) obtener tablero predeterminado (en productoRepository según el tipo

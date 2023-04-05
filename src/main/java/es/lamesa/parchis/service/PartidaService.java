@@ -145,6 +145,7 @@ public class PartidaService {
         ueRepository.save(ue);
         partida = pRepository.save(partida);
         ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
+        messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), up.getColor());
         return r;
     }
 
