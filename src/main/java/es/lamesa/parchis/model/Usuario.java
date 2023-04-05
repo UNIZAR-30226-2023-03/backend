@@ -1,15 +1,13 @@
 package es.lamesa.parchis.model;
 
+import jakarta.persistence.*;
+import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.persistence.*;
-import lombok.Data;
 
 @Data
 @Entity
@@ -48,6 +46,9 @@ public class Usuario {
     @JsonManagedReference
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<UsuarioProducto> productos = new ArrayList<>();
+
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private UsuarioEstadisticas estadisticas;
 
     public void encriptarPassword() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

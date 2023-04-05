@@ -9,8 +9,12 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import es.lamesa.parchis.repository.PartidaRepository;
 import es.lamesa.parchis.repository.TableroRepository;
+import es.lamesa.parchis.repository.UsuarioEstadisticasRepository;
+import es.lamesa.parchis.repository.UsuarioPartidaRepository;
 import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.Usuario;
+import es.lamesa.parchis.model.UsuarioEstadisticas;
+import es.lamesa.parchis.model.TipoCasilla;
 import es.lamesa.parchis.model.Tablero;
 import es.lamesa.parchis.model.EstadoPartida;
 import es.lamesa.parchis.model.UsuarioPartida;
@@ -33,6 +37,12 @@ public class PartidaService {
     TableroRepository tRepository;
 
     @Autowired
+    UsuarioEstadisticasRepository ueRepository;
+
+    @Autowired
+    UsuarioPartidaRepository upRepository;
+    
+    @Autowired
     SimpMessagingTemplate messagingTemplate;
      
     public List<Partida> getPartidas() {
@@ -47,16 +57,16 @@ public class PartidaService {
             partida.setConfigBarreras(partidaDto.getConfiguracionB());
             partida.setConfigFichas(partidaDto.getConfiguracionF());
             partida.setEstado(EstadoPartida.ESPERANDO_JUGADORES);
-
             Usuario usuario = new Usuario();
-            usuario.setId(partidaDto.getJugador());
-            
+            usuario.setId(partidaDto.getJugador());    
             UsuarioPartida up = new UsuarioPartida();
             up.setUsuario(usuario);
             up.setPartida(partida);
             up.setColor(Color.values()[partida.getJugadores().size()]);
-
             partida.getJugadores().add(up);
+            UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
+            ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
+            ueRepository.save(ue);
             partida = pRepository.save(partida);
             ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
             return r;
@@ -71,7 +81,6 @@ public class PartidaService {
             if (partidaDto.getPassword().contentEquals(partida.getPassword())) {
                 Usuario usuario = new Usuario();
                 usuario.setId(partidaDto.getJugador());
-
                 UsuarioPartida up = new UsuarioPartida();
                 up.setUsuario(usuario);
                 up.setPartida(partida);
@@ -80,7 +89,9 @@ public class PartidaService {
                 if (partida.getJugadores().size() == 4) {
                     partida.empezar();
                 }
-
+                UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
+                ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
+                ueRepository.save(ue);
                 partida = pRepository.save(partida);
                 ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
                 return r;
@@ -107,30 +118,29 @@ public class PartidaService {
     public ResponsePartida jugarPartidaPublica(RequestPartidaPublica p) {
         List<Partida> partidas = new ArrayList<>();
         Partida partida = new Partida();
-
         partidas = pRepository.buscarPublica();
-        if (partidas.isEmpty()){
+        if (partidas.isEmpty()) {
             // Creo la partida
             partida.setConfigBarreras(p.getConfiguracionB());
             partida.setConfigFichas(p.getConfiguracionF());
             partida.setEstado(EstadoPartida.ESPERANDO_JUGADORES);
         }
-        else{
+        else {
             partida = partidas.get(0);
         }
         Usuario usuario = new Usuario();
         usuario.setId(p.getJugador());
-
         UsuarioPartida up = new UsuarioPartida();
         up.setUsuario(usuario);
         up.setPartida(partida);
         up.setColor(Color.values()[partida.getJugadores().size()]);
         partida.getJugadores().add(up);
-
         if (partida.getJugadores().size() == 4) {
             partida.empezar();
         }
-        
+        UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
+        ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
+        ueRepository.save(ue);
         partida = pRepository.save(partida);
         ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
         return r;
@@ -143,6 +153,12 @@ public class PartidaService {
         if (rd.isSacar()) {
             messagingTemplate.convertAndSend("/topic/salida/" + p.getId(), rd);
         }
+        if (rd.getComida() != null) {
+            Usuario u = upRepository.obtenerUsuario(p, p.getTurno());
+            UsuarioEstadisticas ue = ueRepository.findByUsuario(u);
+            ue.setNumComidas(ue.getNumComidas() + 1);
+            ueRepository.save(ue);
+        }   
         return rd;
     }
     
@@ -150,7 +166,25 @@ public class PartidaService {
         System.out.println(request.getPartida());
         Partida p = pRepository.findById(request.getPartida()).get();
         ResponseMovimiento rm = p.realizarMovimiento(request.getFicha(), request.getDado());
+        Usuario u = null;
+        UsuarioEstadisticas ue = null;
+        if (rm.getDestino().getTipo() == TipoCasilla.META) { 
+            u = upRepository.obtenerUsuario(p, p.getTurno());
+            ue = ueRepository.findByUsuario(u);
+            ue.setNumEnMeta(ue.getNumEnMeta() + 1);
+            ueRepository.save(ue);
+        }
+        else if (rm.getComida() != null) {
+            u = upRepository.obtenerUsuario(p, p.getTurno());
+            ue = ueRepository.findByUsuario(u);
+            ue.setNumComidas(ue.getNumComidas() + 1);
+            ueRepository.save(ue);
+        } 
         if (rm.isAcabada()) {
+            u = upRepository.obtenerUsuario(p, p.getTurno());
+            ue = ueRepository.findByUsuario(u);
+            ue.setPartidasGanadas(ue.getPartidasGanadas() + 1);
+            ueRepository.save(ue);
             Tablero t = p.getTablero();
             p.setTablero(null);
             pRepository.save(p);

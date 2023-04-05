@@ -10,10 +10,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import es.lamesa.parchis.repository.UsuarioRepository;
 import es.lamesa.parchis.repository.ProductoRepository;
 import es.lamesa.parchis.repository.AmistadRepository;
+import es.lamesa.parchis.repository.UsuarioEstadisticasRepository;
 import es.lamesa.parchis.repository.UsuarioProductoRepository;
 import es.lamesa.parchis.model.Amistad;
 import es.lamesa.parchis.model.Producto;
 import es.lamesa.parchis.model.Usuario;
+import es.lamesa.parchis.model.UsuarioEstadisticas;
 import es.lamesa.parchis.model.UsuarioProducto;
 import es.lamesa.parchis.model.dto.ResponseAmistad;
 import es.lamesa.parchis.model.dto.RequestAmistad;
@@ -21,6 +23,7 @@ import es.lamesa.parchis.model.dto.RequestUsuario;
 import es.lamesa.parchis.model.dto.ResponseUsuario;
 import es.lamesa.parchis.model.dto.RequestProducto;
 import es.lamesa.parchis.model.dto.RequestCambio;
+import es.lamesa.parchis.model.dto.ResponseEstadisticas;
 import es.lamesa.parchis.exception.GenericException;
 
 @Service
@@ -37,6 +40,9 @@ public class UsuarioService {
 
     @Autowired
     AmistadRepository aRepository;
+
+    @Autowired
+    UsuarioEstadisticasRepository ueRepository;
 
     public List<Usuario> getUsuarios() {
         return uRepository.findAll();
@@ -209,6 +215,31 @@ public class UsuarioService {
         up = upRepository.findByUsuarioAndProducto(u, activo);
         up.setActivo(false);
         upRepository.save(up);
+    }
+
+    public List<ResponseEstadisticas> getRanking() {
+        List<UsuarioEstadisticas> ue = ueRepository.findAll();
+        List<ResponseEstadisticas> re = new ArrayList<>();
+        float mediaComidas = 0;
+        float mediaEnMeta = 0;
+        String username;
+        for (UsuarioEstadisticas e : ue) {
+            username = e.getUsuario().getUsername();
+            mediaComidas = (float) e.getNumComidas() / (float) e.getPartidasJugadas();
+            mediaEnMeta = (float) e.getNumEnMeta() / (float) e.getPartidasJugadas();
+            ResponseEstadisticas r = new ResponseEstadisticas(username, e.getPartidasJugadas(), e.getPartidasGanadas(), mediaComidas, mediaEnMeta);
+            re.add(r);
+        }
+        return re;
+    }
+
+    public ResponseEstadisticas getEstadisticas(Long id) {
+        Usuario u = uRepository.findById(id).get();
+        UsuarioEstadisticas ue = ueRepository.findByUsuario(u);
+        float mediaComidas = (float) ue.getNumComidas() / (float) ue.getPartidasJugadas();
+        float mediaEnMeta = (float) ue.getNumEnMeta() / (float) ue.getPartidasJugadas();
+        ResponseEstadisticas re = new ResponseEstadisticas(u.getUsername(), ue.getPartidasJugadas(), ue.getPartidasGanadas(), mediaComidas, mediaEnMeta);
+        return re;
     }
 
 }
