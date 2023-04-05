@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import es.lamesa.parchis.service.UsuarioService;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.UsuarioProducto;
-import es.lamesa.parchis.model.UsuarioEstadisticas;
 import es.lamesa.parchis.model.dto.RequestUsuario;
 import es.lamesa.parchis.model.dto.RequestAmistad;
 import es.lamesa.parchis.model.dto.ResponseAmistad;
