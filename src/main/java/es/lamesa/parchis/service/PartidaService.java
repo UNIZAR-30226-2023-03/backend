@@ -40,7 +40,6 @@ public class PartidaService {
     }
     
     public ResponsePartida crearPartidaPrivada(RequestPartida partidaDto) {
-        System.out.println(partidaDto);
         if (pRepository.findByNombreAndEstado(partidaDto.getNombre()) == null) {
             Partida partida = new Partida();
             partida.setNombre(partidaDto.getNombre());
@@ -59,6 +58,7 @@ public class PartidaService {
 
             partida.getJugadores().add(up);
             partida = pRepository.save(partida);
+            messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), up.getColor());
             ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
             return r;
         }
