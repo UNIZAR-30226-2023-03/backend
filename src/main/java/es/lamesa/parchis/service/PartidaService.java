@@ -65,6 +65,7 @@ public class PartidaService {
             up.setColor(Color.values()[partida.getJugadores().size()]);
             partida.getJugadores().add(up);
             UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
+
             ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
             ueRepository.save(ue);
             partida = pRepository.save(partida);

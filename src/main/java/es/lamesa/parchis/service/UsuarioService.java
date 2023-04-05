@@ -55,12 +55,13 @@ public class UsuarioService {
         if (uRepository.findByUsername(usuario.getUsername()) != null) {
             throw new GenericException("Ya existe un usuario con ese username");
         }
-
         Usuario u = new Usuario();
         u.setEmail(usuario.getEmail());
         u.setUsername(usuario.getUsername());
         u.setPassword(usuario.getPassword());
         u.encriptarPassword();
+        UsuarioEstadisticas ue = new UsuarioEstadisticas();
+        u.setEstadisticas(ue);
         // ASIGNAR TABLERO Y FICHAS PREDETERMINADAS AL USUARIO CREADO:
         // 1) obtener tablero predeterminado (en productoRepository según el tipo
         // (Tipo.TABLERO) y el nombre (Tablero Predeterminado)
