@@ -68,6 +68,7 @@ public class PartidaService {
             ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
             ueRepository.save(ue);
             partida = pRepository.save(partida);
+            messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), up.getColor());
             ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
             return r;
         }
