@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+
 import io.swagger.v3.oas.annotations.Operation;
 
 import es.lamesa.parchis.service.PartidaService;
@@ -35,7 +37,8 @@ public class PartidaController {
 
     @PostMapping("/crear")
     @Operation(summary = "Crea una nueva partida privada")
-    public ResponsePartida crearPartidaPrivada(@RequestBody RequestPartida request) {
+    public ResponsePartida crearPartidaPrivada(@RequestBody RequestPartida request, @RequestHeader("Origin") String origin) {
+        System.out.println(origin);
         return service.crearPartidaPrivada(request);
     }
     
