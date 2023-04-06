@@ -237,6 +237,5 @@ public class PartidaService {
         }
         messagingTemplate.convertAndSend("/topic/movimiento/" + p.getId(), rm);
         return rm;
-    }
-    
+    } 
 }

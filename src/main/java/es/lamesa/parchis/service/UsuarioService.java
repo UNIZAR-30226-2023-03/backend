@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import es.lamesa.parchis.repository.UsuarioRepository;
+import es.lamesa.parchis.security.TokenUtil;
 import es.lamesa.parchis.repository.ProductoRepository;
 import es.lamesa.parchis.repository.AmistadRepository;
 import es.lamesa.parchis.repository.UsuarioEstadisticasRepository;
@@ -18,6 +19,7 @@ import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.UsuarioEstadisticas;
 import es.lamesa.parchis.model.UsuarioProducto;
 import es.lamesa.parchis.model.TipoEmail;
+import es.lamesa.parchis.model.TipoProducto;
 import es.lamesa.parchis.model.dto.ResponseAmistad;
 import es.lamesa.parchis.model.dto.RequestAmistad;
 import es.lamesa.parchis.model.dto.RequestUsuario;
@@ -64,7 +66,7 @@ public class UsuarioService {
         u.setUsername(usuario.getUsername());
         u.setPassword(usuario.getPassword());
         u.encriptarPassword();
-        // email.enviarCorreoElectronico(usuario.getEmail(), TipoEmail.REGISTRO);
+        email.enviarCorreoElectronico(usuario.getEmail(), u.getUsername(), TipoEmail.REGISTRO);
         UsuarioEstadisticas ue = new UsuarioEstadisticas();
         ue.setUsuario(u);
         u.setEstadisticas(ue);
@@ -168,14 +170,14 @@ public class UsuarioService {
     public void actualizarUsername(RequestCambio request) {
         Usuario u = uRepository.findById(request.getId()).get();
         u.setUsername(request.getCambio());
-        // email.enviarCorreoElectronico(usuario.getEmail(), TipoEmail.CAMBIO_USERNAME);
+        // email.enviarCorreoElectronico(usuario.getEmail(), u.getUsername(), TipoEmail.CAMBIO_USERNAME);
         uRepository.save(u);
     }
 
     public void actualizarEmail(RequestCambio request) {
         Usuario u = uRepository.findById(request.getId()).get();
         u.setEmail(request.getCambio());
-        // email.enviarCorreoElectronico(usuario.getEmail(), TipoEmail.CAMBIO_EMAIL);
+        // email.enviarCorreoElectronico(usuario.getEmail(), u.getUsername(), TipoEmail.CAMBIO_EMAIL);
         uRepository.save(u);
     }
 
@@ -183,7 +185,7 @@ public class UsuarioService {
         Usuario u = uRepository.findById(request.getId()).get();
         u.setPassword(request.getCambio());
         u.encriptarPassword();
-        // email.enviarCorreoElectronico(usuario.getEmail(), TipoEmail.CAMBIO_PASSWORD);
+        // email.enviarCorreoElectronico(usuario.getEmail(), u.getUsername(), TipoEmail.CAMBIO_PASSWORD);
         u = uRepository.save(u);
     }
 
@@ -211,7 +213,7 @@ public class UsuarioService {
         Usuario u = uRepository.findById(request.getUsuario()).get();
         Producto p = pRepository.findById(request.getProducto()).get();
         UsuarioProducto up = upRepository.findByUsuarioAndProducto(u, p);
-        Producto activo = upRepository.getProductoActivado(u);
+        Producto activo = upRepository.getProductoActivado(u, p.getTipoProducto());
         if (activo.getId() == p.getId()) {
             throw new GenericException("Ya tienes el producto activado");
         }
@@ -219,6 +221,16 @@ public class UsuarioService {
         up = upRepository.findByUsuarioAndProducto(u, activo);
         up.setActivo(false);
         upRepository.save(up);
+    }
+
+    public Producto getFichaActiva(Long id) {
+        Usuario u = uRepository.findById(id).get();
+        return upRepository.getProductoActivado(u, TipoProducto.FICHA);
+    }
+
+    public Producto getTableroActivo(Long id) {
+        Usuario u = uRepository.findById(id).get();
+        return upRepository.getProductoActivado(u, TipoProducto.TABLERO);
     }
 
     public List<ResponseEstadisticas> getRanking() {
@@ -248,6 +260,8 @@ public class UsuarioService {
 
     public void recuperarPassword(Long id) {
         Usuario u = uRepository.findById(id).get();
-        email.enviarCorreoElectronico(u.getEmail(), TipoEmail.RECUPERACION);
+        String token = TokenUtil.generateToken(id, u.getEmail());
+        email.enviarCorreoRecuperacion(u.getEmail(), u.getUsername(), token);
     }
+
 }

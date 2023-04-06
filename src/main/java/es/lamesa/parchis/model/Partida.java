@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import es.lamesa.parchis.model.dto.ResponseDado;
 import es.lamesa.parchis.model.dto.ResponseMovimiento;
@@ -29,6 +30,16 @@ public class Partida {
 
     @OneToOne(mappedBy = "partida", cascade = CascadeType.ALL)
     private Tablero tablero; //una vez finalizada la partida, se podría borrar?
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "torneo_id")
+    private Torneo torneo;
+    
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "final_torneo_id")
+    private Torneo finalTorneo;
 
     @Column
     private Color turno;

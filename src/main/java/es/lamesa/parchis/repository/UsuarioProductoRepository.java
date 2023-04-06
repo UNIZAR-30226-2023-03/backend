@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import es.lamesa.parchis.model.UsuarioProducto;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.Producto;
+import es.lamesa.parchis.model.TipoProducto;
 
 public interface UsuarioProductoRepository extends JpaRepository<UsuarioProducto, Long> {
 
@@ -20,7 +21,7 @@ public interface UsuarioProductoRepository extends JpaRepository<UsuarioProducto
     @Query("SELECT COUNT(up) > 0 FROM UsuarioProducto up WHERE up.usuario = :usuario AND up.producto = :producto")
     boolean productoComprado(@Param("usuario") Usuario usuario, @Param("producto") Producto producto);
 
-    @Query("SELECT up.producto FROM UsuarioProducto up WHERE up.usuario = :usuario AND up.activo = true")
-    Producto getProductoActivado(@Param("usuario") Usuario usuario);
+    @Query("SELECT up.producto FROM UsuarioProducto up WHERE up.usuario = :usuario AND up.activo = true AND up.producto.tipoProducto = :tipo")
+    Producto getProductoActivado(@Param("usuario") Usuario usuario, @Param("tipo") TipoProducto tipo);
 
 }
