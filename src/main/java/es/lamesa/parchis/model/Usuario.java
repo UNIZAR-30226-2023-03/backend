@@ -47,6 +47,7 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<UsuarioProducto> productos = new ArrayList<>();
 
+    @JsonManagedReference
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private UsuarioEstadisticas estadisticas;
 

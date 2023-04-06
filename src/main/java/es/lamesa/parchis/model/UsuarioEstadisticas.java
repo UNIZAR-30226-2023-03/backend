@@ -1,5 +1,7 @@
 package es.lamesa.parchis.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,6 +14,7 @@ public class UsuarioEstadisticas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
    
+    @JsonBackReference
     @OneToOne
     @JoinColumn(name = "usuario_id", unique = true)
     private Usuario usuario;
