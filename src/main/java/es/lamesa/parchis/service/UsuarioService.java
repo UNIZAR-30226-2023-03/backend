@@ -66,7 +66,7 @@ public class UsuarioService {
         u.setUsername(usuario.getUsername());
         u.setPassword(usuario.getPassword());
         u.encriptarPassword();
-        email.enviarCorreoElectronico(usuario.getEmail(), u.getUsername(), TipoEmail.REGISTRO);
+        // email.enviarCorreoElectronico(usuario.getEmail(), u.getUsername(), TipoEmail.REGISTRO);
         UsuarioEstadisticas ue = new UsuarioEstadisticas();
         ue.setUsuario(u);
         u.setEstadisticas(ue);
@@ -261,7 +261,7 @@ public class UsuarioService {
     public void recuperarPassword(Long id) {
         Usuario u = uRepository.findById(id).get();
         String token = TokenUtil.generateToken(id, u.getEmail());
-        email.enviarCorreoRecuperacion(u.getEmail(), u.getUsername(), token);
+        // email.enviarCorreoRecuperacion(u.getEmail(), u.getUsername(), token);
     }
 
 }
