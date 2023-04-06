@@ -18,5 +18,8 @@ public interface UsuarioPartidaRepository extends JpaRepository<UsuarioPartida, 
 
     @Query("SELECT DISTINCT up FROM UsuarioPartida up WHERE up.partida = :partida AND up.usuario <> :usuario")
     List<UsuarioPartida> obtenerUsuarios(@Param("partida") Partida partida, @Param("usuario") Usuario usuario);
+
+    @Query("SELECT COUNT(up) > 0 FROM UsuarioPartida up WHERE up.usuario = :usuario AND up.partida.estado IN ('EN_PROGRESO', 'ESPERANDO_JUGADORES')")
+    boolean estaJugando(@Param("usuario") Usuario usuario);
     
 }

@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface PartidaRepository extends JpaRepository<Partida, Long> {
 
-    @Query("SELECT p FROM Partida p WHERE p.nombre = :nombre  AND (p.estado = 'ESPERANDO_JUGADORES' OR p.estado = 'JUGANDO')")
+    @Query("SELECT p FROM Partida p WHERE p.nombre = :nombre AND (p.estado = 'ESPERANDO_JUGADORES' OR p.estado = 'JUGANDO')")
     Partida findByNombreAndEstado(@Param("nombre") String nombre);
 
     @Query("SELECT p FROM Partida p WHERE p.nombre = :nombre AND p.estado = 'ESPERANDO_JUGADORES'")

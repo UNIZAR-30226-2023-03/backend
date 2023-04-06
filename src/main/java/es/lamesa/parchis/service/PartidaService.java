@@ -54,62 +54,77 @@ public class PartidaService {
         return pRepository.findAll();
     }
     
-    public ResponsePartida crearPartidaPrivada(RequestPartida partidaDto) {
-        // TODO: Comprobar si ya está jugando una
-        if (pRepository.findByNombreAndEstado(partidaDto.getNombre()) == null) {
-            Partida partida = new Partida();
-            partida.setNombre(partidaDto.getNombre());
-            partida.setPassword(partidaDto.getPassword());
-            partida.setConfigBarreras(partidaDto.getConfiguracionB());
-            partida.setConfigFichas(partidaDto.getConfiguracionF());
-            partida.setEstado(EstadoPartida.ESPERANDO_JUGADORES);
-            Usuario usuario = new Usuario();
-            usuario.setId(partidaDto.getJugador());    
-            UsuarioPartida up = new UsuarioPartida();
-            up.setUsuario(usuario);
-            up.setPartida(partida);
-            up.setColor(Color.values()[partida.getJugadores().size()]);
-            partida.getJugadores().add(up);
-            
-            UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
-            ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
-            ueRepository.save(ue);
-            partida = pRepository.save(partida);
-            ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
-            return r;
-        }
-        throw new GenericException("Nombre de sala no disponible: ya se está jugando una partida con ese nombre de sala");
-    }
-    
-    public ResponsePartida conectarPartidaPrivada(RequestPartida partidaDto) {
-        // TODO: Comprobar si ya está jugando una
-		Partida partida = new Partida();
-		partida = pRepository.buscarPartida(partidaDto.getNombre());
-        if (partida != null) {
-            if (partidaDto.getPassword().contentEquals(partida.getPassword())) {
-                Usuario usuario = new Usuario();
-                usuario.setId(partidaDto.getJugador());
+    public ResponsePartida crearPartidaPrivada(RequestPartida request) {
+        Usuario usuario = new Usuario();
+        usuario.setId(request.getJugador());    
+        if (!upRepository.estaJugando(usuario)) {
+            if (pRepository.findByNombreAndEstado(request.getNombre()) == null) {
+                Partida partida = new Partida();
+                partida.setNombre(request.getNombre());
+                partida.setPassword(request.getPassword());
+                partida.setConfigBarreras(request.getConfiguracionB());
+                partida.setConfigFichas(request.getConfiguracionF());
+                partida.setEstado(EstadoPartida.ESPERANDO_JUGADORES);
                 UsuarioPartida up = new UsuarioPartida();
                 up.setUsuario(usuario);
                 up.setPartida(partida);
                 up.setColor(Color.values()[partida.getJugadores().size()]);
                 partida.getJugadores().add(up);
-                if (partida.getJugadores().size() == 4) {
-                    partida.empezar();
-                }
+                
                 UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
                 ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
                 ueRepository.save(ue);
-                partida = pRepository.saveAndFlush(partida);
+                partida = pRepository.save(partida);
                 ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
-                messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), up.getColor());
                 return r;
             }
-            //EXCEPCIÓN CONTRASEÑA INCORRECTA
-            throw new GenericException("Contraseña incorrecta para la sala indicada");
+            throw new GenericException("Nombre de sala no disponible: ya se está jugando una partida con ese nombre de sala");
         }
-        //EXCEPCIÓN NOMBRE DE PARTIDA NO ENCONTRADO
-        throw new GenericException("La partida no existe o está ya en curso");
+        throw new GenericException("Ya estás jugando una partida");
+    }
+    
+    public ResponsePartida conectarPartidaPrivada(RequestPartida request) {
+        Usuario usuario = new Usuario();
+        usuario.setId(request.getJugador());
+        if (!upRepository.estaJugando(usuario)) {
+            Partida partida = new Partida();
+            partida = pRepository.buscarPartida(request.getNombre());
+            if (partida != null) {
+                if (request.getPassword().contentEquals(partida.getPassword())) {
+                    //UsuarioPartida:
+                    UsuarioPartida up = new UsuarioPartida();
+                    up.setUsuario(usuario);
+                    up.setPartida(partida);
+                    up.setColor(Color.values()[partida.getJugadores().size()]);
+                    partida.getJugadores().add(up);
+                    if (partida.getJugadores().size() == 4) {
+                        partida.empezar();
+                    }
+                    //Estadisticas:
+                    UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
+                    ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
+                    ueRepository.save(ue);
+                    partida = pRepository.saveAndFlush(partida);
+                    //Envio de info al frontend:
+                    List<UsuarioPartida> lup = upRepository.obtenerUsuarios(partida, usuario);
+                    List<UsuarioColorDto> luc = new ArrayList<>();
+                    for(UsuarioPartida uup: lup) {
+                        UsuarioColorDto uc = new UsuarioColorDto(uup.getUsuario().getUsername(), uup.getColor());
+                        luc.add(uc);
+                    }
+                    ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), luc);
+                    //Aviso al resto de la llegada de un nuevo jugador:
+                    UsuarioColorDto uc = new UsuarioColorDto(uRepository.findById(usuario.getId()).get().getUsername(), up.getColor());
+                    messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), uc);
+                    return r;
+                }
+                //EXCEPCIÓN CONTRASEÑA INCORRECTA
+                throw new GenericException("Contraseña incorrecta para la sala indicada");
+            }
+            //EXCEPCIÓN NOMBRE DE PARTIDA NO ENCONTRADO
+            throw new GenericException("La partida no existe o está ya en curso");
+        }
+        throw new GenericException("Ya estás jugando una partida");
     }
 
     public void empezarPartida(Long id) {
@@ -125,36 +140,49 @@ public class PartidaService {
     }
 
     public ResponsePartida jugarPartidaPublica(RequestPartidaPublica p) {
-        // TODO: Comprobar si ya está jugando una
-        List<Partida> partidas = new ArrayList<>();
-        Partida partida = new Partida();
-        partidas = pRepository.buscarPublica();
-        if (partidas.isEmpty()) {
-            // Creo la partida
-            partida.setConfigBarreras(p.getConfiguracionB());
-            partida.setConfigFichas(p.getConfiguracionF());
-            partida.setEstado(EstadoPartida.ESPERANDO_JUGADORES);
-        }
-        else {
-            partida = partidas.get(0);
-        }
         Usuario usuario = new Usuario();
         usuario.setId(p.getJugador());
-        UsuarioPartida up = new UsuarioPartida();
-        up.setUsuario(usuario);
-        up.setPartida(partida);
-        up.setColor(Color.values()[partida.getJugadores().size()]);
-        partida.getJugadores().add(up);
-        if (partida.getJugadores().size() == 4) {
-            partida.empezar();
+        if (!upRepository.estaJugando(usuario)) {
+            List<Partida> partidas = new ArrayList<>();
+            Partida partida = new Partida();
+            partidas = pRepository.buscarPublica();
+            if (partidas.isEmpty()) {
+                // Creo la partida
+                partida.setConfigBarreras(p.getConfiguracionB());
+                partida.setConfigFichas(p.getConfiguracionF());
+                partida.setEstado(EstadoPartida.ESPERANDO_JUGADORES);
+            }
+            else {
+                partida = partidas.get(0);
+            }
+            // UsuarioPartida:
+            UsuarioPartida up = new UsuarioPartida();
+            up.setUsuario(usuario);
+            up.setPartida(partida);
+            up.setColor(Color.values()[partida.getJugadores().size()]);
+            partida.getJugadores().add(up);
+            if (partida.getJugadores().size() == 4) {
+                partida.empezar();
+            }
+            //Estadisticas:
+            UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
+            ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
+            ueRepository.save(ue);
+            partida = pRepository.save(partida);
+            //Envio de info al frontend:
+            List<UsuarioPartida> lup = upRepository.obtenerUsuarios(partida, usuario);
+            List<UsuarioColorDto> luc = new ArrayList<>();
+            for(UsuarioPartida uup: lup) {
+                UsuarioColorDto uc = new UsuarioColorDto(uup.getUsuario().getUsername(), uup.getColor());
+                luc.add(uc);
+            }
+            ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(),luc);
+            //Aviso al resto de la llegada de un nuevo jugador:
+            UsuarioColorDto uc = new UsuarioColorDto(uRepository.findById(usuario.getId()).get().getUsername(), up.getColor());
+            messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), uc);
+            return r;
         }
-        UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
-        ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
-        ueRepository.save(ue);
-        partida = pRepository.save(partida);
-        ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
-        messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), up.getColor());
-        return r;
+        throw new GenericException("Ya estás jugando una partida");
     }
 
     public ResponseDado comprobarMovimientos(Long id, int dado) {

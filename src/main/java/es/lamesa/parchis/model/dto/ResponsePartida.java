@@ -1,5 +1,8 @@
 package es.lamesa.parchis.model.dto;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -12,10 +15,18 @@ public class ResponsePartida {
     private Long id;
     @Schema(description = "Color asignado al jugador")
     private Color color;
+    @Schema(description = "Lista de usuarios en la partida y su color")
+    private List<UsuarioColorDto> jugadores = new ArrayList<>();
 
     public ResponsePartida(Long id, Color color) {
         this.id = id;
         this.color = color;
+    }
+
+    public ResponsePartida(Long id, Color color, List<UsuarioColorDto> jugadores) {
+        this.id = id;
+        this.color = color;
+        this.jugadores = jugadores;
     }
 
 }
