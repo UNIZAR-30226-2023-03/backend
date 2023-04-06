@@ -17,6 +17,6 @@ public interface UsuarioPartidaRepository extends JpaRepository<UsuarioPartida, 
     Usuario obtenerUsuario(@Param("partida") Partida partida, @Param("color") Color color);
 
     @Query("SELECT DISTINCT up FROM UsuarioPartida up WHERE up.partida = :partida AND up.usuario <> :usuario")
-    List<UsuarioPartida> obtenerUsuariosPartida(@Param("partida") Partida partida, @Param("usuario") Usuario usuario);
+    List<UsuarioPartida> obtenerUsuarios(@Param("partida") Partida partida, @Param("usuario") Usuario usuario);
     
 }

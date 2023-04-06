@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import es.lamesa.parchis.model.dto.ResponseDado;
 import es.lamesa.parchis.model.dto.ResponseMovimiento;
 
+@EqualsAndHashCode(exclude = "tablero")
 @NoArgsConstructor
 @Data
 @Entity

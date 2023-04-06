@@ -55,6 +55,7 @@ public class PartidaService {
     }
     
     public ResponsePartida crearPartidaPrivada(RequestPartida partidaDto) {
+        // TODO: Comprobar si ya está jugando una
         if (pRepository.findByNombreAndEstado(partidaDto.getNombre()) == null) {
             Partida partida = new Partida();
             partida.setNombre(partidaDto.getNombre());
@@ -74,14 +75,14 @@ public class PartidaService {
             ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
             ueRepository.save(ue);
             partida = pRepository.save(partida);
-            List<UsuarioColorDto> jugadores_en_partida = new ArrayList<>();
-            ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), jugadores_en_partida);
+            ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
             return r;
         }
         throw new GenericException("Nombre de sala no disponible: ya se está jugando una partida con ese nombre de sala");
     }
     
     public ResponsePartida conectarPartidaPrivada(RequestPartida partidaDto) {
+        // TODO: Comprobar si ya está jugando una
 		Partida partida = new Partida();
 		partida = pRepository.buscarPartida(partidaDto.getNombre());
         if (partida != null) {
@@ -99,14 +100,8 @@ public class PartidaService {
                 UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
                 ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
                 ueRepository.save(ue);
-                partida = pRepository.save(partida);
-                List<UsuarioPartida> lup = upRepository.obtenerUsuariosPartida(partida, usuario);
-                List<UsuarioColorDto> jugadores_en_partida = new ArrayList<>();
-                for (UsuarioPartida ups : lup) {
-                    UsuarioColorDto uc = new UsuarioColorDto(ups.getUsuario().getUsername(), ups.getColor());
-                    jugadores_en_partida.add(uc);
-                }
-                ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), jugadores_en_partida);
+                partida = pRepository.saveAndFlush(partida);
+                ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
                 messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), up.getColor());
                 return r;
             }
@@ -130,6 +125,7 @@ public class PartidaService {
     }
 
     public ResponsePartida jugarPartidaPublica(RequestPartidaPublica p) {
+        // TODO: Comprobar si ya está jugando una
         List<Partida> partidas = new ArrayList<>();
         Partida partida = new Partida();
         partidas = pRepository.buscarPublica();
@@ -156,13 +152,7 @@ public class PartidaService {
         ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
         ueRepository.save(ue);
         partida = pRepository.save(partida);
-        List<UsuarioPartida> lup = upRepository.obtenerUsuariosPartida(partida, usuario);
-        List<UsuarioColorDto> jugadores_en_partida = new ArrayList<>();
-        for (UsuarioPartida ups : lup) {
-            UsuarioColorDto uc = new UsuarioColorDto(ups.getUsuario().getUsername(), ups.getColor());
-            jugadores_en_partida.add(uc);
-        }
-        ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), jugadores_en_partida);
+        ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
         messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), up.getColor());
         return r;
     }
