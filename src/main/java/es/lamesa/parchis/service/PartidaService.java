@@ -9,6 +9,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import es.lamesa.parchis.repository.PartidaRepository;
 import es.lamesa.parchis.repository.TableroRepository;
+import es.lamesa.parchis.repository.UsuarioRepository;
 import es.lamesa.parchis.repository.UsuarioEstadisticasRepository;
 import es.lamesa.parchis.repository.UsuarioPartidaRepository;
 import es.lamesa.parchis.model.Partida;
@@ -23,6 +24,7 @@ import es.lamesa.parchis.model.dto.RequestPartida;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
 import es.lamesa.parchis.model.dto.RequestMovimiento;
 import es.lamesa.parchis.model.dto.ResponsePartida;
+import es.lamesa.parchis.model.dto.UsuarioColorDto;
 import es.lamesa.parchis.model.dto.ResponseDado;
 import es.lamesa.parchis.model.dto.ResponseMovimiento;
 import es.lamesa.parchis.exception.GenericException;
@@ -35,6 +37,9 @@ public class PartidaService {
 
     @Autowired
     TableroRepository tRepository;
+
+    @Autowired
+    UsuarioRepository uRepository;
 
     @Autowired
     UsuarioEstadisticasRepository ueRepository;
@@ -64,12 +69,13 @@ public class PartidaService {
             up.setPartida(partida);
             up.setColor(Color.values()[partida.getJugadores().size()]);
             partida.getJugadores().add(up);
+            
             UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
-
             ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
             ueRepository.save(ue);
             partida = pRepository.save(partida);
-            ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
+            List<UsuarioColorDto> jugadores_en_partida = new ArrayList<>();
+            ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), jugadores_en_partida);
             return r;
         }
         throw new GenericException("Nombre de sala no disponible: ya se está jugando una partida con ese nombre de sala");
@@ -94,7 +100,13 @@ public class PartidaService {
                 ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
                 ueRepository.save(ue);
                 partida = pRepository.save(partida);
-                ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
+                List<UsuarioPartida> lup = upRepository.obtenerUsuariosPartida(partida, usuario);
+                List<UsuarioColorDto> jugadores_en_partida = new ArrayList<>();
+                for (UsuarioPartida ups : lup) {
+                    UsuarioColorDto uc = new UsuarioColorDto(ups.getUsuario().getUsername(), ups.getColor());
+                    jugadores_en_partida.add(uc);
+                }
+                ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), jugadores_en_partida);
                 messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), up.getColor());
                 return r;
             }
@@ -144,7 +156,13 @@ public class PartidaService {
         ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
         ueRepository.save(ue);
         partida = pRepository.save(partida);
-        ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor());
+        List<UsuarioPartida> lup = upRepository.obtenerUsuariosPartida(partida, usuario);
+        List<UsuarioColorDto> jugadores_en_partida = new ArrayList<>();
+        for (UsuarioPartida ups : lup) {
+            UsuarioColorDto uc = new UsuarioColorDto(ups.getUsuario().getUsername(), ups.getColor());
+            jugadores_en_partida.add(uc);
+        }
+        ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), jugadores_en_partida);
         messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), up.getColor());
         return r;
     }
@@ -186,12 +204,15 @@ public class PartidaService {
         if (rm.isAcabada()) {
             u = upRepository.obtenerUsuario(p, p.getTurno());
             ue = ueRepository.findByUsuario(u);
+            u.setNumMonedas(u.getNumMonedas() + 50);
+            System.out.println(u.getNumMonedas());
+            uRepository.save(u);
             ue.setPartidasGanadas(ue.getPartidasGanadas() + 1);
             ueRepository.save(ue);
             Tablero t = p.getTablero();
             p.setTablero(null);
             pRepository.save(p);
-            tRepository.delete(t);
+            tRepository.delete(t);        
         }
         else {
             pRepository.save(p);

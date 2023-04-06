@@ -94,12 +94,6 @@ public class UsuarioController {
         service.eliminarAmigo(request);
     }
 
-    @PostMapping("/premio/{id}")
-    @Operation(summary = "Actualiza el número de monedas de un usuario dado")
-	public void actualizarMonedas(@PathVariable("id") Long id, int premio) {
-		service.actualizarMonedas(id, premio);
-	}
-
     @GetMapping("/monedas/{id}")
     @Operation(summary = "Obtiene el número de monedas de un usuario dado")
     public int obtenerNumMonedas(@PathVariable("id") Long id) {
@@ -160,4 +154,9 @@ public class UsuarioController {
         return service.getEstadisticas(id);
     }
     
+    @PostMapping("/recuperar/password/{id}")
+    @Operation(summary = "Manda ")
+    public void recuperarPassword(@PathVariable("id") Long id) {
+        service.recuperarPassword(id);
+    }
 }

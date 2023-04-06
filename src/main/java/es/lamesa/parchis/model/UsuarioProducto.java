@@ -29,4 +29,10 @@ public class UsuarioProducto {
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean activo;
 
+    public UsuarioProducto(Usuario usuario, Producto producto, boolean activo) {
+        this.usuario = usuario;
+        this.producto = producto;
+        this.activo = activo;
+    }
+
 }

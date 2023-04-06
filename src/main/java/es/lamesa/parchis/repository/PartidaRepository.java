@@ -23,5 +23,5 @@ public interface PartidaRepository extends JpaRepository<Partida, Long> {
 
     @Query("SELECT p FROM Partida p WHERE p.nombre = :nombre AND p.estado = 'ESPERANDO_JUGADORES' AND p.configBarreras = :barreras AND p.configFichas = :fichas")
     Partida buscarPartidaPublica(@Param("nombre") String nombre, @Param("barreras") ConfigBarreras cb, @Param("fichas") ConfigFichas cf);
-
+    
 }

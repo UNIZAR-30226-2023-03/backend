@@ -17,6 +17,7 @@ import es.lamesa.parchis.model.Producto;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.UsuarioEstadisticas;
 import es.lamesa.parchis.model.UsuarioProducto;
+import es.lamesa.parchis.model.TipoEmail;
 import es.lamesa.parchis.model.dto.ResponseAmistad;
 import es.lamesa.parchis.model.dto.RequestAmistad;
 import es.lamesa.parchis.model.dto.RequestUsuario;
@@ -63,17 +64,17 @@ public class UsuarioService {
         u.setUsername(usuario.getUsername());
         u.setPassword(usuario.getPassword());
         u.encriptarPassword();
-        // email.enviarCorreoElectronico(usuario.getEmail());
+        // email.enviarCorreoElectronico(usuario.getEmail(), TipoEmail.REGISTRO);
         UsuarioEstadisticas ue = new UsuarioEstadisticas();
         ue.setUsuario(u);
         u.setEstadisticas(ue);
-        // ASIGNAR TABLERO Y FICHAS PREDETERMINADAS AL USUARIO CREADO:
-        // 1) obtener tablero predeterminado (en productoRepository según el tipo
-        // (Tipo.TABLERO) y el nombre (Tablero Predeterminado)
-        // u.getProductos().add(t);
-        // 2) obtener ficha predeterminada (en productoRepository según el tipo
-        // (Tipo.FICHA) y el nombre (Ficha Predeterminada)
-        // u.getProductos().add(f);
+        // ASIGNAR TABLERO Y FICHAS PREDETERMINADAS AL USUARIO CREADO (hecho, solo descomentar):
+        // Producto p = pRepository.findByNombre("Tablero Predeterminado");
+        // UsuarioProducto upt = new UsuarioProducto(u,p,true);
+        // u.getProductos().add(upt);
+        // p = pRepository.findByNombre("Ficha Predeterminada");
+        // UsuarioProducto upf = new UsuarioProducto(u,p,true);
+        // u.getProductos().add(upf);
         u = uRepository.save(u);
         ResponseUsuario ru = new ResponseUsuario(u.getId(), u.getEmail(), u.getUsername(), u.getNumMonedas());
         return ru;
@@ -164,21 +165,17 @@ public class UsuarioService {
         aRepository.delete(a);
     }
 
-    public void actualizarMonedas(Long id, int premio) {
-        Usuario u = uRepository.findById(id).get();
-        u.setNumMonedas(u.getNumMonedas() + premio);
-        uRepository.save(u);
-    }
-
     public void actualizarUsername(RequestCambio request) {
         Usuario u = uRepository.findById(request.getId()).get();
         u.setUsername(request.getCambio());
+        // email.enviarCorreoElectronico(usuario.getEmail(), TipoEmail.CAMBIO_USERNAME);
         uRepository.save(u);
     }
 
     public void actualizarEmail(RequestCambio request) {
         Usuario u = uRepository.findById(request.getId()).get();
         u.setEmail(request.getCambio());
+        // email.enviarCorreoElectronico(usuario.getEmail(), TipoEmail.CAMBIO_EMAIL);
         uRepository.save(u);
     }
 
@@ -186,6 +183,7 @@ public class UsuarioService {
         Usuario u = uRepository.findById(request.getId()).get();
         u.setPassword(request.getCambio());
         u.encriptarPassword();
+        // email.enviarCorreoElectronico(usuario.getEmail(), TipoEmail.CAMBIO_PASSWORD);
         u = uRepository.save(u);
     }
 
@@ -248,4 +246,8 @@ public class UsuarioService {
         return re;
     }
 
+    public void recuperarPassword(Long id) {
+        Usuario u = uRepository.findById(id).get();
+        email.enviarCorreoElectronico(u.getEmail(), TipoEmail.RECUPERACION);
+    }
 }

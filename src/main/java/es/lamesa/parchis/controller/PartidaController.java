@@ -37,8 +37,7 @@ public class PartidaController {
 
     @PostMapping("/crear")
     @Operation(summary = "Crea una nueva partida privada")
-    public ResponsePartida crearPartidaPrivada(@RequestBody RequestPartida request, @RequestHeader("Origin") String origin) {
-        System.out.println(origin);
+    public ResponsePartida crearPartidaPrivada(@RequestBody RequestPartida request) {
         return service.crearPartidaPrivada(request);
     }
     
