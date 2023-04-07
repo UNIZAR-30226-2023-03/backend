@@ -13,7 +13,7 @@ import es.lamesa.parchis.model.Color;
 public class ResponseDado {
     
     @Schema(description = "Si sacar es false, representa las fichas que no se pueden mover con la tirada realizada. " +
-                          "Si es false, representa la ficha a mover a la casilla de salida tras sacar un 5")
+                          "Si es true, representa la ficha a mover a la casilla de salida tras sacar un 5")
     private List<Ficha> fichas;
     @Schema(description = "True si tras sacar un 5 se puede mover una ficha de casa a la casilla de salida")
     private boolean sacar;
