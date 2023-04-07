@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.Operation;
 
 import es.lamesa.parchis.service.PartidaService;
+import es.lamesa.parchis.model.Color;
 import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.dto.RequestPartida;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
