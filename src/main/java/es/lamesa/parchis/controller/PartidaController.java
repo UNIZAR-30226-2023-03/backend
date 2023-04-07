@@ -47,8 +47,8 @@ public class PartidaController {
 
     @PostMapping("/empezar/{id}")
     @Operation(summary = "Inicia una partida existente, debe haber conectados al menos 2 jugadores")
-    public void empezarPartida(@PathVariable("id") Long id) {
-        service.empezarPartida(id);
+    public Color empezarPartida(@PathVariable("id") Long id) {
+        return service.empezarPartida(id);
     }
     
     @PostMapping("/publica")

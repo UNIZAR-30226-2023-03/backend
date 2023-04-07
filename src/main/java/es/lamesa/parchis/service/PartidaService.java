@@ -127,7 +127,7 @@ public class PartidaService {
         throw new GenericException("Ya estás jugando una partida");
     }
 
-    public void empezarPartida(Long id) {
+    public Color empezarPartida(Long id) {
         Partida p = pRepository.findById(id).get();
         if (p.getJugadores().size() == 1) {
             throw new GenericException("Debe haber al menos 2 jugadores para empezar");
@@ -137,6 +137,7 @@ public class PartidaService {
         }
         p.empezar();
         pRepository.save(p);
+        return p.getTurno();
     }
 
     public ResponsePartida jugarPartidaPublica(RequestPartidaPublica p) {
