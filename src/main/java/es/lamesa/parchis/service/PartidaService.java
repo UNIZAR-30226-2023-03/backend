@@ -189,10 +189,11 @@ public class PartidaService {
 
     public ResponseDado comprobarMovimientos(Long id, int dado) {
         Partida p = pRepository.findById(id).get();
+        Color turno = p.getTurno();
         ResponseDado rd = p.comprobarMovimientos(dado);
         pRepository.save(p);
-        if (rd.isSacar()) {
-            messagingTemplate.convertAndSend("/topic/salida/" + p.getId(), rd);
+        if (rd.isSacar() || rd.getTurno() != turno) {
+            messagingTemplate.convertAndSend("/topic/dado/" + p.getId(), rd);
         }
         if (rd.getComida() != null) {
             Usuario u = upRepository.obtenerUsuario(p, p.getTurno());
