@@ -137,6 +137,7 @@ public class PartidaService {
         }
         p.empezar();
         pRepository.save(p);
+        messagingTemplate.convertAndSend("/topic/turno/" + p.getId(), p.getTurno());
         return p.getTurno();
     }
 
