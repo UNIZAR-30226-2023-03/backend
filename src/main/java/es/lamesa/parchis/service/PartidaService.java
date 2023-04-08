@@ -127,7 +127,7 @@ public class PartidaService {
         throw new GenericException("Ya estás jugando una partida");
     }
 
-    public void empezarPartida(Long id) {
+    public Color empezarPartida(Long id) {
         Partida p = pRepository.findById(id).get();
         if (p.getJugadores().size() == 1) {
             throw new GenericException("Debe haber al menos 2 jugadores para empezar");
@@ -137,6 +137,8 @@ public class PartidaService {
         }
         p.empezar();
         pRepository.save(p);
+        messagingTemplate.convertAndSend("/topic/turno/" + p.getId(), p.getTurno());
+        return p.getTurno();
     }
 
     public ResponsePartida jugarPartidaPublica(RequestPartidaPublica p) {
@@ -187,10 +189,11 @@ public class PartidaService {
 
     public ResponseDado comprobarMovimientos(Long id, int dado) {
         Partida p = pRepository.findById(id).get();
+        Color turno = p.getTurno();
         ResponseDado rd = p.comprobarMovimientos(dado);
         pRepository.save(p);
-        if (rd.isSacar()) {
-            messagingTemplate.convertAndSend("/topic/salida/" + p.getId(), rd);
+        if (rd.isSacar() || rd.getTurno() != turno) {
+            messagingTemplate.convertAndSend("/topic/dado/" + p.getId(), rd);
         }
         if (rd.getComida() != null) {
             Usuario u = upRepository.obtenerUsuario(p, p.getTurno());

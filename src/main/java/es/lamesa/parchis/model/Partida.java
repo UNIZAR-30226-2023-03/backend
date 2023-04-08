@@ -164,7 +164,7 @@ public class Partida {
                     }
                 }
             }
-            if (bloqueadas.size() == num_fichas && num_dado < 6){
+            if (bloqueadas.size() == num_fichas && num_dado <= 6){
                 turno = turno.siguienteTurno(jugadores.size());
             }
             ResponseDado rd = new ResponseDado(bloqueadas, false, null, null, turno);

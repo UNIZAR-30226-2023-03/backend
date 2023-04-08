@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.Operation;
 
 import es.lamesa.parchis.service.PartidaService;
+import es.lamesa.parchis.model.Color;
 import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.dto.RequestPartida;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
@@ -47,8 +48,8 @@ public class PartidaController {
 
     @PostMapping("/empezar/{id}")
     @Operation(summary = "Inicia una partida existente, debe haber conectados al menos 2 jugadores")
-    public void empezarPartida(@PathVariable("id") Long id) {
-        service.empezarPartida(id);
+    public Color empezarPartida(@PathVariable("id") Long id) {
+        return service.empezarPartida(id);
     }
     
     @PostMapping("/publica")
