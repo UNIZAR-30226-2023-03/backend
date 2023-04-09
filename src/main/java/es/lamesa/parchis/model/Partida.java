@@ -233,7 +233,7 @@ public class Partida {
         c.getFichas().add(f);
         f.setCasilla(c);
         f.setNumPasos(f.getNumPasos() + dado);
-        ResponseMovimiento rm = new ResponseMovimiento(c, comida, turno, acabada);
+        ResponseMovimiento rm = new ResponseMovimiento(c, comida, turno, acabada, f);
         return rm;
     }
 }

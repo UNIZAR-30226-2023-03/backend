@@ -18,12 +18,15 @@ public class ResponseMovimiento {
     private Color turno;
     @Schema(description = "True si con este movimiento la partida ha finalizado")
     private boolean acabada;
+    @Schema(description = "Ficha movida en el movimiendo")
+    private Ficha ficha;
 
-    public ResponseMovimiento(Casilla destino, Ficha comida, Color turno, boolean acabada) {
+    public ResponseMovimiento(Casilla destino, Ficha comida, Color turno, boolean acabada, Ficha ficha) {
         this.destino = destino;
         this.comida = comida;
         this.turno = turno;
         this.acabada = acabada;
+        this.ficha = ficha;
     }
 
 }
