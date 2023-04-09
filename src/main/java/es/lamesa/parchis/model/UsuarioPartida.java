@@ -32,6 +32,9 @@ public class UsuarioPartida {
     @Column(columnDefinition = "boolean default false")
     private boolean ganador;
 
+    @Column(columnDefinition = "int default 0")
+    private int numSeises;
+
     public UsuarioPartida(Usuario usuario, Partida partida, Color color) {
         this.usuario = usuario;
         this.partida = partida;

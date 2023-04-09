@@ -96,8 +96,9 @@ public class Partida {
             bloqueadas.add(f);
         }
         List<Ficha> fichas_del_turno = tablero.obtenerFichasTablero(turno);
-        Ficha comida = null;
+        Ficha comida = null;    
         if (num_dado == 5 && fichas_del_turno.size() < num_fichas && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) != 2) {
+            jugadores.get(turno.ordinal()).setNumSeises(0);
             int salida = tablero.obtenerSalida(turno);
             Casilla c = tablero.getCasillas().get(salida);
             boolean ficha_comida = false;
@@ -122,13 +123,34 @@ public class Partida {
             if (!ficha_comida) {
                 turno = turno.siguienteTurno(jugadores.size());
             }
-            ResponseDado rd = new ResponseDado(fichas, true, comida, c, turno);
+            ResponseDado rd = new ResponseDado(fichas, true, comida, c, turno, false);
             return rd;
         }
         else {
-            if (fichas_del_turno.size() == num_fichas && num_dado == 6){ 
-                num_dado++;
+            if (num_dado == 6) {
+                jugadores.get(turno.ordinal()).setNumSeises(1 + jugadores.get(turno.ordinal()).getNumSeises());
+                int num_seis = jugadores.get(turno.ordinal()).getNumSeises();
+                if (num_seis == 3) {
+                    Ficha f = tablero.obtenerFichaMasAvanzada(turno);
+                    f.getCasilla().getFichas().remove(f);
+                    Casilla c = tablero.obtenerCasillaCasa(f.getColor());
+                    c.getFichas().add(f);
+                    f.setCasilla(c);
+                    f.setNumPasos(0);
+                    turno = turno.siguienteTurno(jugadores.size());
+                    List<Ficha> fichas = new ArrayList<>();
+                    fichas.add(f);
+                    jugadores.get(turno.ordinal()).setNumSeises(0);                   
+                    ResponseDado rd = new ResponseDado(fichas, false, null, c, turno, true);
+                    return rd;
+                }
             }
+            else {
+                jugadores.get(turno.ordinal()).setNumSeises(0);
+            }
+            // if (fichas_del_turno.size() == num_fichas && num_dado == 6){ 
+            //     num_dado++;
+            // }
             for(Ficha i : fichas_del_turno) {
                 id_casilla = i.getCasilla().getPosicion();
                 if (i.getNumPasos() + num_dado > 71){ //¿se podría quitar condicion de turno? (si ya está en pasillo, ya se sabe que es del color del turno)
@@ -167,7 +189,7 @@ public class Partida {
             if (bloqueadas.size() == num_fichas && num_dado <= 6){
                 turno = turno.siguienteTurno(jugadores.size());
             }
-            ResponseDado rd = new ResponseDado(bloqueadas, false, null, null, turno);
+            ResponseDado rd = new ResponseDado(bloqueadas, false, null, null, turno, false);
             return rd;
         }
     }
@@ -202,7 +224,7 @@ public class Partida {
                     jugadores.get(turno.ordinal()).setGanador(true);
                 }
             }
-            else {
+            else if (dado != 6) {
                 turno = turno.siguienteTurno(jugadores.size());
             }
         } 
@@ -210,7 +232,9 @@ public class Partida {
             //entrada a pasillo
             id_casilla = 67 + ((id_casilla + dado - id_casilla_prepasillo)%68);
             c = tablero.obtenerCasillaPasillo(id_casilla, turno);
-            turno = turno.siguienteTurno(jugadores.size());
+            if (dado != 6) {
+                turno = turno.siguienteTurno(jugadores.size());
+            }
         }
         else {
             c = tablero.obtenerCasillaPerimetro((id_casilla + dado)%68);
@@ -225,7 +249,7 @@ public class Partida {
                     comida.setCasilla(casa);
                     comida.setNumPasos(0);
             }
-            else {
+            else if (dado != 6) {
                 turno = turno.siguienteTurno(jugadores.size());
             }
         } 

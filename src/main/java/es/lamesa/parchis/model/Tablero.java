@@ -236,4 +236,18 @@ public class Tablero {
         }
         return fichas;
     }
+
+    public Ficha obtenerFichaMasAvanzada(Color c) {
+        Ficha f = null;
+        for (Casilla ca : casillas) {
+            if (ca.getTipo() != TipoCasilla.META || ca.getTipo() != TipoCasilla.PASILLO || ca.getTipo() != TipoCasilla.CASA) {
+                for (Ficha i : ca.getFichas()) {
+                    if (i.getColor() == c) {
+                        f = i;
+                    }
+                }
+            }
+        }
+        return f;    
+    } 
 }

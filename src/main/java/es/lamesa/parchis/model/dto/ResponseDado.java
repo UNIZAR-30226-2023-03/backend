@@ -23,13 +23,16 @@ public class ResponseDado {
     private Casilla casilla;
     @Schema(description = "Siguiente turno")
     private Color turno;
+    @Schema(description = "True si tras sacar tres 6 seguidos se mete una ficha en casa")
+    private boolean vueltaACasa;
 
-    public ResponseDado(List<Ficha> fichas, boolean sacar, Ficha comida, Casilla casilla, Color turno) {
+    public ResponseDado(List<Ficha> fichas, boolean sacar, Ficha comida, Casilla casilla, Color turno, boolean vueltaACasa) {
         this.fichas = fichas;
         this.sacar = sacar;
         this.comida = comida;
         this.casilla = casilla;
         this.turno = turno;
+        this.vueltaACasa = vueltaACasa;
     }
 
 }
