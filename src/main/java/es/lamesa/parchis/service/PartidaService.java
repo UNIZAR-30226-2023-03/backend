@@ -97,9 +97,9 @@ public class PartidaService {
                     up.setPartida(partida);
                     up.setColor(Color.values()[partida.getJugadores().size()]);
                     partida.getJugadores().add(up);
-                    if (partida.getJugadores().size() == 4) {
-                        partida.empezar();
-                    }
+                    // if (partida.getJugadores().size() == 4) {
+                    //     partida.empezar();
+                    // }
                     //Estadisticas:
                     UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
                     ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
