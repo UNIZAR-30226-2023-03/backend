@@ -128,8 +128,12 @@ public class Partida {
         }
         else {
             if (num_dado == 6) {
-                jugadores.get(turno.ordinal()).setNumSeises(1 + jugadores.get(turno.ordinal()).getNumSeises());
+                int seis = jugadores.get(turno.ordinal()).getNumSeises();
+                System.out.println("NUMERO DE SEISES ANTES DE SUMAR = " + seis);
+                System.out.println("TURNO " + turno);
+                jugadores.get(turno.ordinal()).setNumSeises(1 + seis);
                 int num_seis = jugadores.get(turno.ordinal()).getNumSeises();
+                System.out.println("DADODADODADO = " + num_seis);
                 if (num_seis == 3) {
                     Ficha f = tablero.obtenerFichaMasAvanzada(turno);
                     f.getCasilla().getFichas().remove(f);
@@ -186,7 +190,7 @@ public class Partida {
                     }
                 }
             }
-            if (bloqueadas.size() == num_fichas && num_dado <= 6){
+            if (bloqueadas.size() == num_fichas && num_dado < 6){
                 turno = turno.siguienteTurno(jugadores.size());
             }
             ResponseDado rd = new ResponseDado(bloqueadas, false, null, null, turno, false);
