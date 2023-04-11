@@ -132,9 +132,6 @@ public class PartidaService {
         if (p.getJugadores().size() == 1) {
             throw new GenericException("Debe haber al menos 2 jugadores para empezar");
         }
-        if (p.getEstado() == EstadoPartida.EN_PROGRESO){
-            throw new GenericException("No se puede crear una partida que ya está en progreso");
-        }
         p.empezar();
         pRepository.save(p);
         messagingTemplate.convertAndSend("/topic/turno/" + p.getId(), p.getTurno());
