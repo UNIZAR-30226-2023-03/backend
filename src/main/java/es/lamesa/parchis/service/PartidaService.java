@@ -70,7 +70,6 @@ public class PartidaService {
                 up.setPartida(partida);
                 up.setColor(Color.values()[partida.getJugadores().size()]);
                 partida.getJugadores().add(up);
-                
                 UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
                 ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
                 ueRepository.save(ue);
@@ -97,9 +96,6 @@ public class PartidaService {
                     up.setPartida(partida);
                     up.setColor(Color.values()[partida.getJugadores().size()]);
                     partida.getJugadores().add(up);
-                    // if (partida.getJugadores().size() == 4) {
-                    //     partida.empezar();
-                    // }
                     //Estadisticas:
                     UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
                     ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
@@ -162,6 +158,7 @@ public class PartidaService {
             partida.getJugadores().add(up);
             if (partida.getJugadores().size() == 4) {
                 partida.empezar();
+                messagingTemplate.convertAndSend("/topic/turno/" + partida.getId(), partida.getTurno());
             }
             //Estadisticas:
             UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
