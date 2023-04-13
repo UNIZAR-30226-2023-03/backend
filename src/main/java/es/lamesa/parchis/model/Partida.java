@@ -73,6 +73,15 @@ public class Partida {
         turno.siguienteTurno(jugadores.size());
     }
 
+    public UsuarioPartida obtenerJugadorTurno() {
+        for (UsuarioPartida up : jugadores) {
+            if (up.getColor() == turno) {
+                return up;
+            }
+        }
+        return null;
+    }
+
     public Ficha sacarFicha() {
         int id_casilla = tablero.obtenerSalida(turno);
         Casilla casa = tablero.obtenerCasillaCasa(turno);
@@ -98,7 +107,7 @@ public class Partida {
         List<Ficha> fichas_del_turno = tablero.obtenerFichasTablero(turno);
         Ficha comida = null;    
         if (num_dado == 5 && fichas_del_turno.size() < num_fichas && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) != 2) {
-            jugadores.get(turno.ordinal()).setNumSeises(0);
+            obtenerJugadorTurno().setNumSeises(0);
             int salida = tablero.obtenerSalida(turno);
             Casilla c = tablero.getCasillas().get(salida);
             boolean ficha_comida = false;
@@ -127,14 +136,10 @@ public class Partida {
             return rd;
         }
         else {
-            if (num_dado == 6) {
-                int seis = jugadores.get(turno.ordinal()).getNumSeises();
-                System.out.println("NUMERO DE SEISES ANTES DE SUMAR = " + seis);
-                System.out.println("TURNO " + turno + " NUMERO " + turno.ordinal());
-                jugadores.get(turno.ordinal()).setNumSeises(1 + seis);
-                int num_seis = jugadores.get(turno.ordinal()).getNumSeises();
-                System.out.println("DADODADODADO = " + num_seis);
-                System.out.println(jugadores.get(turno.ordinal()));
+            if (num_dado == 6) { 
+                int num_seis = obtenerJugadorTurno().getNumSeises();
+                obtenerJugadorTurno().setNumSeises(1 + num_seis);
+                num_seis = obtenerJugadorTurno().getNumSeises();
                 if (num_seis == 3) {
                     Ficha f = tablero.obtenerFichaMasAvanzada(turno);
                     f.getCasilla().getFichas().remove(f);
@@ -142,7 +147,7 @@ public class Partida {
                     c.getFichas().add(f);
                     f.setCasilla(c);
                     f.setNumPasos(0);
-                    jugadores.get(turno.ordinal()).setNumSeises(0);  
+                    obtenerJugadorTurno().setNumSeises(0);  
                     turno = turno.siguienteTurno(jugadores.size());
                     List<Ficha> fichas = new ArrayList<>();
                     fichas.add(f);               
@@ -151,7 +156,7 @@ public class Partida {
                 }
             }
             else {
-                jugadores.get(turno.ordinal()).setNumSeises(0);
+                obtenerJugadorTurno().setNumSeises(0);
             }
             // if (fichas_del_turno.size() == num_fichas && num_dado == 6){ 
             //     num_dado++;
@@ -226,7 +231,7 @@ public class Partida {
                     c.getFichas().size() == 1 && configFichas == ConfigFichas.RAPIDO) {
                     this.estado = EstadoPartida.FINALIZADA;
                     acabada = true;
-                    jugadores.get(turno.ordinal()).setGanador(true);
+                    obtenerJugadorTurno().setGanador(true);
                 }
             }
             else if (dado != 6) {
