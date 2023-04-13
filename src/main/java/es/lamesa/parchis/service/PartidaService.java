@@ -186,7 +186,7 @@ public class PartidaService {
         Color turno = p.getTurno();
         ResponseDado rd = p.comprobarMovimientos(dado);
         pRepository.save(p);
-        if (rd.isSacar() || rd.getTurno() != turno) {
+        if (rd.isSacar() || rd.getTurno() != turno || rd.isVueltaACasa()) {
             messagingTemplate.convertAndSend("/topic/dado/" + p.getId(), rd);
         }
         if (rd.getComida() != null) {
