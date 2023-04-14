@@ -31,17 +31,15 @@ public class TorneoService {
     
     @Autowired
     SimpMessagingTemplate messagingTemplate;
-
-    @Autowired
-    RandomGenerator random;
      
     public List<Torneo> getTorneos() {
         return tRepository.findAll();
     }
     
     @Async
-    @Scheduled(cron = "0 0 12 30 * ?", zone = "Europe/Madrid")
+    @Scheduled(cron = "0 34 12 * * ?", zone = "Europe/Madrid")
     public void crearTorneoSeguroRapido() {
+        RandomGenerator random = new RandomGenerator();
         Torneo t = new Torneo("TORNEO RÁPIDO", random.generarEntradaTorneoRapido(), ConfigBarreras.SOLO_SEGUROS, ConfigFichas.RAPIDO);
         tRepository.save(t);
     }
@@ -49,6 +47,7 @@ public class TorneoService {
     @Async
     @Scheduled(cron = "0 0 15 * * ?", zone = "Europe/Madrid")
     public void crearTorneoTodoRapido() {
+        RandomGenerator random = new RandomGenerator();
         Torneo t = new Torneo("TORNEO RÁPIDO", random.generarEntradaTorneoRapido(), ConfigBarreras.TODAS_CASILLAS, ConfigFichas.RAPIDO);
         tRepository.save(t);
     }
@@ -56,6 +55,7 @@ public class TorneoService {
     @Async
     @Scheduled(cron = "0 0 18 * * ?", zone = "Europe/Madrid")
     public void crearTorneoSeguroNormal() {
+        RandomGenerator random = new RandomGenerator();
         Torneo t = null;
         int entrada = random.generarEntradaTorneoNormal();
         String nombre = "";
@@ -72,6 +72,7 @@ public class TorneoService {
     @Async
     @Scheduled(cron = "0 0 21 * * ?", zone = "Europe/Madrid")
     public void crearTorneoTodoNormal() {
+        RandomGenerator random = new RandomGenerator();
         Torneo t = null;
         int entrada = random.generarEntradaTorneoNormal();
         String nombre = "";
@@ -85,33 +86,36 @@ public class TorneoService {
         tRepository.save(t);
     }
 
-    public ResponseTorneo apuntarATorneo(RequestTorneo rt) {
-        ResponseTorneo rtt = null;
-        Usuario u = uRepository.findById(rt.getUsuario()).get();
-        Torneo t = tRepository.findById(rt.getTorneo()).get();
-        if (t.getNumJugadores() == 16) {
-            throw new GenericException("El torneo está completo");
-        }
-        if (t.getPrecioEntrada() > u.getNumMonedas()) {
-            throw new GenericException("No tienes monedas suficientes eres pobre");
-        }
-        t.setNumJugadores(1 + t.getNumJugadores());
-        int num = t.getNumJugadores();
-        if (num == 16) {
-            messagingTemplate.convertAndSend("/topic/torneo/" + t.getId(), "Torneo abierto");
-            for (int i = 0; i < 4; ++i) {
-                Partida p = new Partida(false, t, t.getConfigBarreras(), t.getConfigFichas());
-                t.getPartidas().add(p);
-            }
-            Partida p = new Partida(true, t, t.getConfigBarreras(), t.getConfigFichas());
-            t.setPartidaFinal(p);
-            tRepository.save(t);
-            rtt = new ResponseTorneo(false, true);
-        }
-        else {
-            rtt = new ResponseTorneo(true, false);
-        }
-        return rtt;
-    }
+    // public ResponseTorneo apuntarATorneo(RequestTorneo rt) {
+    //     ResponseTorneo rtt = null;
+    //     Usuario u = uRepository.findById(rt.getUsuario()).get();
+    //     Torneo t = tRepository.findById(rt.getTorneo()).get();
+    //     if (t.getNumJugadores() == 16) {
+    //         throw new GenericException("El torneo está completo");
+    //     }
+    //     if (t.getPrecioEntrada() > u.getNumMonedas()) {
+    //         throw new GenericException("No tienes monedas suficientes eres pobre");
+    //     }
+    //     t.setNumJugadores(1 + t.getNumJugadores());
+    //     int num = t.getNumJugadores();
+    //     if (num == 16) {
+    //         messagingTemplate.convertAndSend("/topic/torneo/" + t.getId(), "Torneo abierto");
+    //         for (int i = 0; i < 4; ++i) {
+    //             Partida p = new Partida();     
+    //             p.setConfigBarreras(t.getConfigBarreras());                
+    //             p.setConfigFichas(t.getConfigFichas());
+    //             p.setEstado(EstadoPartida.ESPERANDO_JUGADORES);
+    //             t.getPartidas().add(p);
+    //         }
+    //         Partida p = new Partida(true, t, t.getConfigBarreras(), t.getConfigFichas());
+    //         t.setPartidaFinal(p);
+    //         tRepository.save(t);
+    //         rtt = new ResponseTorneo(false, true);
+    //     }
+    //     else {
+    //         rtt = new ResponseTorneo(true, false);
+    //     }
+    //     return rtt;
+    // }
 
 }
