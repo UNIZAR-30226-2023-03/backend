@@ -20,6 +20,7 @@ import es.lamesa.parchis.model.Tablero;
 import es.lamesa.parchis.model.EstadoPartida;
 import es.lamesa.parchis.model.UsuarioPartida;
 import es.lamesa.parchis.model.Color;
+import es.lamesa.parchis.model.ConfigFichas;
 import es.lamesa.parchis.model.dto.RequestPartida;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
 import es.lamesa.parchis.model.dto.RequestMovimiento;
@@ -219,7 +220,12 @@ public class PartidaService {
         if (rm.isAcabada()) {
             u = upRepository.obtenerUsuario(p, p.getTurno());
             ue = ueRepository.findByUsuario(u);
-            u.setNumMonedas(u.getNumMonedas() + 50);
+            if (p.getConfigFichas() == ConfigFichas.RAPIDO) {
+                u.setNumMonedas(u.getNumMonedas() + 25);
+            }
+            else {
+                u.setNumMonedas(u.getNumMonedas() + 50);
+            }
             System.out.println(u.getNumMonedas());
             uRepository.save(u);
             ue.setPartidasGanadas(ue.getPartidasGanadas() + 1);

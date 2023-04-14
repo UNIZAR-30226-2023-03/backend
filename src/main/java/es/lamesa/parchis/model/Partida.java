@@ -62,6 +62,18 @@ public class Partida {
     @Enumerated(EnumType.STRING)
     private EstadoPartida estado;
 
+    public Partida(boolean fin, Torneo torneo, ConfigBarreras configBarreras, ConfigFichas configFichas) {
+        if (fin) {
+            this.finalTorneo = torneo;
+        }
+        else {
+            this.torneo = torneo;
+        }
+        this.configBarreras = configBarreras;
+        this.configFichas = configFichas;
+        this.estado = EstadoPartida.ESPERANDO_JUGADORES;
+    }
+
     public void empezar() {
         this.tablero = new Tablero(jugadores.size(), this);
         this.estado = EstadoPartida.EN_PROGRESO;
