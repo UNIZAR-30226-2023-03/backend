@@ -29,6 +29,9 @@ public class Torneo {
     @Column(nullable = false, columnDefinition = "int default 0")
     private int numJugadores;
 
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private int numFinalistas;
+
     @Column
     private ConfigBarreras configBarreras;
 
@@ -41,11 +44,16 @@ public class Torneo {
     @OneToOne(mappedBy = "finalTorneo", cascade = CascadeType.ALL)
     private Partida partidaFinal;
 
-    public Torneo(String nom, int precio, ConfigBarreras cb, ConfigFichas cf) {
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EstadoTorneo estado;
+
+    public Torneo(String nom, int precio, ConfigBarreras cb, ConfigFichas cf, EstadoTorneo estado) {
         this.nombre = nom;
         this.precioEntrada = precio;
         this.configBarreras = cb;
         this.configFichas = cf;
+        this.estado = estado;
     }
     
 }

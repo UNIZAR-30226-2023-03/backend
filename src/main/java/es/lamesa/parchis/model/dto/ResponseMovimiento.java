@@ -20,6 +20,9 @@ public class ResponseMovimiento {
     private boolean acabada;
     @Schema(description = "Ficha movida en el movimiendo")
     private Ficha ficha;
+    @Schema(description = "Booleano que indica si el jugador es el último en " +
+                          "haber ganado su partida en un torneo")
+    boolean finalTorneo;
 
     public ResponseMovimiento(Casilla destino, Ficha comida, Color turno, boolean acabada, Ficha ficha) {
         this.destino = destino;
@@ -27,6 +30,7 @@ public class ResponseMovimiento {
         this.turno = turno;
         this.acabada = acabada;
         this.ficha = ficha;
+        this.finalTorneo = false;
     }
 
 }

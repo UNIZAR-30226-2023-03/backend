@@ -16,8 +16,10 @@ import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.UsuarioEstadisticas;
 import es.lamesa.parchis.model.TipoCasilla;
+import es.lamesa.parchis.model.Torneo;
 import es.lamesa.parchis.model.Tablero;
 import es.lamesa.parchis.model.EstadoPartida;
+import es.lamesa.parchis.model.EstadoTorneo;
 import es.lamesa.parchis.model.UsuarioPartida;
 import es.lamesa.parchis.model.Color;
 import es.lamesa.parchis.model.ConfigFichas;
@@ -105,7 +107,7 @@ public class PartidaService {
                     //Envio de info al frontend:
                     List<UsuarioPartida> lup = upRepository.obtenerUsuarios(partida, usuario);
                     List<UsuarioColorDto> luc = new ArrayList<>();
-                    for(UsuarioPartida uup: lup) {
+                    for (UsuarioPartida uup: lup) {
                         UsuarioColorDto uc = new UsuarioColorDto(uup.getUsuario().getUsername(), uup.getColor());
                         luc.add(uc);
                     }
@@ -220,25 +222,55 @@ public class PartidaService {
         if (rm.isAcabada()) {
             u = upRepository.obtenerUsuario(p, p.getTurno());
             ue = ueRepository.findByUsuario(u);
-            if (p.getConfigFichas() == ConfigFichas.RAPIDO) {
-                u.setNumMonedas(u.getNumMonedas() + 25);
-            }
-            else {
-                u.setNumMonedas(u.getNumMonedas() + 50);
-            }
-            System.out.println(u.getNumMonedas());
-            uRepository.save(u);
             ue.setPartidasGanadas(ue.getPartidasGanadas() + 1);
             ueRepository.save(ue);
+            if (p.getTorneo() != null) {
+                Torneo t = p.getTorneo();
+                t.setNumFinalistas(1 + t.getNumFinalistas());
+                int num = t.getNumFinalistas();
+                if (num == 4) {
+                    messagingTemplate.convertAndSend("/topic/final/" + t.getId(), "Comienzo de la final");
+                    t.setEstado(EstadoTorneo.EN_FINAL);
+                    rm.setFinalTorneo(true);
+                }
+            }
+            else if (p.getFinalTorneo() != null) {
+                ue.setTorneosGanados(1 + ue.getTorneosGanados());
+                ueRepository.save(ue);
+                Torneo t = p.getFinalTorneo();
+                t.setEstado(EstadoTorneo.FINALIZADO);
+                int premioGanador = t.getPrecioEntrada() * 8;
+                int premioPerdedores = (t.getPrecioEntrada() * 8 / 3) / 100 * 100;
+                for (UsuarioPartida up : p.getJugadores()) {
+                    u = up.getUsuario();
+                    int monedas = u.getNumMonedas();
+                    if (up.getColor() == p.getTurno()) {
+                        u.setNumMonedas(premioGanador + monedas);
+                    }
+                    else {
+                        u.setNumMonedas(premioPerdedores + monedas);
+                    }
+                } 
+                uRepository.save(u);
+            } 
+            else {
+                if (p.getConfigFichas() == ConfigFichas.RAPIDO) {
+                    u.setNumMonedas(u.getNumMonedas() + 25);
+                }
+                else {
+                    u.setNumMonedas(u.getNumMonedas() + 50);
+                }
+                uRepository.save(u);
+            }
             Tablero t = p.getTablero();
             p.setTablero(null);
             pRepository.save(p);
-            tRepository.delete(t);        
+            tRepository.delete(t);
         }
         else {
             pRepository.save(p);
         }
         messagingTemplate.convertAndSend("/topic/movimiento/" + p.getId(), rm);
         return rm;
-    } 
+    }
 }

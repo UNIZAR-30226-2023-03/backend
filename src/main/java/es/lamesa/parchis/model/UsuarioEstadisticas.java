@@ -32,5 +32,9 @@ public class UsuarioEstadisticas {
     private int numEnMeta;
 
     @Column(nullable = false, columnDefinition = "int default 0")
-    private int trofeos;
+    private int torneosJugados;
+    
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private int torneosGanados;
+
 }

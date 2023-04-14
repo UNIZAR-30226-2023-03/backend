@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import es.lamesa.parchis.model.Torneo;
 import es.lamesa.parchis.service.TorneoService;
 import es.lamesa.parchis.model.dto.RequestTorneo;
+import es.lamesa.parchis.model.dto.ResponsePartida;
 import es.lamesa.parchis.model.dto.ResponseTorneo;
 
 @RestController
@@ -33,5 +34,23 @@ public class TorneoController {
     public ResponseTorneo apuntarATorneo(@RequestBody RequestTorneo rt) {
         return service.apuntarATorneo(rt);
     }
+
+    @PostMapping("/jugar")
+    @Operation(summary = "Un usuario se une a una partida libre del torneo")
+    public ResponsePartida jugarTorneo(@RequestBody RequestTorneo rt) {
+        return service.jugarTorneo(rt);
+    }
+
+    @PostMapping("/jugar-final")
+    @Operation(summary = "Un usuario se une a la final de un torneo después de ganar su eliminatoria")
+    public ResponsePartida jugarFinal(@RequestBody RequestTorneo rt) {
+        return service.jugarFinal(rt);
+    }
     
+    @PostMapping("/desapuntar")
+    @Operation(summary = "Un usuario se desapunta de un torneo")
+    public void desapuntarDeTorneo(@RequestBody RequestTorneo rt) {
+        service.desapuntarDeTorneo(rt);
+    }
+
 }
