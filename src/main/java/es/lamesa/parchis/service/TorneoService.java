@@ -57,10 +57,10 @@ public class TorneoService {
     }
     
     @Async
-    @Scheduled(cron = "0 0 12 * * ?", zone = "Europe/Madrid")
+    @Scheduled(cron = "0 0 13 * * ?", zone = "Europe/Madrid")
     public void crearTorneoSeguroRapido() {
         RandomGenerator random = new RandomGenerator();
-        Torneo t = new Torneo("TORNEO RÁPIDO", random.generarEntradaTorneoRapido(), ConfigBarreras.SOLO_SEGUROS, ConfigFichas.RAPIDO, EstadoTorneo.ESPERANDO_JUGADORES);
+        Torneo t = new Torneo("TORNEO RÁPIDO", 0, ConfigBarreras.SOLO_SEGUROS, ConfigFichas.RAPIDO, EstadoTorneo.ESPERANDO_JUGADORES);
         tRepository.save(t);
     }
 
@@ -73,7 +73,7 @@ public class TorneoService {
     }
 
     @Async
-    @Scheduled(cron = "0 39 18 * * ?", zone = "Europe/Madrid")
+    @Scheduled(cron = "0 0 18 * * ?", zone = "Europe/Madrid")
     public void crearTorneoSeguroNormal() {
         RandomGenerator random = new RandomGenerator();
         Torneo t = null;
@@ -118,7 +118,7 @@ public class TorneoService {
         }
         t.setNumJugadores(1 + t.getNumJugadores());
         int num = t.getNumJugadores();
-        if (num == 4) { //en teoría es 16
+        if (num == 8) { //en teoría es 16
             messagingTemplate.convertAndSend("/topic/torneo/" + t.getId(), "Torneo abierto");
             for (int i = 0; i < 4; ++i) {
                 Partida p = new Partida();     

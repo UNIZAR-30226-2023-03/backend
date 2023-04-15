@@ -250,7 +250,7 @@ public class PartidaService {
                     else {
                         u.setNumMonedas(premioPerdedores + monedas);
                     }
-                } 
+                }
                 uRepository.save(u);
             } 
             else {
