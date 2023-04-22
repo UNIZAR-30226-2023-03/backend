@@ -60,7 +60,7 @@ public class TorneoService {
     @Scheduled(cron = "0 0 13 * * ?", zone = "Europe/Madrid")
     public void crearTorneoSeguroRapido() {
         RandomGenerator random = new RandomGenerator();
-        Torneo t = new Torneo("TORNEO RÁPIDO", 0, ConfigBarreras.SOLO_SEGUROS, ConfigFichas.RAPIDO, EstadoTorneo.ESPERANDO_JUGADORES);
+        Torneo t = new Torneo("TORNEO RÁPIDO", random.generarEntradaTorneoRapido(), ConfigBarreras.SOLO_SEGUROS, ConfigFichas.RAPIDO, EstadoTorneo.ESPERANDO_JUGADORES);
         tRepository.save(t);
     }
 

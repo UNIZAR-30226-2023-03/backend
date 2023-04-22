@@ -250,4 +250,17 @@ public class Tablero {
         }
         return f;    
     } 
+
+    public Ficha ObtenerFichaBarrera(Color c) {
+        Ficha f = null;
+        for (Casilla ca : casillas) {
+            if (ca.getFichas().size() == 2) {
+                List<Ficha> fichs = ca.getFichas();
+                if (fichs.get(0).getColor() == c && fichs.get(1).getColor() == c) {
+                    return fichs.get(0);
+                }
+            }
+        }
+        return f;
+    }
 }
