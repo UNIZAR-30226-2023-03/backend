@@ -25,6 +25,8 @@ public class ResponseDado {
     private Color turno;
     @Schema(description = "True si tras sacar tres 6 seguidos se mete una ficha en casa")
     private boolean vueltaACasa;
+    // @Schema(description = "True si has sacado un seis y tienes una barrera y por lo tanto tienes que abrir")
+    // private boolean sacarBarrera;
 
     public ResponseDado(List<Ficha> fichas, boolean sacar, Ficha comida, Casilla casilla, Color turno, boolean vueltaACasa) {
         this.fichas = fichas;

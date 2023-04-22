@@ -85,7 +85,7 @@ public class TorneoService {
         else {
             nombre = "TORNEO NORMAL";
         }
-        t = new Torneo(nombre, 0, ConfigBarreras.SOLO_SEGUROS, ConfigFichas.NORMAL, EstadoTorneo.ESPERANDO_JUGADORES);
+        t = new Torneo(nombre, entrada, ConfigBarreras.SOLO_SEGUROS, ConfigFichas.NORMAL, EstadoTorneo.ESPERANDO_JUGADORES);
         tRepository.save(t);
     }
     

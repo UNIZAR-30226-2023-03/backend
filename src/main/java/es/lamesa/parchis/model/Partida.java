@@ -135,6 +135,12 @@ public class Partida {
             ResponseDado rd = new ResponseDado(fichas, true, comida, c, turno, false);
             return rd;
         }
+        // else if (num_dado == 6 && tablero.ObtenerFichaBarrera(turno) != null) {
+        //     List<Ficha> fichas = new ArrayList<>();
+        //     fichas.add(tablero.ObtenerFichaBarrera(turno));
+        //     ResponseDado rd = new ResponseDado(fichas, true, null, null, turno, false);
+        //     return rd;
+        // }
         else {
             if (num_dado == 6) { 
                 int num_seis = obtenerJugadorTurno().getNumSeises();
