@@ -135,12 +135,7 @@ public class Partida {
             ResponseDado rd = new ResponseDado(fichas, true, comida, c, turno, false);
             return rd;
         }
-        // else if (num_dado == 6 && tablero.ObtenerFichaBarrera(turno) != null) {
-        //     List<Ficha> fichas = new ArrayList<>();
-        //     fichas.add(tablero.ObtenerFichaBarrera(turno));
-        //     ResponseDado rd = new ResponseDado(fichas, true, null, null, turno, false);
-        //     return rd;
-        // }
+        
         else {
             if (num_dado == 6) { 
                 int num_seis = obtenerJugadorTurno().getNumSeises();
@@ -205,6 +200,16 @@ public class Partida {
             if (bloqueadas.size() == num_fichas){
                 turno = turno.siguienteTurno(jugadores.size());
             }
+            // if (num_dado == 6) {
+            //     List<Ficha> fichas_barrera = tablero.obtenerFichasBarrera(turno, configBarreras);
+            //     if (!fichas_barrera.isEmpty()) {
+            //         for (Ficha f : fichas_del_turno) {
+            //             if (!fichas_barrera.contains(f)) {
+            //                 bloqueadas.add(f);
+            //             }
+            //         }
+            //     }
+            // }
             ResponseDado rd = new ResponseDado(bloqueadas, false, null, null, turno, false);
             return rd;
         }

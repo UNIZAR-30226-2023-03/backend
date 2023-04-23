@@ -251,16 +251,28 @@ public class Tablero {
         return f;    
     } 
 
-    public Ficha ObtenerFichaBarrera(Color c) {
-        Ficha f = null;
+    public List<Ficha> obtenerFichasBarrera(Color c, ConfigBarreras cb) {
+        List<Ficha> fichas = new ArrayList<>();
         for (Casilla ca : casillas) {
             if (ca.getFichas().size() == 2) {
-                List<Ficha> fichs = ca.getFichas();
-                if (fichs.get(0).getColor() == c && fichs.get(1).getColor() == c) {
-                    return fichs.get(0);
+                List<Ficha> f = ca.getFichas();
+                if (cb == ConfigBarreras.SOLO_SEGUROS) {
+                    if (ca.getTipo() == TipoCasilla.SEGURO || ca.getTipo() == TipoCasilla.ENTRADA || ca.getTipo() == TipoCasilla.SALIDA) {
+                        if (f.get(0).getColor() == c && f.get(1).getColor() == c) {
+                            fichas.add(f.get(0));
+                            fichas.add(f.get(1));
+                        }
+                    }
+                }
+                else {
+                    if (f.get(0).getColor() == c && f.get(1).getColor() == c) {
+                        fichas.add(f.get(0));
+                        fichas.add(f.get(1));
+                    }
                 }
             }
         }
-        return f;
+        return fichas;
     }
+    
 }
