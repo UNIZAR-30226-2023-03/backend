@@ -57,23 +57,23 @@ public class TorneoService {
     }
     
     @Async
-    @Scheduled(cron = "0 0 13 * * ?", zone = "Europe/Madrid")
+    @Scheduled(cron = "0 30 10 * * ?", zone = "Europe/Madrid")
     public void crearTorneoSeguroRapido() {
         RandomGenerator random = new RandomGenerator();
-        Torneo t = new Torneo("TORNEO RÁPIDO", random.generarEntradaTorneoRapido(), ConfigBarreras.SOLO_SEGUROS, ConfigFichas.RAPIDO, EstadoTorneo.ESPERANDO_JUGADORES);
+        Torneo t = new Torneo("TORNEO RÁPIDO", 0, ConfigBarreras.SOLO_SEGUROS, ConfigFichas.RAPIDO, EstadoTorneo.ESPERANDO_JUGADORES);
         tRepository.save(t);
     }
 
     @Async
-    @Scheduled(cron = "0 0 15 * * ?", zone = "Europe/Madrid")
+    @Scheduled(cron = "0 30 10 * * ?", zone = "Europe/Madrid")
     public void crearTorneoTodoRapido() {
         RandomGenerator random = new RandomGenerator();
-        Torneo t = new Torneo("TORNEO RÁPIDO", random.generarEntradaTorneoRapido(), ConfigBarreras.TODAS_CASILLAS, ConfigFichas.RAPIDO, EstadoTorneo.ESPERANDO_JUGADORES);
+        Torneo t = new Torneo("TORNEO RÁPIDO", 0, ConfigBarreras.TODAS_CASILLAS, ConfigFichas.RAPIDO, EstadoTorneo.ESPERANDO_JUGADORES);
         tRepository.save(t);
     }
 
     @Async
-    @Scheduled(cron = "0 0 18 * * ?", zone = "Europe/Madrid")
+    @Scheduled(cron = "0 30 10 * * ?", zone = "Europe/Madrid")
     public void crearTorneoSeguroNormal() {
         RandomGenerator random = new RandomGenerator();
         Torneo t = null;
@@ -85,12 +85,12 @@ public class TorneoService {
         else {
             nombre = "TORNEO NORMAL";
         }
-        t = new Torneo(nombre, entrada, ConfigBarreras.SOLO_SEGUROS, ConfigFichas.NORMAL, EstadoTorneo.ESPERANDO_JUGADORES);
+        t = new Torneo(nombre, 0, ConfigBarreras.SOLO_SEGUROS, ConfigFichas.NORMAL, EstadoTorneo.ESPERANDO_JUGADORES);
         tRepository.save(t);
     }
     
     @Async
-    @Scheduled(cron = "0 0 21 * * ?", zone = "Europe/Madrid")
+    @Scheduled(cron = "0 30 10 * * ?", zone = "Europe/Madrid")
     public void crearTorneoTodoNormal() {
         RandomGenerator random = new RandomGenerator();
         Torneo t = null;
@@ -102,7 +102,7 @@ public class TorneoService {
         else {
             nombre = "TORNEO NORMAL";
         }
-        t = new Torneo(nombre, entrada, ConfigBarreras.TODAS_CASILLAS, ConfigFichas.NORMAL, EstadoTorneo.ESPERANDO_JUGADORES);
+        t = new Torneo(nombre, 0, ConfigBarreras.TODAS_CASILLAS, ConfigFichas.NORMAL, EstadoTorneo.ESPERANDO_JUGADORES);
         tRepository.save(t);
     }
 
