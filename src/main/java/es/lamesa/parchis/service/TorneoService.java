@@ -57,7 +57,7 @@ public class TorneoService {
     }
     
     @Async
-    @Scheduled(cron = "0 12 11 * * ?", zone = "Europe/Madrid")
+    @Scheduled(cron = "0 20 11 * * ?", zone = "Europe/Madrid")
     public void crearTorneoSeguroRapido() {
         RandomGenerator random = new RandomGenerator();
         Torneo t = new Torneo("TORNEO RÁPIDO", 0, ConfigBarreras.SOLO_SEGUROS, ConfigFichas.RAPIDO, EstadoTorneo.ESPERANDO_JUGADORES);
@@ -65,7 +65,7 @@ public class TorneoService {
     }
 
     @Async
-    @Scheduled(cron = "0 12 11 * * ?", zone = "Europe/Madrid")
+    @Scheduled(cron = "0 22 11 * * ?", zone = "Europe/Madrid")
     public void crearTorneoTodoRapido() {
         RandomGenerator random = new RandomGenerator();
         Torneo t = new Torneo("TORNEO RÁPIDO", 0, ConfigBarreras.TODAS_CASILLAS, ConfigFichas.RAPIDO, EstadoTorneo.ESPERANDO_JUGADORES);
@@ -73,7 +73,7 @@ public class TorneoService {
     }
 
     @Async
-    @Scheduled(cron = "0 12 11 * * ?", zone = "Europe/Madrid")
+    @Scheduled(cron = "0 22 11 * * ?", zone = "Europe/Madrid")
     public void crearTorneoSeguroNormal() {
         RandomGenerator random = new RandomGenerator();
         Torneo t = null;
