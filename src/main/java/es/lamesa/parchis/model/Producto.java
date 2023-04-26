@@ -25,9 +25,6 @@ public class Producto {
     @Column(nullable = false)
     private String descripcion;
 
-    @Column(nullable = false)
-    private String imagenUrl;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TipoProducto tipoProducto;
