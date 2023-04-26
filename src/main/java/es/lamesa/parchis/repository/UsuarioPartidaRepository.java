@@ -21,5 +21,8 @@ public interface UsuarioPartidaRepository extends JpaRepository<UsuarioPartida, 
 
     @Query("SELECT COUNT(up) > 0 FROM UsuarioPartida up WHERE up.usuario = :usuario AND up.partida.estado IN ('EN_PROGRESO', 'ESPERANDO_JUGADORES')")
     boolean estaJugando(@Param("usuario") Usuario usuario);
+
+    @Query("SELECT up.partida.id FROM UsuarioPartida up WHERE up.usuario = :usuario AND up.partida.estado = 'ESPERANDO_JUGADORES')")
+    Long getPartida(@Param("usuario") Usuario usuario);
     
 }

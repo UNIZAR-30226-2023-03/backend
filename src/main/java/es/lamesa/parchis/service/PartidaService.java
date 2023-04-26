@@ -25,6 +25,7 @@ import es.lamesa.parchis.model.Color;
 import es.lamesa.parchis.model.ConfigFichas;
 import es.lamesa.parchis.model.dto.RequestPartida;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
+import es.lamesa.parchis.model.dto.RequestPartidaAmigo;
 import es.lamesa.parchis.model.dto.RequestMovimiento;
 import es.lamesa.parchis.model.dto.ResponsePartida;
 import es.lamesa.parchis.model.dto.UsuarioColorDto;
@@ -126,6 +127,41 @@ public class PartidaService {
         throw new GenericException("Ya estás jugando una partida");
     }
 
+    public ResponsePartida conectarPartidaAmigo(RequestPartidaAmigo request) {
+        Usuario usuario = new Usuario();
+        usuario.setId(request.getJugador());
+        Partida partida = pRepository.findById(request.getPartida()).get();
+        //UsuarioPartida:
+        UsuarioPartida up = new UsuarioPartida();
+        up.setUsuario(usuario);
+        up.setPartida(partida);
+        up.setColor(Color.values()[partida.getJugadores().size()]);
+        partida.getJugadores().add(up);
+        if (partida.getNombre() == null && partida.getPassword() == null) {        
+            if (partida.getJugadores().size() == 4) {
+                partida.empezar();
+                messagingTemplate.convertAndSend("/topic/turno/" + partida.getId(), partida.getTurno());
+            }
+        }
+        //Estadisticas:
+        UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
+        ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
+        ueRepository.save(ue);
+        partida = pRepository.saveAndFlush(partida);
+        //Envio de info al frontend:
+        List<UsuarioPartida> lup = upRepository.obtenerUsuarios(partida, usuario);
+        List<UsuarioColorDto> luc = new ArrayList<>();
+        for (UsuarioPartida uup: lup) {
+            UsuarioColorDto uc = new UsuarioColorDto(uup.getUsuario().getUsername(), uup.getColor());
+            luc.add(uc);
+        }
+        ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), luc);
+        //Aviso al resto de la llegada de un nuevo jugador:
+        UsuarioColorDto uc = new UsuarioColorDto(uRepository.findById(usuario.getId()).get().getUsername(), up.getColor());
+        messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), uc);
+        return r;
+    }
+
     public Color empezarPartida(Long id) {
         Partida p = pRepository.findById(id).get();
         if (p.getJugadores().size() == 1) {
@@ -171,11 +207,11 @@ public class PartidaService {
             //Envio de info al frontend:
             List<UsuarioPartida> lup = upRepository.obtenerUsuarios(partida, usuario);
             List<UsuarioColorDto> luc = new ArrayList<>();
-            for(UsuarioPartida uup: lup) {
+            for (UsuarioPartida uup: lup) {
                 UsuarioColorDto uc = new UsuarioColorDto(uup.getUsuario().getUsername(), uup.getColor());
                 luc.add(uc);
             }
-            ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(),luc);
+            ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), luc);
             //Aviso al resto de la llegada de un nuevo jugador:
             UsuarioColorDto uc = new UsuarioColorDto(uRepository.findById(usuario.getId()).get().getUsername(), up.getColor());
             messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), uc);

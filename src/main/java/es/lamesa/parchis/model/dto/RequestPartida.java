@@ -13,7 +13,7 @@ public class RequestPartida {
     private String nombre;
     @Schema(description = "Contraseña de la sala/partida")
     private String password;
-    @Schema(description = "Id del jugador que crea la partida")
+    @Schema(description = "Id del jugador que se une a la partida")
     private Long jugador;
     @Schema(description = "Configuración de barreras elegida")
     private ConfigBarreras configuracionB;

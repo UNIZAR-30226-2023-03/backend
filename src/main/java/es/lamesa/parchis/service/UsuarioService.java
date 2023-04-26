@@ -11,9 +11,13 @@ import es.lamesa.parchis.repository.UsuarioRepository;
 import es.lamesa.parchis.security.TokenUtil;
 import es.lamesa.parchis.repository.ProductoRepository;
 import es.lamesa.parchis.repository.AmistadRepository;
+import es.lamesa.parchis.repository.PartidaRepository;
 import es.lamesa.parchis.repository.UsuarioEstadisticasRepository;
 import es.lamesa.parchis.repository.UsuarioProductoRepository;
+import es.lamesa.parchis.repository.UsuarioPartidaRepository;
 import es.lamesa.parchis.model.Amistad;
+import es.lamesa.parchis.model.EstadoPartida;
+import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.Producto;
 import es.lamesa.parchis.model.Usuario;
 import es.lamesa.parchis.model.UsuarioEstadisticas;
@@ -36,10 +40,16 @@ public class UsuarioService {
     ProductoRepository pRepository;
 
     @Autowired
+    PartidaRepository paRepository;
+
+    @Autowired
     UsuarioRepository uRepository;
 
     @Autowired
     UsuarioProductoRepository upRepository;
+
+    @Autowired
+    UsuarioPartidaRepository upaRepository;
 
     @Autowired
     AmistadRepository aRepository;
@@ -119,7 +129,7 @@ public class UsuarioService {
         List<Usuario> us = aRepository.findSolicitudes(u);
         List<ResponseAmistad> am = new ArrayList<>();
         for (Usuario uu : us) {
-            ResponseAmistad a = new ResponseAmistad(uu.getId(), uu.getUsername());
+            ResponseAmistad a = new ResponseAmistad(uu.getId(), uu.getUsername(), null, null);
             am.add(a);
         }
         return am;
@@ -130,8 +140,23 @@ public class UsuarioService {
         u.setId(id);
         List<Amistad> la = aRepository.findAmigos(u);
         List<ResponseAmistad> amigos = new ArrayList<>();
+        Long idPartida = null;
+        EstadoPartida estado = null;
         for (Amistad a : la) {
-            ResponseAmistad amigo = new ResponseAmistad(a.getIdAmigo(id), a.getUsernameAmigo(id));
+            if (upaRepository.estaJugando(u)) {
+                idPartida = upaRepository.getPartida(u);
+                if (idPartida != null) {
+                    estado = EstadoPartida.ESPERANDO_JUGADORES;
+                    Partida p = paRepository.findById(idPartida).get();
+                    if (p.getJugadores().size() == 4) {
+                        idPartida = null;
+                    }
+                }
+                else {
+                    estado = EstadoPartida.EN_PROGRESO;
+                }
+            }
+            ResponseAmistad amigo = new ResponseAmistad(a.getIdAmigo(id), a.getUsernameAmigo(id), estado, idPartida);
             amigos.add(amigo);
         }
         return amigos;
