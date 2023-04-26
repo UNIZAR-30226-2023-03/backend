@@ -25,6 +25,7 @@ import es.lamesa.parchis.model.UsuarioPartida;
 import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.EstadoTorneo;
 import es.lamesa.parchis.model.dto.RequestTorneo;
+import es.lamesa.parchis.model.dto.RequestTorneoCrear;
 import es.lamesa.parchis.model.dto.ResponsePartida;
 import es.lamesa.parchis.model.dto.ResponseTorneo;
 import es.lamesa.parchis.model.dto.UsuarioColorDto;
@@ -56,6 +57,18 @@ public class TorneoService {
         return tRepository.findByEstado(EstadoTorneo.ESPERANDO_JUGADORES);
     }
     
+    public void crearTorneo(RequestTorneoCrear request) {
+        Torneo t = new Torneo();
+        t.setPrecioEntrada(request.getPrecio());
+        t.setConfigBarreras(request.getConfigBarreras());
+        t.setConfigFichas(request.getConfigFichas());
+        t.setEstado(EstadoTorneo.ESPERANDO_JUGADORES);
+        t.setNombre(request.getNombre());
+        Usuario u = uRepository.findById(request.getUsuario()).get();
+        t.setNumJugadores(1 + t.getNumJugadores());
+        tRepository.save(t);
+    }
+
     @Async
     @Scheduled(cron = "0 20 11 * * ?", zone = "Europe/Madrid")
     public void crearTorneoSeguroRapido() {
