@@ -275,7 +275,7 @@ public class UsuarioService {
         else if(campo.contentEquals("torneosJugados")) {
             ue = ueRepository.findAllByOrderByTorneosJugados();
         }
-        else if(campo.contentEquals("numGanados")) {
+        else if(campo.contentEquals("torneosGanados")) {
             ue = ueRepository.findAllByOrderByTorneosGanados();
         }
         
