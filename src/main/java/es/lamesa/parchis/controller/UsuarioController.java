@@ -161,8 +161,8 @@ public class UsuarioController {
 
     @GetMapping("/ranking")
     @Operation(summary = "Obtiene el ranking con las estadísticas de todos los usuarios")
-    public List<ResponseEstadisticas> getRanking() {
-        return service.getRanking();
+    public List<ResponseEstadisticas> getRanking(String campo) {
+        return service.getRanking(campo);
     }
 
     @GetMapping("/estadisticas/{id}")

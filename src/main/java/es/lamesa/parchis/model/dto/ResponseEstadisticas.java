@@ -16,13 +16,19 @@ public class ResponseEstadisticas {
     private float mediaComidas;
     @Schema(description = "Media de fichas metidas en meta por el usuario")
     private float mediaEnMeta;
+    @Schema(description = "Torneos jugados por el usuario")
+    private int tJugados;
+    @Schema(description = "Torneos ganados por el usuario")
+    private int tGanados;
 
-    public ResponseEstadisticas(String username, int pJugadas, int pGanadas, float mediaComidas, float mediaEnMeta) {
+    public ResponseEstadisticas(String username, int pJugadas, int pGanadas, float mediaComidas, float mediaEnMeta, int tJugados, int tGanados) {
         this.username = username;
         this.pJugadas = pJugadas;
         this.pGanadas = pGanadas;
         this.mediaComidas = mediaComidas;
         this.mediaEnMeta = mediaEnMeta;
+        this.tJugados = tJugados;
+        this.tGanados = tGanados;
     }
 
 }
