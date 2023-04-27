@@ -6,8 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.annotation.Async;
 
 import es.lamesa.parchis.repository.TorneoRepository;
 import es.lamesa.parchis.repository.PartidaRepository;
@@ -15,8 +13,6 @@ import es.lamesa.parchis.repository.UsuarioRepository;
 import es.lamesa.parchis.repository.UsuarioPartidaRepository;
 import es.lamesa.parchis.repository.UsuarioEstadisticasRepository;
 import es.lamesa.parchis.model.Color;
-import es.lamesa.parchis.model.ConfigBarreras;
-import es.lamesa.parchis.model.ConfigFichas;
 import es.lamesa.parchis.model.EstadoPartida;
 import es.lamesa.parchis.model.Torneo;
 import es.lamesa.parchis.model.Usuario;
@@ -29,7 +25,6 @@ import es.lamesa.parchis.model.dto.RequestTorneoCrear;
 import es.lamesa.parchis.model.dto.ResponsePartida;
 import es.lamesa.parchis.model.dto.ResponseTorneo;
 import es.lamesa.parchis.model.dto.UsuarioColorDto;
-import es.lamesa.parchis.util.RandomGenerator;
 import es.lamesa.parchis.exception.GenericException;
 
 @Service
@@ -57,66 +52,21 @@ public class TorneoService {
         return tRepository.findByEstado(EstadoTorneo.ESPERANDO_JUGADORES);
     }
     
-    public void crearTorneo(RequestTorneoCrear request) {
+    public ResponseTorneo crearTorneo(RequestTorneoCrear request) {
         Torneo t = new Torneo();
+        Usuario u = uRepository.findById(request.getUsuario()).get();
+        if (request.getPrecio() > u.getNumMonedas()) {
+            throw new GenericException("No tienes monedas suficientes");
+        }
         t.setPrecioEntrada(request.getPrecio());
         t.setConfigBarreras(request.getConfigBarreras());
         t.setConfigFichas(request.getConfigFichas());
         t.setEstado(EstadoTorneo.ESPERANDO_JUGADORES);
         t.setNombre(request.getNombre());
-        Usuario u = uRepository.findById(request.getUsuario()).get();
         t.setNumJugadores(1 + t.getNumJugadores());
         tRepository.save(t);
-    }
-
-    @Async
-    @Scheduled(cron = "0 20 11 * * ?", zone = "Europe/Madrid")
-    public void crearTorneoSeguroRapido() {
-        RandomGenerator random = new RandomGenerator();
-        Torneo t = new Torneo("TORNEO RÁPIDO", 0, ConfigBarreras.SOLO_SEGUROS, ConfigFichas.RAPIDO, EstadoTorneo.ESPERANDO_JUGADORES);
-        tRepository.save(t);
-    }
-
-    @Async
-    @Scheduled(cron = "0 22 11 * * ?", zone = "Europe/Madrid")
-    public void crearTorneoTodoRapido() {
-        RandomGenerator random = new RandomGenerator();
-        Torneo t = new Torneo("TORNEO RÁPIDO", 0, ConfigBarreras.TODAS_CASILLAS, ConfigFichas.RAPIDO, EstadoTorneo.ESPERANDO_JUGADORES);
-        tRepository.save(t);
-    }
-
-    @Async
-    @Scheduled(cron = "0 22 11 * * ?", zone = "Europe/Madrid")
-    public void crearTorneoSeguroNormal() {
-        RandomGenerator random = new RandomGenerator();
-        Torneo t = null;
-        int entrada = random.generarEntradaTorneoNormal();
-        String nombre = "";
-        if (entrada == 300) {
-            nombre = "SUPER TORNEO";
-        }
-        else {
-            nombre = "TORNEO NORMAL";
-        }
-        t = new Torneo(nombre, 0, ConfigBarreras.SOLO_SEGUROS, ConfigFichas.NORMAL, EstadoTorneo.ESPERANDO_JUGADORES);
-        tRepository.save(t);
-    }
-    
-    @Async
-    @Scheduled(cron = "0 12 11 * * ?", zone = "Europe/Madrid")
-    public void crearTorneoTodoNormal() {
-        RandomGenerator random = new RandomGenerator();
-        Torneo t = null;
-        int entrada = random.generarEntradaTorneoNormal();
-        String nombre = "";
-        if (entrada == 300) {
-            nombre = "SUPER TORNEO";
-        }
-        else {
-            nombre = "TORNEO NORMAL";
-        }
-        t = new Torneo(nombre, 0, ConfigBarreras.TODAS_CASILLAS, ConfigFichas.NORMAL, EstadoTorneo.ESPERANDO_JUGADORES);
-        tRepository.save(t);
+        ResponseTorneo rt = new ResponseTorneo(true, false);
+        return rt;
     }
 
     public ResponseTorneo apuntarATorneo(RequestTorneo rt) {
@@ -127,7 +77,7 @@ public class TorneoService {
             throw new GenericException("El torneo está completo");
         }
         if (t.getPrecioEntrada() > u.getNumMonedas()) {
-            throw new GenericException("No tienes monedas suficientes eres pobre");
+            throw new GenericException("No tienes monedas suficientes");
         }
         t.setNumJugadores(1 + t.getNumJugadores());
         int num = t.getNumJugadores();

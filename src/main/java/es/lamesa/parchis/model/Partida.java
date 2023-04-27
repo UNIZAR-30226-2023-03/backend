@@ -159,17 +159,15 @@ public class Partida {
             else {
                 obtenerJugadorTurno().setNumSeises(0);
             }
-            // if (fichas_del_turno.size() == num_fichas && num_dado == 6){ 
-            //     num_dado++;
-            // }
+
             for(Ficha i : fichas_del_turno) {
                 id_casilla = i.getCasilla().getPosicion();
                 if (i.getNumPasos() + num_dado > 71){ //¿se podría quitar condicion de turno? (si ya está en pasillo, ya se sabe que es del color del turno)
                     bloqueadas.add(i);
                 }
-                else if (num_dado == 5 && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) == 2) {
-                    bloqueadas.add(i);
-                }
+                // else if (num_dado == 5 && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) == 2) {
+                //     bloqueadas.add(i);
+                // }
                 else{
                     if(tablero.obtenerFichas(id_casilla + num_dado) == 2) {
                         bloqueadas.add(i);
@@ -204,7 +202,7 @@ public class Partida {
             //     List<Ficha> fichas_barrera = tablero.obtenerFichasBarrera(turno, configBarreras);
             //     if (!fichas_barrera.isEmpty()) {
             //         for (Ficha f : fichas_del_turno) {
-            //             if (!fichas_barrera.contains(f)) {
+            //             if (!fichas_barrera.contains(f) && !bloqueadas.containsAll(fichas_barrera)) {
             //                 bloqueadas.add(f);
             //             }
             //         }

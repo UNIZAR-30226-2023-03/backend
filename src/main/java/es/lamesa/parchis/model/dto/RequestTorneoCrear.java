@@ -9,8 +9,6 @@ import es.lamesa.parchis.model.ConfigBarreras;
 public class RequestTorneoCrear {
     @Schema(description = "Id del usuario que crea el torneo")
     private Long usuario;
-    @Schema(description = "Id del torneo al que se apunta el jugador")
-    private Long torneo;
     @Schema(description = "Precio de entrada del torneo")
     private int precio;
     @Schema(description = "Nombre del torneo")

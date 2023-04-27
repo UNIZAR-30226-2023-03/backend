@@ -15,6 +15,7 @@ import es.lamesa.parchis.service.TorneoService;
 import es.lamesa.parchis.model.dto.RequestTorneo;
 import es.lamesa.parchis.model.dto.ResponsePartida;
 import es.lamesa.parchis.model.dto.ResponseTorneo;
+import es.lamesa.parchis.model.dto.RequestTorneoCrear;
 
 @RestController
 @RequestMapping("/torneo")
@@ -27,6 +28,12 @@ public class TorneoController {
     @Operation(summary = "Obtiene todos los torneos creados")
     public List<Torneo> getTorneos() {
         return service.getTorneos();
+    }
+
+    @PostMapping("/crear")
+    @Operation(summary = "Un usuario crea un torneo")
+    public ResponseTorneo crearTorneo(@RequestBody RequestTorneoCrear rt) {
+        return service.crearTorneo(rt);
     }
 
     @PostMapping("/apuntar")
