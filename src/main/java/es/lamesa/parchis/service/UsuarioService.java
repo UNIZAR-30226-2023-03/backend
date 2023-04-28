@@ -259,24 +259,24 @@ public class UsuarioService {
     }
 
     public List<ResponseEstadisticas> getRanking(String campo) {
-        List<UsuarioEstadisticas> ue = null;
-        if(campo.contentEquals("partidasJugadas")) {
-            ue = ueRepository.findAllByOrderByPartidasJugadas();
+        List<UsuarioEstadisticas> ue = new ArrayList<>();
+        if (campo.contentEquals("partidasJugadas")) {
+            ue = ueRepository.findAllByOrderByPartidasJugadasDesc();
         }
-        else if(campo.contentEquals("partidasGanadas")) {
-            ue = ueRepository.findAllByOrderByPartidasGanadas();
+        else if (campo.contentEquals("partidasGanadas")) {
+            ue = ueRepository.findAllByOrderByPartidasGanadasDesc();
         }
-        else if(campo.contentEquals("numComidas")) {
-            ue = ueRepository.findAllByOrderByNumComidas();
+        else if (campo.contentEquals("mediaComidas")) {
+            ue = ueRepository.findAllByOrderByNumComidasDesc();
         }
-        else if(campo.contentEquals("numEnMeta")) {
-            ue = ueRepository.findAllByOrderByNumEnMeta();
+        else if (campo.contentEquals("mediaEnMeta")) {
+            ue = ueRepository.findAllByOrderByNumEnMetaDesc();
         }
-        else if(campo.contentEquals("torneosJugados")) {
-            ue = ueRepository.findAllByOrderByTorneosJugados();
+        else if (campo.contentEquals("torneosJugados")) {
+            ue = ueRepository.findAllByOrderByTorneosJugadosDesc();
         }
-        else if(campo.contentEquals("torneosGanados")) {
-            ue = ueRepository.findAllByOrderByTorneosGanados();
+        else if (campo.contentEquals("torneosGanados")) {
+            ue = ueRepository.findAllByOrderByTorneosGanadosDesc();
         }
         
         List<ResponseEstadisticas> re = new ArrayList<>();
