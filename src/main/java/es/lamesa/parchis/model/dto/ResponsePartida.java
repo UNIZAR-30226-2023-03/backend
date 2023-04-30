@@ -7,6 +7,7 @@ import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import es.lamesa.parchis.model.Color;
+import es.lamesa.parchis.model.ConfigFichas;
 
 @Data
 public class ResponsePartida {
@@ -17,6 +18,8 @@ public class ResponsePartida {
     private Color color;
     @Schema(description = "Lista de usuarios en la partida y su color")
     private List<UsuarioColorDto> jugadores = new ArrayList<>();
+    @Schema(description = "Configuración de las fichas de una partida")
+    private ConfigFichas cf;
 
     public ResponsePartida(Long id, Color color) {
         this.id = id;
@@ -27,6 +30,13 @@ public class ResponsePartida {
         this.id = id;
         this.color = color;
         this.jugadores = jugadores;
+    }
+
+    public ResponsePartida(Long id, Color color, List<UsuarioColorDto> jugadores, ConfigFichas cf) {
+        this.id = id;
+        this.color = color;
+        this.jugadores = jugadores;
+        this.cf = cf;
     }
 
 }

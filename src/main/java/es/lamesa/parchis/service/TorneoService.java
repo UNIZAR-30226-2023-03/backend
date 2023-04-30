@@ -65,7 +65,7 @@ public class TorneoService {
         t.setNombre(request.getNombre());
         t.setNumJugadores(1 + t.getNumJugadores());
         tRepository.save(t);
-        ResponseTorneo rt = new ResponseTorneo(true, false);
+        ResponseTorneo rt = new ResponseTorneo(t.getId(), true, false);
         return rt;
     }
 
@@ -97,10 +97,10 @@ public class TorneoService {
             p.setEstado(EstadoPartida.ESPERANDO_JUGADORES);
             p.setFinalTorneo(t);
             t.setPartidaFinal(p);
-            rtt = new ResponseTorneo(false, true);
+            rtt = new ResponseTorneo(rt.getTorneo(), false, true);
         }
         else {
-            rtt = new ResponseTorneo(true, false);
+            rtt = new ResponseTorneo(rt.getTorneo(), true, false);
         }
         tRepository.save(t);
         return rtt;

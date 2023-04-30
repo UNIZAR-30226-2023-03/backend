@@ -112,7 +112,7 @@ public class PartidaService {
                         UsuarioColorDto uc = new UsuarioColorDto(uup.getUsuario().getUsername(), uup.getColor());
                         luc.add(uc);
                     }
-                    ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), luc);
+                    ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), luc, request.getConfiguracionF());
                     //Aviso al resto de la llegada de un nuevo jugador:
                     UsuarioColorDto uc = new UsuarioColorDto(uRepository.findById(usuario.getId()).get().getUsername(), up.getColor());
                     messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), uc);
