@@ -12,16 +12,16 @@ public interface UsuarioEstadisticasRepository extends JpaRepository<UsuarioEsta
     
     UsuarioEstadisticas findByUsuario(Usuario usuario);
 
-    List<UsuarioEstadisticas> findAllByOrderByPartidasJugadas();
+    List<UsuarioEstadisticas> findAllByOrderByPartidasJugadasDesc();
 
-    List<UsuarioEstadisticas> findAllByOrderByPartidasGanadas();
+    List<UsuarioEstadisticas> findAllByOrderByPartidasGanadasDesc();
 
-    List<UsuarioEstadisticas> findAllByOrderByNumComidas();
+    List<UsuarioEstadisticas> findAllByOrderByNumComidasDesc();
 
-    List<UsuarioEstadisticas> findAllByOrderByNumEnMeta();
+    List<UsuarioEstadisticas> findAllByOrderByNumEnMetaDesc();
 
-    List<UsuarioEstadisticas> findAllByOrderByTorneosJugados();
+    List<UsuarioEstadisticas> findAllByOrderByTorneosJugadosDesc();
 
-    List<UsuarioEstadisticas> findAllByOrderByTorneosGanados();
+    List<UsuarioEstadisticas> findAllByOrderByTorneosGanadosDesc();
 
 }
