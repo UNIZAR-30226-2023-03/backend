@@ -24,6 +24,7 @@ import es.lamesa.parchis.model.UsuarioPartida;
 import es.lamesa.parchis.model.Color;
 import es.lamesa.parchis.model.ConfigFichas;
 import es.lamesa.parchis.model.dto.RequestPartida;
+import es.lamesa.parchis.model.dto.RequestConexion;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
 import es.lamesa.parchis.model.dto.RequestPartidaAmigo;
 import es.lamesa.parchis.model.dto.RequestMovimiento;
@@ -86,7 +87,7 @@ public class PartidaService {
         throw new GenericException("Ya estás jugando una partida");
     }
     
-    public ResponsePartida conectarPartidaPrivada(RequestPartida request) {
+    public ResponsePartida conectarPartidaPrivada(RequestConexion request) {
         Usuario usuario = new Usuario();
         usuario.setId(request.getJugador());
         if (!upRepository.estaJugando(usuario)) {
@@ -104,7 +105,7 @@ public class PartidaService {
                     UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
                     ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
                     ueRepository.save(ue);
-                    partida = pRepository.saveAndFlush(partida);
+                    partida = pRepository.save(partida);
                     //Envio de info al frontend:
                     List<UsuarioPartida> lup = upRepository.obtenerUsuarios(partida, usuario);
                     List<UsuarioColorDto> luc = new ArrayList<>();
@@ -112,7 +113,7 @@ public class PartidaService {
                         UsuarioColorDto uc = new UsuarioColorDto(uup.getUsuario().getUsername(), uup.getColor());
                         luc.add(uc);
                     }
-                    ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), luc, request.getConfiguracionF());
+                    ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), luc, partida.getConfigFichas());
                     //Aviso al resto de la llegada de un nuevo jugador:
                     UsuarioColorDto uc = new UsuarioColorDto(uRepository.findById(usuario.getId()).get().getUsername(), up.getColor());
                     messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), uc);
@@ -147,7 +148,7 @@ public class PartidaService {
         UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
         ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
         ueRepository.save(ue);
-        partida = pRepository.saveAndFlush(partida);
+        partida = pRepository.save(partida);
         //Envio de info al frontend:
         List<UsuarioPartida> lup = upRepository.obtenerUsuarios(partida, usuario);
         List<UsuarioColorDto> luc = new ArrayList<>();
