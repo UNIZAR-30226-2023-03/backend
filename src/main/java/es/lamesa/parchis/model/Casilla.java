@@ -28,7 +28,7 @@ public class Casilla {
     @Column
     private Color color;
 
-    @OneToMany(mappedBy = "casilla", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "casilla", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ficha> fichas = new ArrayList<>();
  
     @JsonIgnore

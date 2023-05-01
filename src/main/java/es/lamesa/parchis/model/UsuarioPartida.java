@@ -35,6 +35,9 @@ public class UsuarioPartida {
     @Column(columnDefinition = "int default 0")
     private int numSeises;
 
+    @Column(columnDefinition = "int default 0")
+    private int numPausas;
+
     public UsuarioPartida(Usuario usuario, Partida partida, Color color) {
         this.usuario = usuario;
         this.partida = partida;

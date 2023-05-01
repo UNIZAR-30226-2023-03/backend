@@ -129,7 +129,7 @@ public class TorneoService {
             }
             i++;
         }
-        // TODO: RESTAR MONEDAS -> PRECIO ENTRADA
+        u.setNumMonedas(u.getNumMonedas() - t.getPrecioEntrada());
         UsuarioPartida up = new UsuarioPartida();
         up.setUsuario(u);
         up.setPartida(p);

@@ -2,6 +2,7 @@ package es.lamesa.parchis.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -27,7 +28,7 @@ public class Tablero {
     @JoinColumn(name = "partida_id")
     private Partida partida;
 
-    @OneToMany(mappedBy = "tablero", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "tablero", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Casilla> casillas = new ArrayList<>();
 
     /**
@@ -179,7 +180,7 @@ public class Tablero {
 
     public Casilla obtenerCasillaCasa(Color c){
         for (Casilla ca : casillas) {
-            if(ca.getColor() == c && ca.getPosicion() == -1) {
+            if (ca.getColor() == c && ca.getPosicion() == -1) {
                 return ca;
             }
         }
@@ -202,7 +203,7 @@ public class Tablero {
     public List<Ficha> obtenerFichasCasa(Color c){
         List<Ficha> fichas = new ArrayList<>();
         for (Casilla ca : casillas){
-            if (ca.getTipo() == TipoCasilla.CASA && ca.getColor() == c){
+            if (ca.getTipo() == TipoCasilla.CASA && ca.getColor() == c) {
                 for (Ficha f : ca.getFichas()) {
                     fichas.add(f);
                 }
@@ -214,7 +215,7 @@ public class Tablero {
     public List<Ficha> obtenerFichasMeta(Color c){
         List<Ficha> fichas = new ArrayList<>();
         for (Casilla ca : casillas){
-            if (ca.getTipo() == TipoCasilla.META && ca.getColor() == c){
+            if (ca.getTipo() == TipoCasilla.META && ca.getColor() == c) {
                 for (Ficha f : ca.getFichas()) {
                     fichas.add(f);
                 }
@@ -273,6 +274,18 @@ public class Tablero {
             }
         }
         return fichas;
+    }
+
+    public void eliminarFichasColor(Color color) {
+        for (Casilla c : casillas) {
+            Iterator<Ficha> iter = c.getFichas().iterator();
+            while (iter.hasNext()) {
+                Ficha f = iter.next();
+                if (f.getColor() == color) {
+                    iter.remove();
+                }
+            }
+        }
     }
     
 }

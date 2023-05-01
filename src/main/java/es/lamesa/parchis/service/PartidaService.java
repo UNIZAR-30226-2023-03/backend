@@ -1,6 +1,8 @@
 package es.lamesa.parchis.service;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ import es.lamesa.parchis.model.ConfigFichas;
 import es.lamesa.parchis.model.dto.RequestPartida;
 import es.lamesa.parchis.model.dto.RequestConexion;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
+import es.lamesa.parchis.model.dto.RequestSalir;
 import es.lamesa.parchis.model.dto.RequestPartidaAmigo;
 import es.lamesa.parchis.model.dto.RequestMovimiento;
 import es.lamesa.parchis.model.dto.ResponsePartida;
@@ -277,7 +280,7 @@ public class PartidaService {
                 Torneo t = p.getFinalTorneo();
                 t.setEstado(EstadoTorneo.FINALIZADO);
                 int premioGanador = t.getPrecioEntrada() * 8;
-                int premioPerdedores = (t.getPrecioEntrada() * 8 / 3) / 100 * 100;
+                int premioPerdedores = (t.getPrecioEntrada() * 8 / (p.getJugadores().size() - 1)) / 100 * 100;
                 for (UsuarioPartida up : p.getJugadores()) {
                     u = up.getUsuario();
                     int monedas = u.getNumMonedas();
@@ -309,5 +312,86 @@ public class PartidaService {
         }
         messagingTemplate.convertAndSend("/topic/movimiento/" + p.getId(), rm);
         return rm;
+    }
+
+    public boolean pausarPartida(Long id) {
+        Partida p = pRepository.findById(id).get();
+        UsuarioPartida up = p.obtenerJugadorTurno();
+        if (up.getNumPausas() == 2) {
+            return false;
+        }
+        else {
+            up.setNumPausas(up.getNumPausas() + 1);
+            p.setEnPausa(true);
+            pRepository.save(p);
+            messagingTemplate.convertAndSend("/topic/pausa/" + id, true);
+
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                public void run() {
+                    p.setEnPausa(false);
+                    pRepository.save(p);
+                    messagingTemplate.convertAndSend("/topic/pausa/" + id, false);
+                }
+            };
+            timer.schedule(task, 60 * 1000);
+        }
+        return true;
+    } 
+
+    public boolean salirPartida(RequestSalir request) {
+        Partida p = pRepository.findById(request.getPartida()).get();
+        if (!p.isEnPausa()) {
+            Usuario u = uRepository.findById(request.getJugador()).get();
+            boolean cambiarTurno = p.eliminarJugador(request.getJugador());
+            if (cambiarTurno) {
+                messagingTemplate.convertAndSend("/topic/turno/" + p.getId(), p.getTurno());
+            }
+            messagingTemplate.convertAndSend("/topic/salir/" + p.getId(), u.getUsername());
+            if (p.getJugadores().size() == 1) {
+                p.setEstado(EstadoPartida.FINALIZADA);
+                Usuario uGanador = p.getJugadores().get(0).getUsuario();
+                UsuarioEstadisticas ue = ueRepository.findByUsuario(uGanador);
+                ue.setPartidasGanadas(ue.getPartidasGanadas() + 1);
+                ueRepository.save(ue);
+                if (p.getConfigFichas() == ConfigFichas.RAPIDO) {
+                    uGanador.setNumMonedas(uGanador.getNumMonedas() + 25);
+                }
+                else {
+                    uGanador.setNumMonedas(uGanador.getNumMonedas() + 50);
+                }
+                uRepository.save(uGanador);
+                Tablero t = p.getTablero();
+                p.setTablero(null);
+                pRepository.save(p);
+                tRepository.delete(t);
+                messagingTemplate.convertAndSend("/topic/ultimo/" + p.getId(), "Fin por abandono");
+            }
+            pRepository.save(p);
+        }
+        return true;
+    }
+
+    public ResponsePartida reconectarPartida(Long id) {
+        Usuario usuario = uRepository.findById(id).get();
+        Long idPartida  = upRepository.getPartidaReconectar(usuario);
+        if (idPartida != null) {
+            Partida partida = pRepository.findById(idPartida).get();
+            List<UsuarioPartida> lup = upRepository.obtenerUsuarios(partida, usuario);
+            List<UsuarioColorDto> luc = new ArrayList<>();
+            UsuarioPartida up = new UsuarioPartida();
+            for (UsuarioPartida uup : lup) {
+                if (uup.getUsuario().getId() != id) {
+                    UsuarioColorDto uc = new UsuarioColorDto(uup.getUsuario().getUsername(), uup.getColor());
+                    luc.add(uc);
+                }
+                else {
+                    up = uup;
+                }
+            }
+            ResponsePartida r = new ResponsePartida(idPartida, up.getColor(), luc);
+            return r;
+        }
+        return null;
     }
 }

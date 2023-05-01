@@ -1,6 +1,7 @@
 package es.lamesa.parchis.model;
 
 import java.util.List;
+
 import java.util.ArrayList;
 
 import jakarta.persistence.*;
@@ -25,8 +26,10 @@ public class Partida {
     private Long id;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "partida", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "partida", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UsuarioPartida> jugadores = new ArrayList<>(4);
+
+    private List<Color> abandonados = new ArrayList<>(4);
 
     @OneToOne(mappedBy = "partida", cascade = CascadeType.ALL)
     private Tablero tablero; //una vez finalizada la partida, se podría borrar?
@@ -62,6 +65,9 @@ public class Partida {
     @Enumerated(EnumType.STRING)
     private EstadoPartida estado;
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean enPausa;
+
     public void empezar() {
         this.tablero = new Tablero(jugadores.size(), this);
         this.estado = EstadoPartida.EN_PROGRESO;
@@ -70,7 +76,10 @@ public class Partida {
     }
 
     public void cambiarTurno() {
-        turno.siguienteTurno(jugadores.size());
+        turno = turno.siguienteTurno(jugadores.size() + abandonados.size());
+        while (abandonados.contains(turno)) {
+            turno = turno.siguienteTurno(jugadores.size() + abandonados.size());
+        }
     }
 
     public UsuarioPartida obtenerJugadorTurno() {
@@ -80,6 +89,25 @@ public class Partida {
             }
         }
         return null;
+    }
+
+    public boolean eliminarJugador(Long jugador) {
+        boolean cambiarTurno = false;
+        Color color = null;
+        for (UsuarioPartida up : jugadores) {
+            if (up.getUsuario().getId() == jugador) {
+                color = up.getColor();
+                abandonados.add(color);
+                jugadores.remove(up);
+                if (turno == color) {
+                    cambiarTurno();
+                    cambiarTurno = true;
+                }
+                tablero.eliminarFichasColor(color);
+                break;
+            }
+        }
+        return cambiarTurno;
     }
 
     public Ficha sacarFicha() {
@@ -130,7 +158,7 @@ public class Partida {
             List<Ficha> fichas = new ArrayList<>();
             fichas.add(ficha_sacada);
             if (!ficha_comida) {
-                turno = turno.siguienteTurno(jugadores.size());
+                cambiarTurno();
             }
             ResponseDado rd = new ResponseDado(fichas, true, comida, c, turno, false);
             return rd;
@@ -149,7 +177,7 @@ public class Partida {
                     f.setCasilla(c);
                     f.setNumPasos(0);
                     obtenerJugadorTurno().setNumSeises(0);  
-                    turno = turno.siguienteTurno(jugadores.size());
+                    cambiarTurno();
                     List<Ficha> fichas = new ArrayList<>();
                     fichas.add(f);               
                     ResponseDado rd = new ResponseDado(fichas, false, null, c, turno, true);
@@ -196,7 +224,7 @@ public class Partida {
                 }
             }
             if (bloqueadas.size() == num_fichas){
-                turno = turno.siguienteTurno(jugadores.size());
+                cambiarTurno();
             }
             // if (num_dado == 6) {
             //     List<Ficha> fichas_barrera = tablero.obtenerFichasBarrera(turno, configBarreras);
@@ -244,7 +272,7 @@ public class Partida {
                 }
             }
             else if (dado != 6) {
-                turno = turno.siguienteTurno(jugadores.size());
+                cambiarTurno();
             }
         } 
         else if (f.getNumPasos() + dado > 63) {
@@ -252,7 +280,7 @@ public class Partida {
             id_casilla = 67 + ((id_casilla + dado - id_casilla_prepasillo)%68);
             c = tablero.obtenerCasillaPasillo(id_casilla, turno);
             if (dado != 6) {
-                turno = turno.siguienteTurno(jugadores.size());
+                cambiarTurno();
             }
         }
         else {
@@ -269,7 +297,7 @@ public class Partida {
                     comida.setNumPasos(0);
             }
             if (dado != 6) {
-                turno = turno.siguienteTurno(jugadores.size());
+                cambiarTurno();
             }
         } 
         f.getCasilla().getFichas().remove(f);
