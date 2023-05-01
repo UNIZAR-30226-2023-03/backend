@@ -19,9 +19,6 @@ public class Torneo {
     
     @Column
     private String nombre;
-
-    // @Column
-    // private String descripcion;
     
     @Column
     private int precioEntrada;

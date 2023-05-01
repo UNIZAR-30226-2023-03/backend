@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import io.swagger.v3.oas.annotations.Operation;
-import es.lamesa.parchis.model.Torneo;
+import es.lamesa.parchis.model.dto.TorneoDto;
 import es.lamesa.parchis.service.TorneoService;
 import es.lamesa.parchis.model.dto.RequestTorneo;
 import es.lamesa.parchis.model.dto.ResponsePartida;
@@ -26,7 +26,7 @@ public class TorneoController {
 
     @GetMapping()
     @Operation(summary = "Obtiene todos los torneos creados")
-    public List<Torneo> getTorneos() {
+    public List<TorneoDto> getTorneos() {
         return service.getTorneos();
     }
 

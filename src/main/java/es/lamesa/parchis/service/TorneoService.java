@@ -24,6 +24,7 @@ import es.lamesa.parchis.model.dto.RequestTorneo;
 import es.lamesa.parchis.model.dto.RequestTorneoCrear;
 import es.lamesa.parchis.model.dto.ResponsePartida;
 import es.lamesa.parchis.model.dto.ResponseTorneo;
+import es.lamesa.parchis.model.dto.TorneoDto;
 import es.lamesa.parchis.model.dto.UsuarioColorDto;
 import es.lamesa.parchis.exception.GenericException;
 
@@ -48,8 +49,14 @@ public class TorneoService {
     @Autowired
     SimpMessagingTemplate messagingTemplate;
      
-    public List<Torneo> getTorneos() {
-        return tRepository.findByEstado(EstadoTorneo.ESPERANDO_JUGADORES);
+    public List<TorneoDto> getTorneos() {
+        List<Torneo> torneos = tRepository.findByEstado(EstadoTorneo.ESPERANDO_JUGADORES);
+        List<TorneoDto> td = new ArrayList<>();
+        for (Torneo t : torneos) {
+            TorneoDto torneo = new TorneoDto(t.getId(), t.getNombre(), t.getPrecioEntrada(), t.getConfigBarreras(), t.getConfigFichas());
+            td.add(torneo);
+        }
+        return td;
     }
     
     public ResponseTorneo crearTorneo(RequestTorneoCrear request) {
