@@ -12,4 +12,5 @@ public class RequestConexion {
     private String password;
     @Schema(description = "Id del jugador que se une a la partida")
     private Long jugador;
+    
 }

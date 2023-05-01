@@ -15,6 +15,7 @@ import es.lamesa.parchis.service.PartidaService;
 import es.lamesa.parchis.model.Color;
 import es.lamesa.parchis.model.Partida;
 import es.lamesa.parchis.model.dto.RequestPartida;
+import es.lamesa.parchis.model.dto.RequestConexion;
 import es.lamesa.parchis.model.dto.RequestPartidaAmigo;
 import es.lamesa.parchis.model.dto.RequestPartidaPublica;
 import es.lamesa.parchis.model.dto.ResponsePartida;
@@ -43,7 +44,7 @@ public class PartidaController {
     
     @PostMapping("/conectar")
     @Operation(summary = "Conecta con una partida privada existente")
-    public ResponsePartida conectarPartidaPrivada(@RequestBody RequestPartida request) {
+    public ResponsePartida conectarPartidaPrivada(@RequestBody RequestConexion request) {
         return service.conectarPartidaPrivada(request);
     }
 
