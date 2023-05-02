@@ -280,8 +280,8 @@ public class UsuarioService {
         }
         
         List<ResponseEstadisticas> re = new ArrayList<>();
-        float mediaComidas = 0;
-        float mediaEnMeta = 0;
+        float mediaComidas = 0.0f;
+        float mediaEnMeta = 0.0f;
         String username;
         for (UsuarioEstadisticas e : ue) {
             username = e.getUsuario().getUsername();        
@@ -298,8 +298,12 @@ public class UsuarioService {
     public ResponseEstadisticas getEstadisticas(Long id) {
         Usuario u = uRepository.findById(id).get();
         UsuarioEstadisticas ue = ueRepository.findByUsuario(u);
-        float mediaComidas = (float) ue.getNumComidas() / (float) ue.getPartidasJugadas();
-        float mediaEnMeta = (float) ue.getNumEnMeta() / (float) ue.getPartidasJugadas();
+        float mediaComidas = 0.0f;
+        float mediaEnMeta = 0.0f;
+        if (ue.getPartidasJugadas() != 0) {
+            mediaComidas = (float) ue.getNumComidas() / (float) ue.getPartidasJugadas();
+            mediaEnMeta = (float) ue.getNumEnMeta() / (float) ue.getPartidasJugadas();
+        }
         ResponseEstadisticas re = new ResponseEstadisticas(u.getUsername(), ue.getPartidasJugadas(), ue.getPartidasGanadas(), mediaComidas, mediaEnMeta, ue.getTorneosJugados(), ue.getTorneosGanados());
         return re;
     }
