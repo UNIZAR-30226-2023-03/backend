@@ -134,7 +134,7 @@ public class Partida {
         }
         List<Ficha> fichas_del_turno = tablero.obtenerFichasTablero(turno);
         Ficha comida = null;    
-        if (num_dado == 5 && fichas_del_turno.size() < num_fichas && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) != 2) {
+        if (num_dado == 5 && fichas_del_turno.size() + meta.size() < num_fichas && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) != 2) {
             obtenerJugadorTurno().setNumSeises(0);
             int salida = tablero.obtenerSalida(turno);
             Casilla c = tablero.getCasillas().get(salida);
