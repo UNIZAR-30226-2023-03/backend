@@ -28,7 +28,7 @@ public class Tablero {
     @JoinColumn(name = "partida_id")
     private Partida partida;
 
-    @OneToMany(mappedBy = "tablero", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "tablero", cascade = CascadeType.ALL)
     private List<Casilla> casillas = new ArrayList<>();
 
     /**
