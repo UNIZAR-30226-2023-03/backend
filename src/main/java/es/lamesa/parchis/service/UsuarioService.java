@@ -284,12 +284,10 @@ public class UsuarioService {
         float mediaEnMeta = 0;
         String username;
         for (UsuarioEstadisticas e : ue) {
-            username = e.getUsuario().getUsername();
-            mediaComidas = (float) e.getNumComidas() / (float) e.getPartidasJugadas();
-            mediaEnMeta = (float) e.getNumEnMeta() / (float) e.getPartidasJugadas();
-            if (e.getPartidasJugadas() == 0) {
-                mediaComidas = 0;
-                mediaEnMeta = 0;
+            username = e.getUsuario().getUsername();        
+            if (e.getPartidasJugadas() != 0) {
+                mediaComidas = (float) e.getNumComidas() / (float) e.getPartidasJugadas();
+                mediaEnMeta = (float) e.getNumEnMeta() / (float) e.getPartidasJugadas();
             }
             ResponseEstadisticas r = new ResponseEstadisticas(username, e.getPartidasJugadas(), e.getPartidasGanadas(), mediaComidas, mediaEnMeta, e.getTorneosJugados(), e.getTorneosGanados());
             re.add(r);
