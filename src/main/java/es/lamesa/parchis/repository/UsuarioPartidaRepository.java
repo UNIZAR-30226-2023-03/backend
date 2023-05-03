@@ -13,6 +13,8 @@ import es.lamesa.parchis.model.Color;
 
 public interface UsuarioPartidaRepository extends JpaRepository<UsuarioPartida, Long> {
 
+    UsuarioPartida findByUsuarioAndPartida(Usuario usuario, Partida partida);
+    
     @Query("SELECT up.usuario FROM UsuarioPartida up WHERE up.partida = :partida AND up.color = :color")
     Usuario obtenerUsuario(@Param("partida") Partida partida, @Param("color") Color color);
 

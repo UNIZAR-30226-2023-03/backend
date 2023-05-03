@@ -347,7 +347,8 @@ public class PartidaService {
             if (cambiarTurno) {
                 messagingTemplate.convertAndSend("/topic/turno/" + p.getId(), p.getTurno());
             }
-            messagingTemplate.convertAndSend("/topic/salir/" + p.getId(), u.getUsername());
+            UsuarioPartida up = upRepository.findByUsuarioAndPartida(u, p);
+            messagingTemplate.convertAndSend("/topic/salir/" + p.getId(), up.getColor());
             if (p.getJugadores().size() == 1) {
                 p.setEstado(EstadoPartida.FINALIZADA);
                 Usuario uGanador = p.getJugadores().get(0).getUsuario();
