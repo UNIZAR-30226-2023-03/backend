@@ -120,7 +120,7 @@ public class TorneoService {
             throw new GenericException("Ya estás jugando una partida");
         }
         Torneo t = tRepository.findById(rt.getTorneo()).get();
-        Partida p = null;
+        Partida p = new Partida();
         int i = 0;
         for (Partida partida : t.getPartidas()) {
             if (partida.getJugadores().size() < 4) {
