@@ -78,5 +78,5 @@ public class Casilla {
     public void borrarFicha(Ficha f) {
         fichas.remove(f);
     }
+    
 }
-

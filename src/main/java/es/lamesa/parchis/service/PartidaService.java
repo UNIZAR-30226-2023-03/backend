@@ -343,11 +343,11 @@ public class PartidaService {
         Partida p = pRepository.findById(request.getPartida()).get();
         if (!p.isEnPausa()) {
             Usuario u = uRepository.findById(request.getJugador()).get();
+            UsuarioPartida up = upRepository.findByUsuarioAndPartida(u, p);
             boolean cambiarTurno = p.eliminarJugador(request.getJugador());
             if (cambiarTurno) {
                 messagingTemplate.convertAndSend("/topic/turno/" + p.getId(), p.getTurno());
             }
-            UsuarioPartida up = upRepository.findByUsuarioAndPartida(u, p);
             messagingTemplate.convertAndSend("/topic/salir/" + p.getId(), up.getColor());
             if (p.getJugadores().size() == 1) {
                 p.setEstado(EstadoPartida.FINALIZADA);

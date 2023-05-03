@@ -296,7 +296,7 @@ public class Partida {
                     comida.setCasilla(casa);
                     comida.setNumPasos(0);
             }
-            if (dado != 6) {
+            else if (dado != 6) {
                 cambiarTurno();
             }
         } 
