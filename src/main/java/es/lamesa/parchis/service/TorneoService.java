@@ -188,7 +188,7 @@ public class TorneoService {
             UsuarioColorDto uc = new UsuarioColorDto(uup.getUsuario().getUsername(), uup.getColor());
             luc.add(uc);
         }
-        ResponsePartida r = new ResponsePartida(p.getId(), up.getColor(), luc);
+        ResponsePartida r = new ResponsePartida(p.getId(), up.getColor(), luc, p.getConfigFichas());
         // Aviso al resto de la llegada de un nuevo jugador:
         UsuarioColorDto uc = new UsuarioColorDto(uRepository.findById(u.getId()).get().getUsername(), up.getColor());
         messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + p.getId(), uc);
