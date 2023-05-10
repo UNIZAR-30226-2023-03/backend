@@ -137,7 +137,7 @@ public class UsuarioController {
 
     @GetMapping("/productos/{id}")
     @Operation(summary = "Obtiene todos los productos comprados por un usuario dado")
-    public List<UsuarioProducto> getProductos(@PathVariable("id") Long id) {
+    public List<Producto> getProductos(@PathVariable("id") Long id) {
         return service.getProductos(id);
     }
 
@@ -171,10 +171,10 @@ public class UsuarioController {
         return service.getEstadisticas(id);
     }
     
-    @PostMapping("/recuperar-password/{id}")
+    @PostMapping("/recuperar-password/{email}")
     @Operation(summary = "Envía una petición de recuperación de contraseña")
-    public void recuperarPassword(@PathVariable("id") Long id) {
-        service.recuperarPassword(id);
+    public void recuperarPassword(@PathVariable("email") String email) {
+        service.recuperarPassword(email);
     }
 
     @PostMapping("/validar-codigo")

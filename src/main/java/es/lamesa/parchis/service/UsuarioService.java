@@ -229,7 +229,7 @@ public class UsuarioService {
         return u.getId();
     }
 
-    public List<UsuarioProducto> getProductos(Long id) {
+    public List<Producto> getProductos(Long id) {
         Usuario u = uRepository.findById(id).get();
         return upRepository.findByUsuario(u);
     }
@@ -308,10 +308,11 @@ public class UsuarioService {
         return re;
     }
 
-    public void recuperarPassword(Long id) {
-        Usuario u = uRepository.findById(id).get();
-        String token = TokenUtil.generateToken(id, u.getEmail());
-        // email.enviarCorreoRecuperacion(u.getEmail(), u.getUsername(), token);
+    public void recuperarPassword(String em) {
+        Usuario u = uRepository.findByEmail(em);
+        if (u != null){
+            String token = TokenUtil.generateToken(u.getId(), em);
+            email.enviarCorreoRecuperacion(em, u.getUsername(), token);
+        }
     }
-
 }

@@ -15,8 +15,8 @@ public interface UsuarioProductoRepository extends JpaRepository<UsuarioProducto
 
     UsuarioProducto findByUsuarioAndProducto(Usuario usuario, Producto producto);
 
-    @Query("SELECT up FROM UsuarioProducto up WHERE up.usuario = :usuario")
-    List<UsuarioProducto> findByUsuario(Usuario usuario);
+    @Query("SELECT up.producto FROM UsuarioProducto up WHERE up.usuario = :usuario")
+    List<Producto> findByUsuario(Usuario usuario);
 
     @Query("SELECT COUNT(up) > 0 FROM UsuarioProducto up WHERE up.usuario = :usuario AND up.producto = :producto")
     boolean productoComprado(@Param("usuario") Usuario usuario, @Param("producto") Producto producto);
