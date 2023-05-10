@@ -23,6 +23,7 @@ import es.lamesa.parchis.model.dto.RequestAmistad;
 import es.lamesa.parchis.model.dto.ResponseAmistad;
 import es.lamesa.parchis.model.dto.RequestLogin;
 import es.lamesa.parchis.model.dto.ResponseUsuario;
+import es.lamesa.parchis.repository.UsuarioRepository;
 import es.lamesa.parchis.model.dto.RequestProducto;
 import es.lamesa.parchis.model.dto.RequestCambio;
 import es.lamesa.parchis.model.dto.ResponseEstadisticas;
@@ -35,6 +36,8 @@ public class UsuarioController {
     @Autowired
     UsuarioService service;
     
+    @Autowired
+    UsuarioRepository uRepository;
     // Gestión de usuarios
 
     @GetMapping()
@@ -180,12 +183,13 @@ public class UsuarioController {
     @PostMapping("/validar-codigo")
     @Operation(summary = "Cambia la contraseña de un usuario dado si el token de verificación es válido")
     public void recuperarPassword(@RequestBody RequestValidacion request) {
-        if (!TokenUtil.validateToken(request.getToken(), request.getUsuario())) {
+        Usuario u = uRepository.findByEmail(request.getEmail());
+        if (!TokenUtil.validateToken(request.getToken(), u.getId())) {
             throw new GenericException("Token inválido");
         }
         RequestCambio rc = new RequestCambio();
         rc.setCambio(request.getPassword());
-        rc.setId(request.getUsuario());
+        rc.setId(u.getId());
         service.actualizarPassword(rc);
     }
     
