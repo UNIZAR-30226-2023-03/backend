@@ -283,6 +283,7 @@ public class Tablero {
                 Ficha f = iter.next();
                 if (f.getColor() == color) {
                     iter.remove();
+                    f.setCasilla(null);
                 }
             }
         }
