@@ -310,9 +310,10 @@ public class UsuarioService {
 
     public void recuperarPassword(String em) {
         Usuario u = uRepository.findByEmail(em);
-        if (u != null){
-            String token = TokenUtil.generateToken(u.getId(), em);
-            email.enviarCorreoRecuperacion(em, u.getUsername(), token);
+        if (u == null){
+            throw new GenericException("No existe un usuario con este correo");
         }
+        String token = TokenUtil.generateToken(u.getId(), em);
+        email.enviarCorreoRecuperacion(em, u.getUsername(), token);
     }
 }

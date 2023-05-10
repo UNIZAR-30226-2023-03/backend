@@ -171,9 +171,9 @@ public class UsuarioController {
         return service.getEstadisticas(id);
     }
     
-    @PostMapping("/recuperar-password/{email}")
+    @PostMapping("/recuperar-password")
     @Operation(summary = "Envía una petición de recuperación de contraseña")
-    public void recuperarPassword(@PathVariable("email") String email) {
+    public void recuperarPassword(String email) {
         service.recuperarPassword(email);
     }
 
