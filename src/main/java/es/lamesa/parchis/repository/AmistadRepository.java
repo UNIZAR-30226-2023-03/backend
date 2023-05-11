@@ -16,7 +16,7 @@ public interface AmistadRepository extends JpaRepository<Amistad, Long> {
 
     public Amistad findByUsuarioAndAmigo(Usuario usuario, Usuario amigo);
 
-    @Query("SELECT a FROM Amistad a WHERE a.usuario = :usuario OR a.amigo = :usuario AND a.aceptado = true")
+    @Query("SELECT a FROM Amistad a WHERE (a.usuario = :usuario OR a.amigo = :usuario) AND a.aceptado = true")
     public List<Amistad> findAmigos(@Param("usuario") Usuario usuario);
 
     @Query("SELECT a FROM Amistad a WHERE (a.usuario = :usuario AND a.amigo = :amigo) OR (a.amigo = :usuario AND a.usuario = :amigo)")
