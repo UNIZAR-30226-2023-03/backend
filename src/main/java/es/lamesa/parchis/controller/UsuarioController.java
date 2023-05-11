@@ -23,6 +23,7 @@ import es.lamesa.parchis.model.dto.RequestAmistad;
 import es.lamesa.parchis.model.dto.ResponseAmistad;
 import es.lamesa.parchis.model.dto.RequestLogin;
 import es.lamesa.parchis.model.dto.ResponseUsuario;
+import es.lamesa.parchis.repository.UsuarioRepository;
 import es.lamesa.parchis.model.dto.RequestProducto;
 import es.lamesa.parchis.model.dto.RequestCambio;
 import es.lamesa.parchis.model.dto.ResponseEstadisticas;
@@ -35,6 +36,8 @@ public class UsuarioController {
     @Autowired
     UsuarioService service;
     
+    @Autowired
+    UsuarioRepository uRepository;
     // Gestión de usuarios
 
     @GetMapping()
@@ -137,7 +140,7 @@ public class UsuarioController {
 
     @GetMapping("/productos/{id}")
     @Operation(summary = "Obtiene todos los productos comprados por un usuario dado")
-    public List<UsuarioProducto> getProductos(@PathVariable("id") Long id) {
+    public List<Producto> getProductos(@PathVariable("id") Long id) {
         return service.getProductos(id);
     }
 
@@ -171,21 +174,22 @@ public class UsuarioController {
         return service.getEstadisticas(id);
     }
     
-    @PostMapping("/recuperar-password/{id}")
+    @PostMapping("/recuperar-password")
     @Operation(summary = "Envía una petición de recuperación de contraseña")
-    public void recuperarPassword(@PathVariable("id") Long id) {
-        service.recuperarPassword(id);
+    public void recuperarPassword(String email) {
+        service.recuperarPassword(email);
     }
 
     @PostMapping("/validar-codigo")
     @Operation(summary = "Cambia la contraseña de un usuario dado si el token de verificación es válido")
     public void recuperarPassword(@RequestBody RequestValidacion request) {
-        if (!TokenUtil.validateToken(request.getToken(), request.getUsuario())) {
+        Usuario u = uRepository.findByEmail(request.getEmail());
+        if (!TokenUtil.validateToken(request.getToken(), u.getId())) {
             throw new GenericException("Token inválido");
         }
         RequestCambio rc = new RequestCambio();
         rc.setCambio(request.getPassword());
-        rc.setId(request.getUsuario());
+        rc.setId(u.getId());
         service.actualizarPassword(rc);
     }
     
