@@ -113,10 +113,13 @@ public class UsuarioService {
     public boolean enviarSolicitud(RequestAmistad amistad) {
         Amistad a = new Amistad();
         Usuario usuario = new Usuario();
+        usuario.setId(amistad.getUsuario());
         Usuario amigo = new Usuario();
         amigo.setId(amistad.getAmigo());
+        if (aRepository.findAmistad(usuario, amigo) != null) {
+            throw new GenericException("Ya se ha enviado una solicitud a este usuario");
+        }
         a.setAmigo(amigo);
-        usuario.setId(amistad.getUsuario());
         a.setUsuario(usuario);
         a.setAceptado(false);
         aRepository.save(a);
