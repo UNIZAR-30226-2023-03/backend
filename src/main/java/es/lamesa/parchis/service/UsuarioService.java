@@ -143,8 +143,15 @@ public class UsuarioService {
         Long idPartida = null;
         EstadoPartida estado = null;
         for (Amistad a : la) {
-            if (upaRepository.estaJugando(u)) {
-                idPartida = upaRepository.getPartida(u);
+            Usuario amigo = null;
+            if (a.getUsuario().getId() == id) {
+                amigo = a.getAmigo();
+            }
+            else {
+                amigo = a.getUsuario();
+            }
+            if (upaRepository.estaJugando(amigo)) {
+                idPartida = upaRepository.getPartida(amigo);
                 if (idPartida != null) {
                     estado = EstadoPartida.ESPERANDO_JUGADORES;
                     Partida p = paRepository.findById(idPartida).get();
@@ -156,8 +163,8 @@ public class UsuarioService {
                     estado = EstadoPartida.EN_PROGRESO;
                 }
             }
-            ResponseAmistad amigo = new ResponseAmistad(a.getIdAmigo(id), a.getUsernameAmigo(id), estado, idPartida);
-            amigos.add(amigo);
+            ResponseAmistad ra = new ResponseAmistad(a.getIdAmigo(id), a.getUsernameAmigo(id), estado, idPartida);
+            amigos.add(ra);
         }
         return amigos;
     }
