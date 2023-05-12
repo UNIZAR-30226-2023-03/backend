@@ -380,19 +380,15 @@ public class PartidaService {
             Partida partida = pRepository.findById(idPartida).get();
             List<UsuarioPartida> lup = upRepository.obtenerUsuarios(partida, usuario);
             List<UsuarioColorDto> luc = new ArrayList<>();
-            UsuarioPartida up = new UsuarioPartida();
+            UsuarioPartida up = upRepository.findByUsuarioAndPartida(usuario, partida);
             for (UsuarioPartida uup : lup) {
-                if (uup.getUsuario().getId() != id) {
-                    UsuarioColorDto uc = new UsuarioColorDto(uup.getUsuario().getUsername(), uup.getColor());
-                    luc.add(uc);
-                }
-                else {
-                    up = uup;
-                }
+                UsuarioColorDto uc = new UsuarioColorDto(uup.getUsuario().getUsername(), uup.getColor());
+                luc.add(uc);
             }
             ResponsePartida r = new ResponsePartida(idPartida, up.getColor(), luc, partida.getConfigFichas());
             return r;
         }
         return null;
     }
+
 }
