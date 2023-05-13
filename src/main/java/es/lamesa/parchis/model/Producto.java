@@ -30,7 +30,7 @@ public class Producto {
     private TipoProducto tipoProducto;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.PERSIST)
     private List<UsuarioProducto> adquisidores = new ArrayList<>();
 
 }

@@ -44,10 +44,4 @@ public class UsuarioPartida {
         this.color = color;
     }
 
-    @Override
-    public String toString() {
-        return "usuario=" + usuario.getUsername() + ",color=" + color.name() +
-               ",numseises=" + numSeises + "\n";
-    }
-
 }
