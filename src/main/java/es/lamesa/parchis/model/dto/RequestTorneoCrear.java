@@ -7,6 +7,7 @@ import es.lamesa.parchis.model.ConfigBarreras;
 
 @Data
 public class RequestTorneoCrear {
+
     @Schema(description = "Id del usuario que crea el torneo")
     private Long usuario;
     @Schema(description = "Precio de entrada del torneo")
@@ -17,4 +18,5 @@ public class RequestTorneoCrear {
     private ConfigFichas configFichas;
     @Schema(description = "Nombre del torneo")
     private String nombre;
+    
 }

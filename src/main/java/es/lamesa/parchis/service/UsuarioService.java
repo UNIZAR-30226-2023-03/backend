@@ -81,12 +81,12 @@ public class UsuarioService {
         ue.setUsuario(u);
         u.setEstadisticas(ue);
         // ASIGNAR TABLERO Y FICHAS PREDETERMINADAS AL USUARIO CREADO (hecho, solo descomentar):
-        // Producto p = pRepository.findByNombre("Tablero Predeterminado");
-        // UsuarioProducto upt = new UsuarioProducto(u,p,true);
-        // u.getProductos().add(upt);
-        // p = pRepository.findByNombre("Ficha Predeterminada");
-        // UsuarioProducto upf = new UsuarioProducto(u,p,true);
-        // u.getProductos().add(upf);
+        Producto p = pRepository.findByNombre("Tablero 1");
+        UsuarioProducto upt = new UsuarioProducto(u,p,true);
+        u.getProductos().add(upt);
+        p = pRepository.findByNombre("Ficha 1");
+        UsuarioProducto upf = new UsuarioProducto(u,p,true);
+        u.getProductos().add(upf);
         u = uRepository.save(u);
         ResponseUsuario ru = new ResponseUsuario(u.getId(), u.getEmail(), u.getUsername(), u.getNumMonedas());
         return ru;
