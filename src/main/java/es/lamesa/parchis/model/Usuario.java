@@ -44,7 +44,7 @@ public class Usuario {
     private List<Amistad> solicitudesRecibidas = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<UsuarioProducto> productos = new ArrayList<>();
 
     @JsonManagedReference
