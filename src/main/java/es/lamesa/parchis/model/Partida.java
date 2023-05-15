@@ -91,6 +91,10 @@ public class Partida {
         return null;
     }
 
+    public List<Ficha> obtenerFichasColorReconectar(Color color) {
+        return tablero.obtenerFichasColorReconectar(color);
+    }
+
     public boolean eliminarJugador(Long jugador) {
         boolean cambiarTurno = false;
         Color color = null;

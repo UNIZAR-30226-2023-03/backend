@@ -24,6 +24,7 @@ import es.lamesa.parchis.model.EstadoPartida;
 import es.lamesa.parchis.model.EstadoTorneo;
 import es.lamesa.parchis.model.UsuarioPartida;
 import es.lamesa.parchis.model.Color;
+import es.lamesa.parchis.model.Ficha;
 import es.lamesa.parchis.model.ConfigFichas;
 import es.lamesa.parchis.model.dto.RequestPartida;
 import es.lamesa.parchis.model.dto.RequestConexion;
@@ -32,6 +33,7 @@ import es.lamesa.parchis.model.dto.RequestSalir;
 import es.lamesa.parchis.model.dto.RequestPartidaAmigo;
 import es.lamesa.parchis.model.dto.RequestMovimiento;
 import es.lamesa.parchis.model.dto.ResponsePartida;
+import es.lamesa.parchis.model.dto.ResponseReconectar;
 import es.lamesa.parchis.model.dto.UsuarioColorDto;
 import es.lamesa.parchis.model.dto.ResponseDado;
 import es.lamesa.parchis.model.dto.ResponseMovimiento;
@@ -373,7 +375,7 @@ public class PartidaService {
         return true;
     }
 
-    public ResponsePartida reconectarPartida(Long id) {
+    public ResponseReconectar reconectarPartida(Long id) {
         Usuario usuario = uRepository.findById(id).get();
         Long idPartida  = upRepository.getPartidaReconectar(usuario);
         if (idPartida != null) {
@@ -385,7 +387,12 @@ public class PartidaService {
                 UsuarioColorDto uc = new UsuarioColorDto(uup.getUsuario().getUsername(), uup.getColor());
                 luc.add(uc);
             }
-            ResponsePartida r = new ResponsePartida(idPartida, up.getColor(), luc, partida.getConfigFichas());
+            List<List<Ficha>> fichasJugadores = new ArrayList<>();
+            for (int i = 0; i < partida.getJugadores().size(); ++i) {
+                List<Ficha> fichas = partida.obtenerFichasColorReconectar(Color.values()[i]);
+                fichasJugadores.add(fichas);
+            }
+            ResponseReconectar r = new ResponseReconectar(idPartida, up.getColor(), luc, partida.getConfigFichas(), fichasJugadores);
             return r;
         }
         return null;

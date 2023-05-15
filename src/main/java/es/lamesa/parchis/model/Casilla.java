@@ -28,6 +28,7 @@ public class Casilla {
     @Column
     private Color color;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "casilla", cascade = CascadeType.ALL)
     private List<Ficha> fichas = new ArrayList<>();
  

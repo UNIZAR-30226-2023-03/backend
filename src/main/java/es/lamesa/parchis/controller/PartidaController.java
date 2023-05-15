@@ -22,6 +22,7 @@ import es.lamesa.parchis.model.dto.RequestSalir;
 import es.lamesa.parchis.model.dto.ResponsePartida;
 import es.lamesa.parchis.model.dto.ResponseDado;
 import es.lamesa.parchis.model.dto.ResponseMovimiento;
+import es.lamesa.parchis.model.dto.ResponseReconectar;
 import es.lamesa.parchis.model.dto.RequestMovimiento;
 
 @RestController
@@ -93,7 +94,7 @@ public class PartidaController {
 
     @PostMapping("/reconectar/{id}")
     @Operation(summary = "El usuario sale de la partida")
-    public ResponsePartida reconectarPartida(@PathVariable("id") Long id) {
+    public ResponseReconectar reconectarPartida(@PathVariable("id") Long id) {
         return service.reconectarPartida(id);
     }
 }

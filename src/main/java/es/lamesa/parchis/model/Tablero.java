@@ -161,6 +161,20 @@ public class Tablero {
         return n_fichas;
     }
 
+    public List<Ficha> obtenerFichasColorReconectar(Color color) {
+        List<Ficha> fichas = new ArrayList<>();
+        for (Casilla c : casillas) {
+            if (c.getTipo() != TipoCasilla.CASA) {
+                for (Ficha f : c.getFichas()) {
+                    if (f.getColor() == color) {
+                        fichas.add(f);
+                    }
+                }
+            }
+        }
+        return fichas;
+    }
+
     public int obtenerSalida(Color c) {
         int num_casilla = -2;
         if (c == Color.AMARILLO) {
