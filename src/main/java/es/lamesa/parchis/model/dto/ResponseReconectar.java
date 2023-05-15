@@ -21,7 +21,7 @@ public class ResponseReconectar {
     private List<UsuarioColorDto> jugadores = new ArrayList<>();
     @Schema(description = "Configuración de las fichas de una partida")
     private ConfigFichas cf;
-    @Schema(description = "Fichas del usuario")
+    @Schema(description = "Fichas de cada jugador de la partida")
     private List<List<Ficha>> fichas;
 
     public ResponseReconectar(Long id, Color color, List<UsuarioColorDto> jugadores, ConfigFichas cf, List<List<Ficha>> fichas) {
