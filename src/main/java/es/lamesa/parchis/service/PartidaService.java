@@ -377,7 +377,7 @@ public class PartidaService {
 
     public ResponseReconectar reconectarPartida(Long id) {
         Usuario usuario = uRepository.findById(id).get();
-        Long idPartida  = upRepository.getPartidaReconectar(usuario);
+        Long idPartida = upRepository.getPartidaReconectar(usuario);
         if (idPartida != null) {
             Partida partida = pRepository.findById(idPartida).get();
             List<UsuarioPartida> lup = upRepository.obtenerUsuarios(partida, usuario);
@@ -392,7 +392,7 @@ public class PartidaService {
                 List<Ficha> fichas = partida.obtenerFichasColorReconectar(Color.values()[i]);
                 fichasJugadores.add(fichas);
             }
-            ResponseReconectar r = new ResponseReconectar(idPartida, up.getColor(), luc, partida.getConfigFichas(), fichasJugadores);
+            ResponseReconectar r = new ResponseReconectar(idPartida, up.getColor(), luc, partida.getConfigFichas(), fichasJugadores, partida.getTurno());
             return r;
         }
         return null;

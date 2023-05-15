@@ -23,13 +23,16 @@ public class ResponseReconectar {
     private ConfigFichas cf;
     @Schema(description = "Fichas de cada jugador de la partida")
     private List<List<Ficha>> fichas;
+    @Schema(description = "Turno actual")
+    private Color turno;
 
-    public ResponseReconectar(Long id, Color color, List<UsuarioColorDto> jugadores, ConfigFichas cf, List<List<Ficha>> fichas) {
+    public ResponseReconectar(Long id, Color color, List<UsuarioColorDto> jugadores, ConfigFichas cf, List<List<Ficha>> fichas, Color turno) {
         this.id = id;
         this.color = color;
         this.jugadores = jugadores;
         this.cf = cf;
         this.fichas = fichas;
+        this.turno = turno;
     }
 
 }
