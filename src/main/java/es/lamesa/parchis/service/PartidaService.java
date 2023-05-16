@@ -34,6 +34,7 @@ import es.lamesa.parchis.model.dto.RequestPartidaAmigo;
 import es.lamesa.parchis.model.dto.RequestMovimiento;
 import es.lamesa.parchis.model.dto.ResponsePartida;
 import es.lamesa.parchis.model.dto.ResponseReconectar;
+import es.lamesa.parchis.model.dto.ResponseSalir;
 import es.lamesa.parchis.model.dto.UsuarioColorDto;
 import es.lamesa.parchis.model.dto.ResponseDado;
 import es.lamesa.parchis.model.dto.ResponseMovimiento;
@@ -341,7 +342,8 @@ public class PartidaService {
         return true;
     } 
 
-    public boolean salirPartida(RequestSalir request) {
+    public ResponseSalir salirPartida(RequestSalir request) {
+        ResponseSalir rs = new ResponseSalir(true, false);
         Partida p = pRepository.findById(request.getPartida()).get();
         if (!p.isEnPausa()) {
             Usuario u = uRepository.findById(request.getJugador()).get();
@@ -357,11 +359,23 @@ public class PartidaService {
                 UsuarioEstadisticas ue = ueRepository.findByUsuario(uGanador);
                 ue.setPartidasGanadas(ue.getPartidasGanadas() + 1);
                 ueRepository.save(ue);
-                if (p.getConfigFichas() == ConfigFichas.RAPIDO) {
-                    uGanador.setNumMonedas(uGanador.getNumMonedas() + 25);
+                if (p.getTorneo() != null) {
+                    Torneo t = p.getTorneo();
+                    t.setNumFinalistas(1 + t.getNumFinalistas());
+                    int num = t.getNumFinalistas();
+                    if (num == 4) {
+                        messagingTemplate.convertAndSend("/topic/final/" + t.getId(), "Comienzo de la final");
+                        t.setEstado(EstadoTorneo.EN_FINAL);
+                        rs.setFinalTorneo(true);
+                    }
                 }
                 else {
-                    uGanador.setNumMonedas(uGanador.getNumMonedas() + 50);
+                    if (p.getConfigFichas() == ConfigFichas.RAPIDO) {
+                        uGanador.setNumMonedas(uGanador.getNumMonedas() + 25);
+                    }
+                    else {
+                        uGanador.setNumMonedas(uGanador.getNumMonedas() + 50);
+                    }
                 }
                 uRepository.save(uGanador);
                 Tablero t = p.getTablero();
@@ -372,7 +386,7 @@ public class PartidaService {
             }
             pRepository.save(p);
         }
-        return true;
+        return rs;
     }
 
     public ResponseReconectar reconectarPartida(Long id) {
