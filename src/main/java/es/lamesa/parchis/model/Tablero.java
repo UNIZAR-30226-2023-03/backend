@@ -31,23 +31,17 @@ public class Tablero {
     @OneToMany(mappedBy = "tablero", cascade = CascadeType.ALL)
     private List<Casilla> casillas = new ArrayList<>();
 
-    /**
-     * Crea una nueva instancia de la clase Tablero, inicializando tanto el perímetro como el pasillo.
-     */
-    public Tablero(int num_jugadores, Partida p) {
+        public Tablero(int num_jugadores, Partida p) {
         this.partida = p;
         inicializarTablero(num_jugadores);
     }
 
     public void inicializarTablero(int num_jugadores) {
-        //4 pasillos de dimensión 8 -> 4*8 + las [0,67] casillas perimetro
         casillas = new ArrayList<Casilla>(num_jugadores + 68 + num_jugadores * 8);
         Casilla c = new Casilla();
         Ficha f;        
 
-        //inicialización perimetro
         for (int i = 0; i < 68; i++) {
-            // CASILLAS SALIDA
             if (i == 4) {
                 c = new Casilla(this, i, TipoCasilla.SALIDA, Color.AMARILLO);
             }
@@ -60,11 +54,9 @@ public class Tablero {
             else if (i == 55) {
                 c = new Casilla(this, i, TipoCasilla.SALIDA, Color.VERDE);
             }
-            // CASILLAS SEGURO
-            else if (i == 11 || i == 28 || i == 45 || i == 62) { // SEGUROS
+            else if (i == 11 || i == 28 || i == 45 || i == 62) {
                 c = new Casilla(this, i, TipoCasilla.SEGURO);
             }
-            // CASILLAS DE ENTRADA A PASILLO
             else if (i == 16) {
                 c = new Casilla(this, i, TipoCasilla.ENTRADA, Color.AZUL);
             }
@@ -94,12 +86,10 @@ public class Tablero {
                 casillas.add(c);
             }
         }
-        
-        //inicialización de casas
+
         for (int i = 0; i < num_jugadores; i++) {
             c = new Casilla(this, -1, TipoCasilla.CASA, Color.values()[i]);
             casillas.add(c);
-            // poner las fichas en las casillas CASA:
             int num_fichas = 4;
             if (partida.getConfigFichas() == ConfigFichas.RAPIDO){
                 num_fichas = 2;

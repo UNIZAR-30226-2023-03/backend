@@ -9,7 +9,7 @@ import java.util.Date;
 public class TokenUtil {
 
     private static final String SECRET_KEY = "mySecretKey";
-    private static final long EXPIRATION_TIME = 60 * 20 * 1000; // 20 minutos
+    private static final long EXPIRATION_TIME = 60 * 20 * 1000;
 
     public static String generateToken(Long id, String email) {
         return Jwts.builder()

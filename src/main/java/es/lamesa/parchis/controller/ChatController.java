@@ -23,13 +23,4 @@ public class ChatController {
         messagingTemplate.convertAndSend("/topic/chat/" + id, mensaje);
     }
 
-    // @MessageMapping("/chat.addUser")
-    // @SendTo("/topic/{id}")
-    // public MensajeDto addUser(@Payload MensajeDto mensaje, SimpMessageHeaderAccessor headerAccessor) {
-        
-    //     // Add username in web socket session
-    //     headerAccessor.getSessionAttributes().put("username", mensaje.getUser());
-    //     return mensaje;
-    // }
-
 }

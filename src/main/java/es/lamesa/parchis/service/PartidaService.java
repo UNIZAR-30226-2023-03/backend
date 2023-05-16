@@ -100,18 +100,18 @@ public class PartidaService {
             partida = pRepository.buscarPartida(request.getNombre());
             if (partida != null) {
                 if (request.getPassword().contentEquals(partida.getPassword())) {
-                    //UsuarioPartida:
+                    
                     UsuarioPartida up = new UsuarioPartida();
                     up.setUsuario(usuario);
                     up.setPartida(partida);
                     up.setColor(Color.values()[partida.getJugadores().size()]);
                     partida.getJugadores().add(up);
-                    //Estadisticas:
+                    
                     UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
                     ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
                     ueRepository.save(ue);
                     partida = pRepository.save(partida);
-                    //Envio de info al frontend:
+                    
                     List<UsuarioPartida> lup = upRepository.obtenerUsuarios(partida, usuario);
                     List<UsuarioColorDto> luc = new ArrayList<>();
                     for (UsuarioPartida uup: lup) {
@@ -119,15 +119,15 @@ public class PartidaService {
                         luc.add(uc);
                     }
                     ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), luc, partida.getConfigFichas());
-                    //Aviso al resto de la llegada de un nuevo jugador:
+                    
                     UsuarioColorDto uc = new UsuarioColorDto(uRepository.findById(usuario.getId()).get().getUsername(), up.getColor());
                     messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), uc);
                     return r;
                 }
-                //EXCEPCIÓN CONTRASEÑA INCORRECTA
+                
                 throw new GenericException("Contraseña incorrecta para la sala indicada");
             }
-            //EXCEPCIÓN NOMBRE DE PARTIDA NO ENCONTRADO
+            
             throw new GenericException("La partida no existe o está ya en curso");
         }
         throw new GenericException("Ya estás jugando una partida");
@@ -137,7 +137,7 @@ public class PartidaService {
         Usuario usuario = new Usuario();
         usuario.setId(request.getJugador());
         Partida partida = pRepository.findById(request.getPartida()).get();
-        //UsuarioPartida:
+        
         UsuarioPartida up = new UsuarioPartida();
         up.setUsuario(usuario);
         up.setPartida(partida);
@@ -149,12 +149,12 @@ public class PartidaService {
                 messagingTemplate.convertAndSend("/topic/turno/" + partida.getId(), partida.getTurno());
             }
         }
-        //Estadisticas:
+        
         UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
         ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
         ueRepository.save(ue);
         partida = pRepository.save(partida);
-        //Envio de info al frontend:
+        
         List<UsuarioPartida> lup = upRepository.obtenerUsuarios(partida, usuario);
         List<UsuarioColorDto> luc = new ArrayList<>();
         for (UsuarioPartida uup: lup) {
@@ -162,7 +162,7 @@ public class PartidaService {
             luc.add(uc);
         }
         ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), luc, partida.getConfigFichas());
-        //Aviso al resto de la llegada de un nuevo jugador:
+        
         UsuarioColorDto uc = new UsuarioColorDto(uRepository.findById(usuario.getId()).get().getUsername(), up.getColor());
         messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), uc);
         return r;
@@ -187,7 +187,7 @@ public class PartidaService {
             Partida partida = new Partida();
             partidas = pRepository.buscarPublica();
             if (partidas.isEmpty()) {
-                // Creo la partida
+                
                 partida.setConfigBarreras(p.getConfiguracionB());
                 partida.setConfigFichas(p.getConfiguracionF());
                 partida.setEstado(EstadoPartida.ESPERANDO_JUGADORES);
@@ -195,7 +195,6 @@ public class PartidaService {
             else {
                 partida = partidas.get(0);
             }
-            // UsuarioPartida:
             UsuarioPartida up = new UsuarioPartida();
             up.setUsuario(usuario);
             up.setPartida(partida);
@@ -205,12 +204,10 @@ public class PartidaService {
                 partida.empezar();
                 messagingTemplate.convertAndSend("/topic/turno/" + partida.getId(), partida.getTurno());
             }
-            //Estadisticas:
             UsuarioEstadisticas ue = ueRepository.findByUsuario(usuario);
             ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
             ueRepository.save(ue);
             partida = pRepository.save(partida);
-            //Envio de info al frontend:
             List<UsuarioPartida> lup = upRepository.obtenerUsuarios(partida, usuario);
             List<UsuarioColorDto> luc = new ArrayList<>();
             for (UsuarioPartida uup: lup) {
@@ -218,7 +215,6 @@ public class PartidaService {
                 luc.add(uc);
             }
             ResponsePartida r = new ResponsePartida(partida.getId(), up.getColor(), luc);
-            //Aviso al resto de la llegada de un nuevo jugador:
             UsuarioColorDto uc = new UsuarioColorDto(uRepository.findById(usuario.getId()).get().getUsername(), up.getColor());
             messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + partida.getId(), uc);
             return r;
