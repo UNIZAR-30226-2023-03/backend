@@ -1,6 +1,7 @@
 package es.lamesa.parchis.service;
 
 import java.util.List;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
@@ -298,6 +299,10 @@ public class UsuarioService {
             if (e.getPartidasJugadas() != 0) {
                 mediaComidas = (float) e.getNumComidas() / (float) e.getPartidasJugadas();
                 mediaEnMeta = (float) e.getNumEnMeta() / (float) e.getPartidasJugadas();
+
+                DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+                mediaComidas = Float.parseFloat(decimalFormat.format(mediaComidas));
+                mediaEnMeta = Float.parseFloat(decimalFormat.format(mediaEnMeta));
             }
             ResponseEstadisticas r = new ResponseEstadisticas(username, e.getPartidasJugadas(), e.getPartidasGanadas(), mediaComidas, mediaEnMeta, e.getTorneosJugados(), e.getTorneosGanados());
             re.add(r);
@@ -313,6 +318,10 @@ public class UsuarioService {
         if (ue.getPartidasJugadas() != 0) {
             mediaComidas = (float) ue.getNumComidas() / (float) ue.getPartidasJugadas();
             mediaEnMeta = (float) ue.getNumEnMeta() / (float) ue.getPartidasJugadas();
+
+            DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+            mediaComidas = Float.parseFloat(decimalFormat.format(mediaComidas));
+            mediaEnMeta = Float.parseFloat(decimalFormat.format(mediaEnMeta));
         }
         ResponseEstadisticas re = new ResponseEstadisticas(u.getUsername(), ue.getPartidasJugadas(), ue.getPartidasGanadas(), mediaComidas, mediaEnMeta, ue.getTorneosJugados(), ue.getTorneosGanados());
         return re;
