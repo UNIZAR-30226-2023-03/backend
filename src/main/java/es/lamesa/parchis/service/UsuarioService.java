@@ -77,11 +77,10 @@ public class UsuarioService {
         u.setUsername(usuario.getUsername());
         u.setPassword(usuario.getPassword());
         u.encriptarPassword();
-        // email.enviarCorreoElectronico(usuario.getEmail(), u.getUsername(), TipoEmail.REGISTRO);
+        email.enviarCorreoElectronico(usuario.getEmail(), u.getUsername(), TipoEmail.REGISTRO);
         UsuarioEstadisticas ue = new UsuarioEstadisticas();
         ue.setUsuario(u);
         u.setEstadisticas(ue);
-        // ASIGNAR TABLERO Y FICHAS PREDETERMINADAS AL USUARIO CREADO (hecho, solo descomentar):
         Producto p = pRepository.findByNombre("Tablero 1");
         UsuarioProducto upt = new UsuarioProducto(u,p,true);
         u.getProductos().add(upt);
@@ -174,7 +173,6 @@ public class UsuarioService {
     }
 
     public void aceptarSolicitud(RequestAmistad amistad) {
-        // aceptar solicitudes -> pasar en bd de la lista de solicitudes a la de amigos
         Usuario usuario = new Usuario();
         Usuario amigo = new Usuario();
         usuario.setId(amistad.getAmigo());
@@ -185,7 +183,6 @@ public class UsuarioService {
     }
 
     public void denegarSolicitud(RequestAmistad amistad) {
-        // denegar solicitud -> eliminar en bd de la lista de solicitudes
         Usuario usuario = new Usuario();
         Usuario amigo = new Usuario();
         usuario.setId(amistad.getAmigo());
@@ -206,14 +203,14 @@ public class UsuarioService {
     public void actualizarUsername(RequestCambio request) {
         Usuario u = uRepository.findById(request.getId()).get();
         u.setUsername(request.getCambio());
-        // email.enviarCorreoElectronico(usuario.getEmail(), u.getUsername(), TipoEmail.CAMBIO_USERNAME);
+        email.enviarCorreoElectronico(u.getEmail(), u.getUsername(), TipoEmail.CAMBIO_USERNAME);
         uRepository.save(u);
     }
 
     public void actualizarEmail(RequestCambio request) {
         Usuario u = uRepository.findById(request.getId()).get();
         u.setEmail(request.getCambio());
-        // email.enviarCorreoElectronico(usuario.getEmail(), u.getUsername(), TipoEmail.CAMBIO_EMAIL);
+        email.enviarCorreoElectronico(u.getEmail(), u.getUsername(), TipoEmail.CAMBIO_EMAIL);
         uRepository.save(u);
     }
 
@@ -221,7 +218,7 @@ public class UsuarioService {
         Usuario u = uRepository.findById(request.getId()).get();
         u.setPassword(request.getCambio());
         u.encriptarPassword();
-        // email.enviarCorreoElectronico(usuario.getEmail(), u.getUsername(), TipoEmail.CAMBIO_PASSWORD);
+        email.enviarCorreoElectronico(u.getEmail(), u.getUsername(), TipoEmail.CAMBIO_PASSWORD);
         u = uRepository.save(u);
     }
 
