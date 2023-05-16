@@ -365,6 +365,15 @@ public class PartidaService {
                         rs.setFinalTorneo(true);
                     }
                 }
+                else if (p.getFinalTorneo() != null) {
+                    ue.setTorneosGanados(1 + ue.getTorneosGanados());
+                    ueRepository.save(ue);
+                    Torneo t = p.getFinalTorneo();
+                    t.setEstado(EstadoTorneo.FINALIZADO);
+                    int premioGanador = t.getPrecioEntrada();
+                    int monedas = uGanador.getNumMonedas();
+                    uGanador.setNumMonedas(premioGanador + monedas);
+                }
                 else {
                     if (p.getConfigFichas() == ConfigFichas.RAPIDO) {
                         uGanador.setNumMonedas(uGanador.getNumMonedas() + 25);
