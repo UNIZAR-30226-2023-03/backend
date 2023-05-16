@@ -140,6 +140,7 @@ public class TorneoService {
                 t.setEstado(EstadoTorneo.EN_PROGRESO);
             }
             p.empezar();
+            p.setTurno(Color.AMARILLO);
             messagingTemplate.convertAndSend("/topic/turno/" + p.getId(), p.getTurno());
         }
         UsuarioEstadisticas ue = ueRepository.findByUsuario(u);
@@ -171,6 +172,7 @@ public class TorneoService {
         p.getJugadores().add(up);
         if (p.getJugadores().size() == 4) {
             p.empezar();
+            p.setTurno(Color.AMARILLO);
             messagingTemplate.convertAndSend("/topic/turno/" + p.getId(), p.getTurno());
         }
         UsuarioEstadisticas ue = ueRepository.findByUsuario(u);
