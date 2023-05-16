@@ -38,7 +38,6 @@ public class UsuarioController {
     
     @Autowired
     UsuarioRepository uRepository;
-    // Gestión de usuarios
 
     @GetMapping()
     @Operation(summary = "Obtiene todos los usuarios registrados")
@@ -63,8 +62,6 @@ public class UsuarioController {
     public void borrarUsuario(@PathVariable("id") Long id) {
         service.borrarUsuario(id);
     }
-
-    // Gestión de amigos
 
     @PostMapping("/enviar-solicitud")
     @Operation(summary = "Envía una solicitud de amistad")

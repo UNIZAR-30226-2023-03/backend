@@ -45,7 +45,7 @@ public class EmailServiceImpl implements EmailService {
         correo.setTo(destinatario);
         correo.setSubject("Recuperación de contraseña");
         correo.setText("Hola " + username + ", le informamos de que se ha realizado una solicitud de recuperación de contraseña. " + 
-        "Para continuar, acceda al siguiente enlace:\nhttps://localhost:3000/recuperar-contraseña?token=" + token + "\n" +
+        "Para continuar, acceda al siguiente enlace:\nhttps://salmon-tree-088093803.2.azurestaticapps.net/recuperar-contraseña?token=" + token + "\n" +
         "Si no has realizado esta acción, por favor ponte en " + "contacto con nosotros lo antes posible.");
         mailSender.send(correo);
     }

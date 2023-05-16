@@ -88,7 +88,7 @@ public class TorneoService {
         }
         t.setNumJugadores(1 + t.getNumJugadores());
         int num = t.getNumJugadores();
-        if (num == 8) { //en teoría es 16
+        if (num == 16) { 
             messagingTemplate.convertAndSend("/topic/torneo/" + t.getId(), "Torneo abierto");
             for (int i = 0; i < 4; ++i) {
                 Partida p = new Partida();     
@@ -137,18 +137,16 @@ public class TorneoService {
         p.getJugadores().add(up);
         if (p.getJugadores().size() == 4) {
             if (i == 3) {
-                t.setEstado(EstadoTorneo.EN_PROGRESO); // si no lo cambia es que falta el save
+                t.setEstado(EstadoTorneo.EN_PROGRESO);
             }
             p.empezar();
             messagingTemplate.convertAndSend("/topic/turno/" + p.getId(), p.getTurno());
         }
-        // Estadisticas:
         UsuarioEstadisticas ue = ueRepository.findByUsuario(u);
         ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
         ue.setTorneosJugados(1 + ue.getTorneosJugados());
         ueRepository.save(ue);
         p = pRepository.save(p);
-        // Envio de info al frontend:
         List<UsuarioPartida> lup = upRepository.obtenerUsuarios(p, u);
         List<UsuarioColorDto> luc = new ArrayList<>();
         for (UsuarioPartida uup : lup) {
@@ -156,7 +154,6 @@ public class TorneoService {
             luc.add(uc);
         }
         ResponsePartida r = new ResponsePartida(p.getId(), up.getColor(), luc, p.getConfigFichas());
-        // Aviso al resto de la llegada de un nuevo jugador:
         UsuarioColorDto uc = new UsuarioColorDto(uRepository.findById(u.getId()).get().getUsername(), up.getColor());
         messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + p.getId(), uc);
         return r;
@@ -176,12 +173,10 @@ public class TorneoService {
             p.empezar();
             messagingTemplate.convertAndSend("/topic/turno/" + p.getId(), p.getTurno());
         }
-        // Estadisticas:
         UsuarioEstadisticas ue = ueRepository.findByUsuario(u);
         ue.setPartidasJugadas(ue.getPartidasJugadas() + 1);
         ueRepository.save(ue);
         p = pRepository.save(p);
-        // Envio de info al frontend:
         List<UsuarioPartida> lup = upRepository.obtenerUsuarios(p, u);
         List<UsuarioColorDto> luc = new ArrayList<>();
         for (UsuarioPartida uup : lup) {
@@ -189,7 +184,6 @@ public class TorneoService {
             luc.add(uc);
         }
         ResponsePartida r = new ResponsePartida(p.getId(), up.getColor(), luc, p.getConfigFichas());
-        // Aviso al resto de la llegada de un nuevo jugador:
         UsuarioColorDto uc = new UsuarioColorDto(uRepository.findById(u.getId()).get().getUsername(), up.getColor());
         messagingTemplate.convertAndSend("/topic/nuevo-jugador/" + p.getId(), uc);
         return r;

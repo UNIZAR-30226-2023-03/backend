@@ -32,7 +32,7 @@ public class Partida {
     private List<Color> abandonados = new ArrayList<>(4);
 
     @OneToOne(mappedBy = "partida", cascade = CascadeType.ALL)
-    private Tablero tablero; //una vez finalizada la partida, se podría borrar?
+    private Tablero tablero;
 
     @JsonIgnore
     @ManyToOne
@@ -71,7 +71,7 @@ public class Partida {
     public void empezar() {
         this.tablero = new Tablero(jugadores.size(), this);
         this.estado = EstadoPartida.EN_PROGRESO;
-        int n = (int) (Math.random() * jugadores.size()); //se elije de manera aleatoria el jugador que empieza en el intervalo [0,3]
+        int n = (int) (Math.random() * jugadores.size());
         turno = Color.values()[n];
     }
 
@@ -157,7 +157,7 @@ public class Partida {
                     }
                 }
             }
-            //Para mandar al frontend:
+            
             Ficha ficha_sacada = sacarFicha();
             List<Ficha> fichas = new ArrayList<>();
             fichas.add(ficha_sacada);
@@ -194,12 +194,9 @@ public class Partida {
 
             for(Ficha i : fichas_del_turno) {
                 id_casilla = i.getCasilla().getPosicion();
-                if (i.getNumPasos() + num_dado > 71){ //¿se podría quitar condicion de turno? (si ya está en pasillo, ya se sabe que es del color del turno)
+                if (i.getNumPasos() + num_dado > 71){
                     bloqueadas.add(i);
                 }
-                // else if (num_dado == 5 && tablero.obtenerFichasColor(tablero.obtenerSalida(turno), turno) == 2) {
-                //     bloqueadas.add(i);
-                // }
                 else{
                     if(tablero.obtenerFichas(id_casilla + num_dado) == 2) {
                         bloqueadas.add(i);
@@ -207,9 +204,6 @@ public class Partida {
                     else { 
                         for(int j = id_casilla + 1; j < id_casilla+num_dado; j++) {
                             if (tablero.obtenerFichas(j) == 2) {
-                                /*CONFIG.BLOQUEANTE_SOLO_SEGURO and TIPOCASILLA.SEGURO 
-                                * OR CONFIG.BLOQUEANTE_TODO -> bloquea ficha
-                                */
                                 if (configBarreras == ConfigBarreras.SOLO_SEGUROS){
                                     if (tablero.obtenerCasillaPerimetro(j).getTipo() == TipoCasilla.SEGURO || 
                                         tablero.obtenerCasillaPerimetro(j).getTipo() == TipoCasilla.ENTRADA || 
@@ -230,16 +224,16 @@ public class Partida {
             if (bloqueadas.size() == num_fichas){
                 cambiarTurno();
             }
-            // if (num_dado == 6) {
-            //     List<Ficha> fichas_barrera = tablero.obtenerFichasBarrera(turno, configBarreras);
-            //     if (!fichas_barrera.isEmpty()) {
-            //         for (Ficha f : fichas_del_turno) {
-            //             if (!fichas_barrera.contains(f) && !bloqueadas.containsAll(fichas_barrera)) {
-            //                 bloqueadas.add(f);
-            //             }
-            //         }
-            //     }
-            // }
+            if (num_dado == 6) {
+                List<Ficha> fichas_barrera = tablero.obtenerFichasBarrera(turno, configBarreras);
+                if (!fichas_barrera.isEmpty()) {
+                    for (Ficha f : fichas_del_turno) {
+                        if (!fichas_barrera.contains(f) && !bloqueadas.containsAll(fichas_barrera)) {
+                            bloqueadas.add(f);
+                        }
+                    }
+                }
+            }
             ResponseDado rd = new ResponseDado(bloqueadas, false, null, null, turno, false);
             return rd;
         }
@@ -280,7 +274,6 @@ public class Partida {
             }
         } 
         else if (f.getNumPasos() + dado > 63) {
-            //entrada a pasillo
             id_casilla = 67 + ((id_casilla + dado - id_casilla_prepasillo)%68);
             c = tablero.obtenerCasillaPasillo(id_casilla, turno);
             if (dado != 6) {
@@ -289,7 +282,7 @@ public class Partida {
         }
         else {
             c = tablero.obtenerCasillaPerimetro((id_casilla + dado)%68);
-            //COMIDAS
+            
             if (c.getFichas().size() == 1 &&
                 c.obtenerColorPrimeraFicha() != turno && 
                 c.getTipo() == TipoCasilla.COMUN) {
