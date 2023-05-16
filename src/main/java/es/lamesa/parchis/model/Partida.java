@@ -230,16 +230,16 @@ public class Partida {
             if (bloqueadas.size() == num_fichas){
                 cambiarTurno();
             }
-            // if (num_dado == 6) {
-            //     List<Ficha> fichas_barrera = tablero.obtenerFichasBarrera(turno, configBarreras);
-            //     if (!fichas_barrera.isEmpty()) {
-            //         for (Ficha f : fichas_del_turno) {
-            //             if (!fichas_barrera.contains(f) && !bloqueadas.containsAll(fichas_barrera)) {
-            //                 bloqueadas.add(f);
-            //             }
-            //         }
-            //     }
-            // }
+            if (num_dado == 6) {
+                List<Ficha> fichas_barrera = tablero.obtenerFichasBarrera(turno, configBarreras);
+                if (!fichas_barrera.isEmpty()) {
+                    for (Ficha f : fichas_del_turno) {
+                        if (!fichas_barrera.contains(f) && !bloqueadas.containsAll(fichas_barrera)) {
+                            bloqueadas.add(f);
+                        }
+                    }
+                }
+            }
             ResponseDado rd = new ResponseDado(bloqueadas, false, null, null, turno, false);
             return rd;
         }
