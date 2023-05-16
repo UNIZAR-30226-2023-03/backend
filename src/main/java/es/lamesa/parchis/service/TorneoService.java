@@ -88,7 +88,7 @@ public class TorneoService {
         }
         t.setNumJugadores(1 + t.getNumJugadores());
         int num = t.getNumJugadores();
-        if (num == 8) { //en teoría es 16
+        if (num == 16) { //en teoría es 16
             messagingTemplate.convertAndSend("/topic/torneo/" + t.getId(), "Torneo abierto");
             for (int i = 0; i < 4; ++i) {
                 Partida p = new Partida();     
@@ -137,7 +137,7 @@ public class TorneoService {
         p.getJugadores().add(up);
         if (p.getJugadores().size() == 4) {
             if (i == 3) {
-                t.setEstado(EstadoTorneo.EN_PROGRESO); // si no lo cambia es que falta el save
+                t.setEstado(EstadoTorneo.EN_PROGRESO);
             }
             p.empezar();
             messagingTemplate.convertAndSend("/topic/turno/" + p.getId(), p.getTurno());
