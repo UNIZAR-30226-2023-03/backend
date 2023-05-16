@@ -34,7 +34,6 @@ import es.lamesa.parchis.model.dto.RequestPartidaAmigo;
 import es.lamesa.parchis.model.dto.RequestMovimiento;
 import es.lamesa.parchis.model.dto.ResponsePartida;
 import es.lamesa.parchis.model.dto.ResponseReconectar;
-import es.lamesa.parchis.model.dto.ResponseSalir;
 import es.lamesa.parchis.model.dto.UsuarioColorDto;
 import es.lamesa.parchis.model.dto.ResponseDado;
 import es.lamesa.parchis.model.dto.ResponseMovimiento;
@@ -338,8 +337,8 @@ public class PartidaService {
         return true;
     } 
 
-    public ResponseSalir salirPartida(RequestSalir request) {
-        ResponseSalir rs = new ResponseSalir(true, false);
+    public boolean salirPartida(RequestSalir request) {
+        boolean finalTorneo = false;
         Partida p = pRepository.findById(request.getPartida()).get();
         if (!p.isEnPausa()) {
             Usuario u = uRepository.findById(request.getJugador()).get();
@@ -362,7 +361,7 @@ public class PartidaService {
                     if (num == 4) {
                         messagingTemplate.convertAndSend("/topic/final/" + t.getId(), "Comienzo de la final");
                         t.setEstado(EstadoTorneo.EN_FINAL);
-                        rs.setFinalTorneo(true);
+                        finalTorneo = true;
                     }
                 }
                 else if (p.getFinalTorneo() != null) {
@@ -387,11 +386,11 @@ public class PartidaService {
                 p.setTablero(null);
                 pRepository.save(p);
                 tRepository.delete(t);
-                messagingTemplate.convertAndSend("/topic/ultimo/" + p.getId(), "Fin por abandono");
+                messagingTemplate.convertAndSend("/topic/ultimo/" + p.getId(), finalTorneo);
             }
             pRepository.save(p);
         }
-        return rs;
+        return true;
     }
 
     public ResponseReconectar reconectarPartida(Long id) {

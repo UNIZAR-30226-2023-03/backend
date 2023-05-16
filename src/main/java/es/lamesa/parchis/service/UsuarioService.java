@@ -3,6 +3,8 @@ package es.lamesa.parchis.service;
 import java.util.List;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +79,7 @@ public class UsuarioService {
         u.setUsername(usuario.getUsername());
         u.setPassword(usuario.getPassword());
         u.encriptarPassword();
-        email.enviarCorreoElectronico(usuario.getEmail(), u.getUsername(), TipoEmail.REGISTRO);
+        // email.enviarCorreoElectronico(usuario.getEmail(), u.getUsername(), TipoEmail.REGISTRO);
         UsuarioEstadisticas ue = new UsuarioEstadisticas();
         ue.setUsuario(u);
         u.setEstadisticas(ue);
@@ -297,7 +299,7 @@ public class UsuarioService {
                 mediaComidas = (float) e.getNumComidas() / (float) e.getPartidasJugadas();
                 mediaEnMeta = (float) e.getNumEnMeta() / (float) e.getPartidasJugadas();
 
-                DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+                DecimalFormat decimalFormat = new DecimalFormat("#0.00", DecimalFormatSymbols.getInstance(Locale.US));
                 mediaComidas = Float.parseFloat(decimalFormat.format(mediaComidas));
                 mediaEnMeta = Float.parseFloat(decimalFormat.format(mediaEnMeta));
             }
@@ -316,7 +318,7 @@ public class UsuarioService {
             mediaComidas = (float) ue.getNumComidas() / (float) ue.getPartidasJugadas();
             mediaEnMeta = (float) ue.getNumEnMeta() / (float) ue.getPartidasJugadas();
 
-            DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+            DecimalFormat decimalFormat = new DecimalFormat("#0.00", DecimalFormatSymbols.getInstance(Locale.US));
             mediaComidas = Float.parseFloat(decimalFormat.format(mediaComidas));
             mediaEnMeta = Float.parseFloat(decimalFormat.format(mediaEnMeta));
         }
